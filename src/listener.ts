@@ -68,7 +68,7 @@ export function emit(key: string, id: EventId, ...args: any[]) {
   let out
   
   for (const target of bindings["*"].concat(bindings[key] || [])) {
-    if (listeners[target]) {
+    if (key !== target && listeners[target]) {
       for (const fn of listeners[target]) {
         out = fn(id, ...args)
         if (out.then) {

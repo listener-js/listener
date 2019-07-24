@@ -6,7 +6,7 @@ class MyClass {
   }
 
   public static async asyncFn(id: EventId, someArg: boolean) {
-    return { fn: true, id, someArg }
+    return { asyncFn: true, id, someArg }
   }
 }
 
@@ -16,12 +16,16 @@ class MyClass2 {
   }
 
   public static async asyncFn2(id: EventId, someArg: boolean) {
-    return { fn2: true, id, someArg }
+    return { asyncFn2: true, id, someArg }
+  }
+
+  public static async asyncFn3(id: EventId, someArg: boolean) {
+    return null
   }
 }
 
 listener(MyClass, "MyClass", "fn", "asyncFn")
-listener(MyClass2, "MyClass2", "fn2", "asyncFn2")
+listener(MyClass2, "MyClass2", "fn2", "asyncFn2", "asyncFn3")
 
 beforeEach(reset)
 
@@ -54,11 +58,11 @@ test("listen", (): void => {
 
 test("async listener", async (): Promise<void> => {
   expect(await MyClass.asyncFn("id", true)).toEqual(
-    { "fn": true, "id": ["id", "MyClass.asyncFn"], "someArg": true }
+    { "asyncFn": true, "id": ["id", "MyClass.asyncFn"], "someArg": true }
   )
 
   expect(await MyClass2.asyncFn2("id", true)).toEqual(
-    { "fn2": true, "id": ["id", "MyClass2.asyncFn2"], "someArg": true }
+    { "asyncFn2": true, "id": ["id", "MyClass2.asyncFn2"], "someArg": true }
   )
 })
 
@@ -66,10 +70,26 @@ test("async listen", async (): Promise<void> => {
   listen("MyClass.asyncFn", "MyClass2.asyncFn2")
 
   expect(await MyClass.asyncFn("id", true)).toEqual(
-    { "fn2": true, "id": ["id", "MyClass.asyncFn", "MyClass2.asyncFn2"], "someArg": true }
+    { "asyncFn2": true, "id": ["id", "MyClass.asyncFn", "MyClass2.asyncFn2"], "someArg": true }
   )
 
   expect(await MyClass2.asyncFn2("id", true)).toEqual(
-    { "fn2": true, "id": ["id", "MyClass2.asyncFn2"], "someArg": true }
+    { "asyncFn2": true, "id": ["id", "MyClass2.asyncFn2"], "someArg": true }
+  )
+})
+
+test("async listen with no return on bound listener", async (): Promise<void> => {
+  listen("MyClass.asyncFn", "MyClass2.asyncFn3")
+
+  expect(await MyClass.asyncFn("id", true)).toEqual(
+    { "asyncFn": true, "id": ["id", "MyClass.asyncFn"], "someArg": true }
+  )
+})
+
+test("global listen", (): void => {
+  listen("*", "MyClass2.fn2")
+
+  expect(MyClass.fn("id", true)).toEqual(
+    { "fn2": true, "id": ["id", "MyClass.fn", "MyClass2.fn2"], "someArg": true }
   )
 })
