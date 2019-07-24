@@ -1,12 +1,18 @@
 import { EventId, listener, listen, reset } from "../"
 
+function delay(t, v) {
+  return new Promise((resolve) => {
+    setTimeout(resolve.bind(null, v), t)
+  })
+}
+
 class MyClass {
   public static fn(id: EventId, someArg: boolean) {
     return { fn: true, id, someArg }
   }
 
   public static async asyncFn(id: EventId, someArg: boolean) {
-    return { asyncFn: true, id, someArg }
+    return delay(10, { asyncFn: true, id, someArg })
   }
 }
 
@@ -16,7 +22,7 @@ class MyClass2 {
   }
 
   public static async asyncFn2(id: EventId, someArg: boolean) {
-    return { asyncFn2: true, id, someArg }
+    return delay(1, { asyncFn2: true, id, someArg })
   }
 
   public static async asyncFn3(id: EventId, someArg: boolean) {

@@ -4,8 +4,7 @@ import { flattenId } from "./flattenId"
 import { bindings, listeners } from "./records"
 
 export function emit(key: string, id: string[], ...args: any[]) {
-  let promise = Promise.resolve()
-  let isAsync = false
+  let promise
   let out
 
   const binds = buildList(bindings, bindings["*"], key, id)
@@ -18,15 +17,17 @@ export function emit(key: string, id: string[], ...args: any[]) {
     const listens = buildList(listeners, [], target, id)
 
     for (const fn of listens) {
-      out = fn(id, ...args)
+      out = promise ?
+        promise.then(() => fn(id, ...args)) :
+        fn(id, ...args)
+      
       if (out.then) {
-        isAsync = true
-        promise = promise.then(() => out)
+        promise = out
       }
     }
   }
 
-  return isAsync ? promise : out
+  return promise || out
 }
 
 export function listenerWrapper(eid: EventId, ...args: any[]) {
@@ -35,15 +36,15 @@ export function listenerWrapper(eid: EventId, ...args: any[]) {
   const out = fn.call(instance, id, ...args)
 
   if (out.then) {
-    let promiseValue: any
+    let firstValue: any
 
     return out.then(
       (value: any) => {
-        promiseValue = value
+        firstValue = value
         return emit(key, id, ...args)
       }
     ).then(
-      (value: any) => value ? value : promiseValue
+      (value: any) => value || firstValue
     )
   } else {
     const emitOut = emit(key, id, ...args)
