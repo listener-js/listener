@@ -8,7 +8,7 @@
     "typescript"
   ],
   "author": "Listener <emit@listener.events>",
-  "main": "dist/listener.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/listener-js/listener.git"
