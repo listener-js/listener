@@ -38,7 +38,7 @@ export function listener(
         const out = fn.call(instance, id, ...args)
         
         if (out.then) {
-          let promiseValue
+          let promiseValue: any
 
           return out.then(
             (value: any) => {
