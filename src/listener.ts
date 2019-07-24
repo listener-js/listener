@@ -63,11 +63,15 @@ export function listener(
 }
 
 export function emit(key: string, id: string[], ...args: any[]) {
-  let binds = bindings["*"].concat(bindings[key] || [])
+  let binds = bindings["*"]
   let idKey = key
   
+  if (bindings[key]) {
+    binds = binds.concat(bindings[key])
+  }
+
   for (const i of id) {
-    idKey = idKey ? idKey + "." + i : i
+    idKey = idKey + "." + i
     if (bindings[idKey]) {
       binds = binds.concat(bindings[idKey])
     }
@@ -82,9 +86,15 @@ export function emit(key: string, id: string[], ...args: any[]) {
       continue
     }
 
-    const targetIdKey = [target, ...id].join(".")
-    const listens = (listeners[target] || [])
-      .concat(listeners[targetIdKey] || [])
+    let targetIdKey = target
+    let listens = listeners[target] || []
+
+    for (const i of id) {
+      targetIdKey = targetIdKey + "." + i
+      if (listeners[targetIdKey]) {
+        listens = listens.concat(listeners[targetIdKey])
+      }
+    }
     
     for (const fn of listens) {
       out = fn(id, ...args)
