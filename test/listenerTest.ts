@@ -93,3 +93,19 @@ test("global listen", (): void => {
     { "fn2": true, "id": ["id", "MyClass.fn", "MyClass2.fn2"], "someArg": true }
   )
 })
+
+test("listen with id", (): void => {
+  listen("MyClass.fn.id", "MyClass2.fn2")
+
+  expect(MyClass.fn(null, true)).toEqual(
+    { "fn": true, "id": ["MyClass.fn"], "someArg": true }
+  )
+
+  expect(MyClass.fn("id", true)).toEqual(
+    { "fn2": true, "id": ["id", "MyClass.fn", "MyClass2.fn2"], "someArg": true }
+  )
+
+  expect(MyClass.fn(["id", "id2"], true)).toEqual(
+    { "fn2": true, "id": ["id", "id2", "MyClass.fn", "MyClass2.fn2"], "someArg": true }
+  )
+})

@@ -62,19 +62,35 @@ export function listener(
   }
 }
 
-export function emit(key: string, id: EventId, ...args: any[]) {
+export function emit(key: string, id: string[], ...args: any[]) {
+  let binds = bindings["*"].concat(bindings[key] || [])
+  let idKey = key
+  
+  for (const i of id) {
+    idKey = idKey ? idKey + "." + i : i
+    if (bindings[idKey]) {
+      binds = binds.concat(bindings[idKey])
+    }
+  }
+
   let promise = Promise.resolve()
   let isAsync = false
   let out
   
-  for (const target of bindings["*"].concat(bindings[key] || [])) {
-    if (key !== target && listeners[target]) {
-      for (const fn of listeners[target]) {
-        out = fn(id, ...args)
-        if (out.then) {
-          isAsync = true
-          promise = promise.then(() => out)
-        }
+  for (const target of binds) {
+    if (key === target) {
+      continue
+    }
+
+    const targetIdKey = [target, ...id].join(".")
+    const listens = (listeners[target] || [])
+      .concat(listeners[targetIdKey] || [])
+    
+    for (const fn of listens) {
+      out = fn(id, ...args)
+      if (out.then) {
+        isAsync = true
+        promise = promise.then(() => out)
       }
     }
   }
@@ -82,7 +98,9 @@ export function emit(key: string, id: EventId, ...args: any[]) {
   return isAsync ? promise : out
 }
 
-export function listen(source: string, target: string) {
+export function listen(sourceId: EventId, targetId: EventId) {
+  const source = flatten(sourceId).join(".")
+  const target = flatten(targetId).join(".")
   bindings[source] = bindings[source] || []
   bindings[source] = bindings[source].concat([target])
 }
