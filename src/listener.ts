@@ -23,38 +23,42 @@ export function flatten(id: EventId): string[] {
   }
 }
 
-export function listener(key: string, instance: any) {
-  const fnKey = key.split(/[.#]/)[1]
-  const fn = instance[fnKey]
+export function listener(
+  instance: any,
+  instanceId: string,
+  ...functionIds: string[]
+) {
+  for (const fnId of functionIds) {
+    const fn = instance[fnId]
+    const key = `${instanceId}.${fnId}`
 
-  if (!fn.isListener) {
-    instance[fnKey] = (eid: EventId, ...args: any[]) => {
-      const id = flatten(eid).concat([key])
-      const out = fn.call(instance, id, ...args)
-      
-      if (out.then) {
-        let promiseValue
+    if (!fn.isListener) {
+      instance[fnId] = (eid: EventId, ...args: any[]) => {
+        const id = flatten(eid).concat([key])
+        const out = fn.call(instance, id, ...args)
+        
+        if (out.then) {
+          let promiseValue
 
-        return out.then(
-          (value: any) => {
-            promiseValue = value
-            return emit(key, id, ...args)
-          }
-        ).then(
-          (value: any) => value ? value : promiseValue
-        )
-      } else {
-        const emitOut = emit(key, id, ...args)
-        return emitOut.then ? out : (emitOut || out)
+          return out.then(
+            (value: any) => {
+              promiseValue = value
+              return emit(key, id, ...args)
+            }
+          ).then(
+            (value: any) => value ? value : promiseValue
+          )
+        } else {
+          const emitOut = emit(key, id, ...args)
+          return emitOut && emitOut.then ? out : (emitOut || out)
+        }
       }
-    }
 
-    if (!listeners[key]) {
+      instance[fnId].isListener = true
+
       listeners[key] = listeners[key] || []
+      listeners[key] = listeners[key].concat([instance[fnId]])
     }
-    
-    instance[fnKey].isListener = true
-    listeners[key] = listeners[key].concat([instance[fnKey]])
   }
 }
 
@@ -81,4 +85,9 @@ export function emit(key: string, id: EventId, ...args: any[]) {
 export function listen(source: string, target: string) {
   bindings[source] = bindings[source] || []
   bindings[source] = bindings[source].concat([target])
+}
+
+export function reset() {
+  for (var key in bindings) delete bindings[key]
+  bindings["*"] = []
 }
