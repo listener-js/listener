@@ -37,15 +37,12 @@ class MyClass2 {
     return delay(1, { asyncFn2: true, id, someArg })
   }
 
-  public static async asyncFn3(
-    id: EventId, someArg: boolean
-  ): Promise<null> {
+  public static async asyncFn3(): Promise<null> {
     return null
   }
 }
 
-listener(MyClass, "MyClass")
-listener(MyClass2, "MyClass2")
+listener({ MyClass, MyClass2 })
 
 beforeEach(reset)
 

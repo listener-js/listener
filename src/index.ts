@@ -9,25 +9,29 @@ export type EventId = (
 )
 
 export function listener(
-  instance: any, instanceId: string
+  instances: Record<string, any>
 ): void {
-  if (!instance.listeners) {
-    return
-  }
+  for (const instanceId in instances) {
+    const instance = instances[instanceId]
+    
+    if (!instance.listeners) {
+      return
+    }
 
-  for (const fnId of instance.listeners) {
-    const fn = instance[fnId]
-    const key = `${instanceId}.${fnId}`
+    for (const fnId of instance.listeners) {
+      const fn = instance[fnId]
+      const key = `${instanceId}.${fnId}`
 
-    if (!fn.isListener) {
-      instance[fnId] = listenerWrapper
-        .bind({ fn, instance, key })
-      
-      instance[fnId].isListener = true
+      if (!fn.isListener) {
+        instance[fnId] = listenerWrapper
+          .bind({ fn, instance, key })
+        
+        instance[fnId].isListener = true
 
-      listeners[key] = listeners[key] || []
-      listeners[key] = listeners[key]
-        .concat([instance[fnId]])
+        listeners[key] = listeners[key] || []
+        listeners[key] = listeners[key]
+          .concat([instance[fnId]])
+      }
     }
   }
 }

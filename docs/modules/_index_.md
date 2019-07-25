@@ -29,7 +29,7 @@ Defined in index.ts:7
 
 ▸ **listen**(`sourceId`: [EventId](_index_.md#eventid), `targetId`: [EventId](_index_.md#eventid)): *void*
 
-Defined in index.ts:35
+Defined in index.ts:39
 
 **Parameters:**
 
@@ -44,7 +44,7 @@ ___
 
 ###  listener
 
-▸ **listener**(`instance`: any, `instanceId`: string): *void*
+▸ **listener**(`instances`: `Record<string, any>`): *void*
 
 Defined in index.ts:11
 
@@ -52,7 +52,6 @@ Defined in index.ts:11
 
 Name | Type |
 ------ | ------ |
-`instance` | any |
-`instanceId` | string |
+`instances` | `Record<string, any>` |
 
 **Returns:** *void*
