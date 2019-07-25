@@ -1,6 +1,6 @@
 {
   "name": "@listener-js/listener",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Type-safe javascript event emitter with an easy API",
   "keywords": [
     "event",
