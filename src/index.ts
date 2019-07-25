@@ -20,7 +20,8 @@ export class Listener {
   }
 
   public listener(
-    instances: Record<string, any>
+    instances: Record<string, any>,
+    options?: Record<string, any>
   ): void {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
@@ -48,7 +49,7 @@ export class Listener {
       }
 
       if (instance.listen) {
-        instance.listen(this)
+        instance.listen(this, options || {})
       }
     }
   }

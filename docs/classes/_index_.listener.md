@@ -36,7 +36,7 @@ ___
 
 ###  listener
 
-▸ **listener**(`instances`: `Record<string, any>`): *void*
+▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
 Defined in index.ts:22
 
@@ -45,5 +45,6 @@ Defined in index.ts:22
 Name | Type |
 ------ | ------ |
 `instances` | `Record<string, any>` |
+`options?` | `Record<string, any>` |
 
 **Returns:** *void*
