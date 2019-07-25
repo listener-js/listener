@@ -35,7 +35,7 @@ ___
 
 ▸ **listenerWrapper**(`eid`: [EventId](_index_.md#eventid), ...`args`: any[]): *any*
 
-Defined in emit.ts:33
+Defined in emit.ts:35
 
 **Parameters:**
 

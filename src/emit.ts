@@ -3,7 +3,9 @@ import { buildList } from "./buildList"
 import { flattenId } from "./flattenId"
 import { bindings, listeners } from "./records"
 
-export function emit(key: string, id: string[], ...args: any[]) {
+export function emit(
+  key: string, id: string[], ...args: any[]
+): any {
   let promise
   let out
 
@@ -18,10 +20,10 @@ export function emit(key: string, id: string[], ...args: any[]) {
 
     for (const fn of listens) {
       out = promise ?
-        promise.then(() => fn(id, ...args)) :
+        promise.then((): any => fn(id, ...args)) :
         fn(id, ...args)
       
-      if (out.then) {
+      if (out && out.then) {
         promise = out
       }
     }
@@ -30,12 +32,14 @@ export function emit(key: string, id: string[], ...args: any[]) {
   return promise || out
 }
 
-export function listenerWrapper(eid: EventId, ...args: any[]) {
+export function listenerWrapper(
+  eid: EventId, ...args: any[]
+) {
   const { fn, instance, key } = this
   const id = flattenId(eid).concat([key])
   const out = fn.call(instance, id, ...args)
 
-  if (out.then) {
+  if (out && out.then) {
     let firstValue: any
 
     return out.then(
