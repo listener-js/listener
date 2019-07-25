@@ -8,40 +8,53 @@ export type EventId = (
   (string | string[])[] | string | null | undefined
 )
 
-export function listener(
-  instances: Record<string, any>
-): void {
-  for (const instanceId in instances) {
-    const instance = instances[instanceId]
-    
-    if (!instance.listeners) {
-      return
-    }
+export class Listener {
+  public listen(
+    sourceId: EventId, targetId: EventId
+  ): void {
+    const source = flattenId(sourceId).join(".")
+    const target = flattenId(targetId).join(".")
 
-    for (const fnId of instance.listeners) {
-      const fn = instance[fnId]
-      const key = `${instanceId}.${fnId}`
+    bindings[source] = bindings[source] || []
+    bindings[source] = bindings[source].concat([target])
+  }
 
-      if (!fn.isListener) {
+  public listener(
+    instances: Record<string, any>
+  ): void {
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (
+        !instance ||
+        !instance.listeners ||
+        instance._listeners
+      ) {
+        continue
+      }
+
+      instance._listeners = true
+
+      for (const fnId of instance.listeners) {
+        const fn = instance[fnId]
+        const key = `${instanceId}.${fnId}`
+
         instance[fnId] = listenerWrapper
           .bind({ fn, instance, key })
-        
-        instance[fnId].isListener = true
 
         listeners[key] = listeners[key] || []
         listeners[key] = listeners[key]
           .concat([instance[fnId]])
       }
+
+      if (instance.listen) {
+        instance.listen(this)
+      }
     }
   }
 }
 
-export function listen(
-  sourceId: EventId, targetId: EventId
-): void {
-  const source = flattenId(sourceId).join(".")
-  const target = flattenId(targetId).join(".")
+const instance = new Listener()
 
-  bindings[source] = bindings[source] || []
-  bindings[source] = bindings[source].concat([target])
-}
+export const listen = instance.listen.bind(instance)
+export const listener = instance.listener.bind(instance)

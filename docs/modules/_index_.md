@@ -6,14 +6,19 @@
 
 ## Index
 
+### Classes
+
+* [Listener](../classes/_index_.listener.md)
+
 ### Type aliases
 
 * [EventId](_index_.md#eventid)
 
-### Functions
+### Variables
 
-* [listen](_index_.md#listen)
-* [listener](_index_.md#listener)
+* [instance](_index_.md#const-instance)
+* [listen](_index_.md#const-listen)
+* [listener](_index_.md#const-listener)
 
 ## Type aliases
 
@@ -23,35 +28,26 @@
 
 Defined in index.ts:7
 
-## Functions
+## Variables
 
-###  listen
+### `Const` instance
 
-▸ **listen**(`sourceId`: [EventId](_index_.md#eventid), `targetId`: [EventId](_index_.md#eventid)): *void*
+• **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:39
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`sourceId` | [EventId](_index_.md#eventid) |
-`targetId` | [EventId](_index_.md#eventid) |
-
-**Returns:** *void*
+Defined in index.ts:57
 
 ___
 
-###  listener
+### `Const` listen
 
-▸ **listener**(`instances`: `Record<string, any>`): *void*
+• **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:11
+Defined in index.ts:59
 
-**Parameters:**
+___
 
-Name | Type |
------- | ------ |
-`instances` | `Record<string, any>` |
+### `Const` listener
 
-**Returns:** *void*
+• **listener**: *any* =  instance.listener.bind(instance)
+
+Defined in index.ts:60
