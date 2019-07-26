@@ -8,18 +8,20 @@ Type-safe event emitter with a simple & unobtrusive API
 
 ![listener](media/listener.gif)
 
-# Goal
+## Goal
 
 Design an event emitter that can turn existing class functions into event listeners.
 
 Call listener class functions in the same way (with the same types).
 
-Finally, make it easy to attach listener functions to each other.
+Make it easy to attach listener functions to each other.
+
+Incorporate an ID system that makes it easy to get a glimpse of the event's call stack.
 
 ## Install
 
 ```bash
-npm install listener
+npm install @listener-js/listener
 ```
 
 ## Class API
