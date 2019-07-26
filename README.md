@@ -24,7 +24,7 @@ npm install @listener-js/listener
 
 Listener classes have a `listeners` array that describes which functions are listener functions:
 
-```js
+```ts
 class MyClass {
   public static listeners = ["hello", "helloAgain"]
 
@@ -46,7 +46,7 @@ Listener functions return whatever they like and are **synchronous or asynchrono
 
 Mutate the class using the `listener` function before using it:
 
-```js
+```ts
 import { listener } from "@listener-js/listener"
 
 listener({ MyClass })
@@ -54,7 +54,7 @@ listener({ MyClass })
 
 ## Call the listener
 
-```js
+```ts
 MyClass.hello([]) // "hi"
 ```
 
@@ -62,14 +62,14 @@ MyClass.hello([]) // "hi"
 
 Use the `listen` function to connect listeners:
 
-```js
+```ts
 import { listen } from "@listener-js/listener"
 listen(["MyClass.hello"], ["MyClass.helloAgain"])
 ```
 
 Now every time you call `MyClass.hello`, `MyClass.helloAgain` is also called:
 
-```js
+```ts
 MyClass.hello([]) // "hi again"
 ```
 
@@ -81,7 +81,7 @@ The first argument to the listener is always an identifier argument (`string[]`)
 
 When you call a listener, its name is pushed onto the identifier array. In the [above example](#connect-listeners), the identifier argument for the `MyClass.helloAgain` function would look like:
 
-```js
+```ts
 public static helloAgain(id: string[]): boolean {
   id // ["MyClass.hello", "MyClass.helloAgain"]
   return "hi again"
@@ -92,7 +92,7 @@ public static helloAgain(id: string[]): boolean {
 
 If you pass an initial ID to the listener call (e.g. `MyClass.hello(["initialId"])`), the identifier argument for the `MyClass.helloAgain` function would look like:
 
-```js
+```ts
 public static helloAgain(id: string[]): boolean {
   id // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
   return "hi again"
@@ -101,7 +101,7 @@ public static helloAgain(id: string[]): boolean {
 
 Identifier passing is handled automatically for ["connected" listeners](#connect-listeners). If you manually call another listener within a listener function, you should pass the current `id` down to it:
 
-```js
+```ts
 public static helloAgain(id: string[]): boolean {
   OtherClass.otherListener(id)
   return "hi again"
@@ -110,7 +110,7 @@ public static helloAgain(id: string[]): boolean {
 
 This also introduces an opportunity to extend the identifier:
 
-```js
+```ts
 public static helloAgain(id: string[]): boolean {
   OtherClass.otherListener([...id, "customId"])
   return "hi again"
