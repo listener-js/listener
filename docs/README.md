@@ -86,9 +86,11 @@ The first argument to the listener is always an identifier argument (`string[]`)
 When you call a listener, its name is pushed onto the identifier array. In the [above example](#connect-listeners), the identifier argument for the `MyClass.helloAgain` function would look like:
 
 ```ts
-public static helloAgain(id: string[]): boolean {
-  id // ["MyClass.hello", "MyClass.helloAgain"]
-  return "hi again"
+class MyClass {
+  public static helloAgain(id: string[]): boolean {
+    id // ["MyClass.hello", "MyClass.helloAgain"]
+    return "hi again"
+  }
 }
 ```
 
@@ -97,26 +99,32 @@ public static helloAgain(id: string[]): boolean {
 If you pass an initial identifier to the listener call (e.g. `MyClass.hello(["initialId"])`), the identifier argument for the `MyClass.helloAgain` function would look like:
 
 ```ts
-public static helloAgain(id: string[]): boolean {
-  id // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
-  return "hi again"
+class MyClass {
+  public static helloAgain(id: string[]): boolean {
+    id // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
+    return "hi again"
+  }
 }
 ```
 
 Identifier passing is handled automatically for ["connected" listeners](#connect-listeners). If you manually call another listener within a listener function, you should pass the current `id` down to it:
 
 ```ts
-public static helloAgain(id: string[]): boolean {
-  OtherClass.otherListener(id)
-  return "hi again"
+class MyClass {
+  public static helloAgain(id: string[]): boolean {
+    OtherClass.otherListener(id)
+    return "hi again"
+  }
 }
 ```
 
 This also introduces an opportunity to extend the identifier:
 
 ```ts
-public static helloAgain(id: string[]): boolean {
-  OtherClass.otherListener([...id, "customId"])
-  return "hi again"
+class MyClass {
+  public static helloAgain(id: string[]): boolean {
+    OtherClass.otherListener([...id, "customId"])
+    return "hi again"
+  }
 }
 ```
