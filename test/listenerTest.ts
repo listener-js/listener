@@ -19,7 +19,7 @@ class MyClass {
   public static async asyncFn(
     id: string[], someArg: boolean
   ): Promise<object> {
-    return delay(10, { asyncFn: true, id, someArg })
+    return delay(2, { asyncFn: true, id, someArg })
   }
 }
 
