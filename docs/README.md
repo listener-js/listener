@@ -32,11 +32,11 @@ Listener classes have a `listeners` array that describes which functions are lis
 class MyClass {
   public static listeners = ["hello", "helloAgain"]
 
-  public static hello(id: string[]): boolean {
+  public static hello(id: string[]): string {
     return "hi"
   }
 
-  public static helloAgain(id: string[]): boolean {
+  public static helloAgain(id: string[]): string {
     return "hi again"
   }
 }
@@ -87,7 +87,7 @@ When you call a listener, its name is pushed onto the identifier array. In the [
 
 ```ts
 class MyClass {
-  public static helloAgain(id: string[]): boolean {
+  public static helloAgain(id: string[]): string {
     console.log(id) // ["MyClass.hello", "MyClass.helloAgain"]
     return "hi again"
   }
@@ -100,7 +100,7 @@ If you pass an initial identifier to the listener call (e.g. `MyClass.hello(["in
 
 ```ts
 class MyClass {
-  public static helloAgain(id: string[]): boolean {
+  public static helloAgain(id: string[]): string {
     console.log(id) // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
     return "hi again"
   }
@@ -111,7 +111,7 @@ Identifier passing is handled automatically for ["connected" listeners](#connect
 
 ```ts
 class MyClass {
-  public static helloAgain(id: string[]): boolean {
+  public static helloAgain(id: string[]): string {
     OtherClass.otherListener(id)
     return "hi again"
   }
@@ -122,7 +122,7 @@ This also introduces an opportunity to extend the identifier:
 
 ```ts
 class MyClass {
-  public static helloAgain(id: string[]): boolean {
+  public static helloAgain(id: string[]): string {
     OtherClass.otherListener([...id, "customId"])
     return "hi again"
   }
