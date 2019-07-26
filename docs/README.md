@@ -79,19 +79,22 @@ MyClass.hello([]) // "hi again"
 
 Since `MyClass.helloAgain` returns a value, that is the end return value.
 
-## ID argument
+## Identifier argument
 
-The first argument to the listener is always an ID argument (`string[]`). The id allows you to easily get a glimpse of the call stack (especially useful when logging) and also acts as a unique ID that describes the code that created it.
+The first argument to the listener is always an identifier argument (`string[]`). The identifier allows you to get a glimpse of the call stack, but can be useful in other contexts.
 
-When you call a listener, its name is pushed onto the `id` array. In the [above example](#connect-listeners), the `id` argument for the `MyClass.helloAgain` function would look like:
+When you call a listener, its name is pushed onto the identifier array. In the [above example](#connect-listeners), the identifier argument for the `MyClass.helloAgain` function would look like:
 
 ```js
-;["MyClass.hello", "MyClass.helloAgain"]
+public static helloAgain(id: string[]): boolean {
+  id // ["MyClass.hello", "MyClass.helloAgain"]
+  return "hi again"
+}
 ```
 
-## Add to the ID
+## Extend the identifier
 
-If you pass an initial ID to the call (e.g. `MyClass.hello(["initialId"])`), the `id` argument for the `MyClass.helloAgain` function would look like:
+If you pass an initial ID to the listener call (e.g. `MyClass.hello(["initialId"])`), the identifier argument for the `MyClass.helloAgain` function would look like:
 
 ```js
 public static helloAgain(id: string[]): boolean {
@@ -100,4 +103,11 @@ public static helloAgain(id: string[]): boolean {
 }
 ```
 
-ID passing is handled automatically for ["connected" listeners](#connect-listeners). If you manually call another listener within a listener function, you should pass the current `id` down to it.
+Identifier passing is handled automatically for ["connected" listeners](#connect-listeners). If you manually call another listener within a listener function, you should pass the current `id` down to it:
+
+```js
+public static helloAgain(id: string[]): boolean {
+  OtherClass.otherListener(id)
+  return "hi again"
+}
+```
