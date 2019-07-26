@@ -88,7 +88,7 @@ When you call a listener, its name is pushed onto the identifier array. In the [
 ```ts
 class MyClass {
   public static helloAgain(id: string[]): boolean {
-    id // ["MyClass.hello", "MyClass.helloAgain"]
+    console.log(id) // ["MyClass.hello", "MyClass.helloAgain"]
     return "hi again"
   }
 }
@@ -101,7 +101,7 @@ If you pass an initial identifier to the listener call (e.g. `MyClass.hello(["in
 ```ts
 class MyClass {
   public static helloAgain(id: string[]): boolean {
-    id // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
+    console.log(id) // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
     return "hi again"
   }
 }
