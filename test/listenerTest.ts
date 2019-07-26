@@ -1,4 +1,5 @@
 import { EventId, listener, listen, reset } from "../"
+import { Log } from "@listener-js/log"
 
 function delay(t, v): Promise<any> {
   return new Promise((resolve): void => {
@@ -42,9 +43,12 @@ class MyClass2 {
   }
 }
 
-listener({ MyClass, MyClass2 })
+listener({ Log, MyClass, MyClass2 })
 
-beforeEach(reset)
+beforeEach((): void => {
+  reset()
+  listen("*", "Log.all")
+})
 
 test("defined", (): void => {
   expect(listener).not.toBeUndefined()
