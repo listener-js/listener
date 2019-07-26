@@ -68,6 +68,7 @@ Use the `listen` function to connect listeners:
 
 ```ts
 import { listen } from "@listener-js/listener"
+
 listen(["MyClass.hello"], ["MyClass.helloAgain"])
 ```
 
