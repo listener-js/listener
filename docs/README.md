@@ -14,7 +14,7 @@ Design an event emitter that can turn existing class functions into event listen
 
 Call listener class functions in the same way (with the same types).
 
-Make it easy to attach listener functions to each other.
+Make it easy to connect listener functions to each other.
 
 Incorporate an ID system that makes it easy to get a glimpse of the event's call stack.
 
@@ -52,6 +52,7 @@ Mutate the class using the `listener` function before using it:
 
 ```js
 import { listener } from "@listener-js/listener"
+
 listener({ MyClass })
 ```
 
@@ -76,7 +77,7 @@ Now every time you call `MyClass.hello`, `MyClass.helloAgain` is also called:
 MyClass.hello([]) // "hi again"
 ```
 
-Since `MyClass.helloAgain` returns a value, that is the end value that is returned.
+Since `MyClass.helloAgain` returns a value, that is the end return value.
 
 ## ID argument
 
@@ -88,10 +89,15 @@ When you call a listener, its name is pushed onto the `id` array. In the [above 
 ;["MyClass.hello", "MyClass.helloAgain"]
 ```
 
-If you called `MyClass.hello(["initialId"])`, the `id` argument for the `MyClass.helloAgain` function would look like:
+## Add to the ID
+
+If you pass an initial ID to the call (e.g. `MyClass.hello(["initialId"])`), the `id` argument for the `MyClass.helloAgain` function would look like:
 
 ```js
-;["initialId", "MyClass.hello", "MyClass.helloAgain"]
+public static helloAgain(id: string[]): boolean {
+  id // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
+  return "hi again"
+}
 ```
 
 ID passing is handled automatically for ["connected" listeners](#connect-listeners). If you manually call another listener within a listener function, you should pass the current `id` down to it.
