@@ -90,7 +90,7 @@ public static helloAgain(id: string[]): boolean {
 
 ## Extend the identifier
 
-If you pass an initial ID to the listener call (e.g. `MyClass.hello(["initialId"])`), the identifier argument for the `MyClass.helloAgain` function would look like:
+If you pass an initial identifier to the listener call (e.g. `MyClass.hello(["initialId"])`), the identifier argument for the `MyClass.helloAgain` function would look like:
 
 ```ts
 public static helloAgain(id: string[]): boolean {
