@@ -107,3 +107,12 @@ public static helloAgain(id: string[]): boolean {
   return "hi again"
 }
 ```
+
+This also introduces an opportunity to extend the identifier:
+
+```js
+public static helloAgain(id: string[]): boolean {
+  OtherClass.otherListener([...id, "customId"])
+  return "hi again"
+}
+```
