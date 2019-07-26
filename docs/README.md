@@ -42,7 +42,7 @@ class MyClass {
 }
 ```
 
-The listener function takes any number of arguments, but the first argument is always a `string[]` id.
+The listener function takes any number of arguments, but the first argument is always a `string[]` [identifier](#identifier-argument).
 
 Listener functions return whatever they like and are **synchronous or asynchronous**.
 
