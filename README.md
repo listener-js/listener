@@ -73,7 +73,7 @@ Now every time you call `MyClass.hello`, `MyClass.helloAgain` is also called:
 MyClass.hello([]) // "hi again"
 ```
 
-Since `MyClass.helloAgain` returns a value, that is the end return value.
+Because the return value of `MyClass.helloAgain` is not falsey, it becomes the final return value.
 
 ## Identifier argument
 
