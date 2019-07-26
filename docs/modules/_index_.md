@@ -12,9 +12,9 @@
 
 ### Type aliases
 
-* [EventId](_index_.md#eventid)
 * [ListenerBindingsType](_index_.md#listenerbindingstype)
 * [ListenerType](_index_.md#listenertype)
+* [ListenersAnyType](_index_.md#listenersanytype)
 * [ListenersType](_index_.md#listenerstype)
 
 ### Variables
@@ -26,19 +26,11 @@
 
 ## Type aliases
 
-###  EventId
-
-Ƭ **EventId**: *string | string | string[][]*
-
-Defined in index.ts:4
-
-___
-
 ###  ListenerBindingsType
 
 Ƭ **ListenerBindingsType**: *`Record<string, string[]>`*
 
-Defined in index.ts:12
+Defined in index.ts:6
 
 ___
 
@@ -46,18 +38,26 @@ ___
 
 Ƭ **ListenerType**: *function*
 
-Defined in index.ts:8
+Defined in index.ts:1
 
 #### Type declaration:
 
-▸ (`id`: [EventId](_index_.md#eventid), ...`arg`: any[]): *any*
+▸ (`id`: string[], ...`arg`: any[]): *any*
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`id` | [EventId](_index_.md#eventid) |
+`id` | string[] |
 `...arg` | any[] |
+
+___
+
+###  ListenersAnyType
+
+Ƭ **ListenersAnyType**: *`Record<string, any[]>`*
+
+Defined in index.ts:5
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 Ƭ **ListenersType**: *`Record<string, ListenerType[]>`*
 
-Defined in index.ts:11
+Defined in index.ts:4
 
 ## Variables
 
@@ -73,7 +73,7 @@ Defined in index.ts:11
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:138
+Defined in index.ts:155
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:140
+Defined in index.ts:157
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:141
+Defined in index.ts:158
 
 ___
 
@@ -97,4 +97,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:142
+Defined in index.ts:159

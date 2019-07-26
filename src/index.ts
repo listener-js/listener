@@ -1,14 +1,8 @@
-import { buildList } from "./buildList"
-import { flattenId } from "./flattenId"
-
-export type EventId = (
-  (string | string[])[] | string | null | undefined
-)
-
 export type ListenerType =
-  (id: EventId, ...arg: any[]) => any
+  (id: string[], ...arg: any[]) => any
 
 export type ListenersType = Record<string, ListenerType[]>
+export type ListenersAnyType = Record<string, any[]>
 export type ListenerBindingsType = Record<string, string[]>
 
 export class Listener {
@@ -16,10 +10,10 @@ export class Listener {
   private listeners: ListenersType = {}
 
   public listen(
-    sourceId: EventId, targetId: EventId
+    sourceId: string[], targetId: string[]
   ): void {
-    const source = flattenId(sourceId).join(".")
-    const target = flattenId(targetId).join(".")
+    const source = sourceId.join(".")
+    const target = targetId.join(".")
 
     this.bindings[source] = this.bindings[source] || []
     
@@ -73,7 +67,7 @@ export class Listener {
       return
     }
 
-    const binds = buildList(
+    const binds = this.buildList(
       this.bindings, this.bindings["*"], key, id
     )
 
@@ -82,7 +76,7 @@ export class Listener {
         continue
       }
 
-      const listens = buildList(
+      const listens = this.buildList(
         this.listeners, [], target, id
       )
 
@@ -103,8 +97,8 @@ export class Listener {
   private listenerWrapper(
     fn: any, instance: any, key: string
   ): Function {
-    return (eid: EventId, ...args: any[]): any => {
-      const id = flattenId(eid).concat([key])
+    return (eid: string[], ...args: any[]): any => {
+      const id = eid.concat([key])
       const out = fn.call(instance, id, ...args)
 
       if (out && out.then) {
@@ -132,6 +126,29 @@ export class Listener {
       delete this.bindings[key]
     }
     this.bindings["*"] = []
+  }
+
+  private buildList(
+    lists: ListenersAnyType,
+    initialList: any[],
+    key: string,
+    id: string[]
+  ): any[] {
+    let list = initialList
+    let idKey = key
+
+    if (lists[idKey]) {
+      list = list.concat(lists[idKey])
+    }
+
+    for (const i of id) {
+      idKey = idKey + "." + i
+      if (lists[idKey]) {
+        list = list.concat(lists[idKey])
+      }
+    }
+
+    return list
   }
 }
 

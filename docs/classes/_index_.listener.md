@@ -16,6 +16,7 @@
 
 ### Methods
 
+* [buildList](_index_.listener.md#private-buildlist)
 * [emit](_index_.listener.md#private-emit)
 * [listen](_index_.listener.md#listen)
 * [listener](_index_.listener.md#listener)
@@ -32,15 +33,34 @@
 
 • **listeners**: *[ListenersType](../modules/_index_.md#listenerstype)*
 
-Defined in index.ts:16
+Defined in index.ts:10
 
 ## Methods
+
+### `Private` buildList
+
+▸ **buildList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `initialList`: any[], `key`: string, `id`: string[]): *any[]*
+
+Defined in index.ts:131
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`lists` | [ListenersAnyType](../modules/_index_.md#listenersanytype) |
+`initialList` | any[] |
+`key` | string |
+`id` | string[] |
+
+**Returns:** *any[]*
+
+___
 
 ### `Private` emit
 
 ▸ **emit**(`key`: string, `id`: string[], ...`args`: any[]): *any*
 
-Defined in index.ts:66
+Defined in index.ts:60
 
 **Parameters:**
 
@@ -56,16 +76,16 @@ ___
 
 ###  listen
 
-▸ **listen**(`sourceId`: [EventId](../modules/_index_.md#eventid), `targetId`: [EventId](../modules/_index_.md#eventid)): *void*
+▸ **listen**(`sourceId`: string[], `targetId`: string[]): *void*
 
-Defined in index.ts:18
+Defined in index.ts:12
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`sourceId` | [EventId](../modules/_index_.md#eventid) |
-`targetId` | [EventId](../modules/_index_.md#eventid) |
+`sourceId` | string[] |
+`targetId` | string[] |
 
 **Returns:** *void*
 
@@ -75,7 +95,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:30
+Defined in index.ts:24
 
 **Parameters:**
 
@@ -92,7 +112,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `key`: string): *`Function`*
 
-Defined in index.ts:103
+Defined in index.ts:97
 
 **Parameters:**
 
@@ -110,7 +130,7 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:130
+Defined in index.ts:124
 
 **Returns:** *void*
 
@@ -120,10 +140,10 @@ Defined in index.ts:130
 
 ### ▪ **bindings**: *object*
 
-Defined in index.ts:15
+Defined in index.ts:9
 
 ###  *
 
 • *****: *undefined[]* =  []
 
-Defined in index.ts:15
+Defined in index.ts:9
