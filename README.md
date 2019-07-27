@@ -147,6 +147,10 @@ class MyClass {
 
 ## Wildcard listeners
 
+You may provide wildcard parameters to the [first argument of `listen`](#connect-listeners).
+
+Asterisks may only appear at the end of the identifier array.
+
 ### Double asterisk (\*\*)
 
 Double asterisks match identifiers recursively.
