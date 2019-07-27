@@ -72,7 +72,7 @@ import { listen } from "@listener-js/listener"
 listen(["MyClass.hello"], ["MyClass.helloAgain"])
 ```
 
-Now every time you call `MyClass.hello`, `MyClass.helloAgain` is also called:
+Now a call to `MyClass.hello` also calls `MyClass.helloAgain`:
 
 ```ts
 MyClass.hello([]) // "hi again"
@@ -86,7 +86,7 @@ The first argument to the listener is always an identifier argument (`string[]`)
 
 The identifier adds programmatic context to all listeners. The most immediate way you'll see its usefulness is around logging and debugging.
 
-When you call a listener, its name is pushed onto the identifier array. In the [above example](#connect-listeners), the identifier argument for the `MyClass.helloAgain` function would look like:
+When you call a listener, it adds the function id to the identifier array. Using the [above example](#connect-listeners), let's see what the identifier argument looks like:
 
 ```ts
 class MyClass {
@@ -97,7 +97,7 @@ class MyClass {
 }
 ```
 
-The last element of the identifier array is the "function id" of the current function. The preceeding elements constitute the identifiers that were passed into the listener.
+The last element of the identifier array is the "function id" of the current function. The preceeding elements constitute the identifiers passed into the listener.
 
 ## Connect listeners by identifier
 
@@ -127,7 +127,7 @@ class MyClass {
 }
 ```
 
-Identifier passing is handled automatically for ["connected" listeners](#connect-listeners). If you manually call another listener within a listener function, you should pass the current `id` down to it:
+Identifier passing happens automatically for ["connected" listeners](#connect-listeners). If you manually call another listener within a listener function, you should pass the current `id` down to it:
 
 ```ts
 class MyClass {
@@ -153,7 +153,7 @@ class MyClass {
 
 You may provide wildcard parameters to the [first argument of `listen`](#connect-listeners).
 
-Asterisks may only appear at the end of the identifier array.
+Wildcards may only appear at the end of the identifier array.
 
 ### Double asterisk (\*\*)
 
@@ -187,7 +187,7 @@ import { listen } from "@listener-js/listener"
 listen(["*"], ["MyClass.helloAgain"])
 ```
 
-And this listens to **`MyClass.hello` called with any single identifier**:
+And this listens to **`MyClass.hello` with any single identifier**:
 
 ```ts
 import { listen } from "@listener-js/listener"
