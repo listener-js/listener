@@ -97,11 +97,24 @@ class MyClass {
 }
 ```
 
-As you can see, the last element of the identifier array contains the function identifier of the current function, preceeded by the identifier of the function that called it, and so on.
+The last element of the identifier array is the "function id" of the current function. The preceeding elements constitute the identifiers that were passed into the listener.
+
+## Connect listeners by identifier
+
+The `listen` function also accepts identifiers, meaning we can listen to `MyClass.helloAgain`, but only in cases it receives `MyClass.hello` as a single identifier (the case in the [previous example](#identifier-argument)):
+
+```ts
+import { listen } from "@listener-js/listener"
+
+listen(
+  ["MyClass.helloAgain", "MyClass.hello"],
+  ["MyClass.helloAgainAndAgain"]
+)
+```
 
 ## Extend the identifier
 
-Sometimes you need to add some additional context to the identifier, such as a record id, if you want to attach listeners to changes on specific records.
+In some cases you need to add additional context to the identifier, such as a record id, if you want to connect listeners to changes on specific records.
 
 If you pass an initial identifier to the listener call (e.g. `MyClass.hello(["initialId"])`), the identifier argument for the `MyClass.helloAgain` function would look like:
 
