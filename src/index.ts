@@ -38,17 +38,17 @@ export class Listener {
 
       instance._listeners = true
 
-      for (const fnId of instance.listeners) {
-        const fn = instance[fnId]
-        const key = `${instanceId}.${fnId}`
+      for (const fnName of instance.listeners) {
+        const fn = instance[fnName]
+        const fnId = `${instanceId}.${fnName}`
 
-        instance[fnId] = this.listenerWrapper(
-          fn, instance, key
+        instance[fnName] = this.listenerWrapper(
+          fn, instance, fnId
         )
 
-        this.listeners[key] = this.listeners[key] || []
-        this.listeners[key] = this.listeners[key]
-          .concat([instance[fnId]])
+        this.listeners[fnId] = this.listeners[fnId] || []
+        this.listeners[fnId] = this.listeners[fnId]
+          .concat([instance[fnName]])
       }
 
       if (instance.listen) {
@@ -58,21 +58,19 @@ export class Listener {
   }
 
   private emit(
-    key: string, id: string[], ...args: any[]
+    fnId: string, id: string[], ...args: any[]
   ): any {
     let promise
     let out
 
-    if (this.bindings["**"].indexOf(key) > -1) {
+    if (this.bindings["**"].indexOf(fnId) > -1) {
       return
     }
 
-    const binds = this.buildList(
-      this.bindings, key, id
-    )
+    const binds = this.buildList(fnId, id)
 
     for (const target of binds) {
-      if (key === target) {
+      if (fnId === target) {
         continue
       }
 
@@ -97,10 +95,10 @@ export class Listener {
   }
 
   private listenerWrapper(
-    fn: any, instance: any, key: string
+    fn: any, instance: any, fnId: string
   ): Function {
     return (eid: string[], ...args: any[]): any => {
-      const id = eid.concat([key])
+      const id = eid.concat([fnId])
       const out = fn.call(instance, id, ...args)
 
       if (out && out.then) {
@@ -109,13 +107,13 @@ export class Listener {
         return out.then(
           (value: any): any => {
             firstValue = value
-            return this.emit(key, id, ...args)
+            return this.emit(fnId, id, ...args)
           }
         ).then(
           (value: any): any => value || firstValue
         )
       } else {
-        const emitOut = this.emit(key, id, ...args)
+        const emitOut = this.emit(fnId, id, ...args)
         return emitOut || out
       }
     }
@@ -129,41 +127,42 @@ export class Listener {
   }
 
   private buildList(
-    lists: ListenersAnyType,
-    key: string,
+    fnId: string,
     id: string[]
   ): any[] {
-    let list = []
-    let idKey = key
+    const lists = this.bindings
 
-    list = this.addList(list, lists, "**")
+    let list = []
+    let key = fnId
+
+    list = this.addList(lists, list, "**")
 
     if (id.length > 1) {
-      list = this.addList(list, lists, idKey + ".**")
+      list = this.addList(lists, list, key + ".**")
     }
 
     for (const i of id.slice(0, -2)) {
-      idKey = idKey + "." + i
-      list = this.addList(list, lists, idKey + ".**")
+      key = key + "." + i
+      list = this.addList(lists, list, key + ".**")
     }
 
     if (id.length <= 1) {
-      list = this.addList(list, lists, "*")
+      list = this.addList(lists, list, "*")
     } else {
-      list = this.addList(list, lists, idKey + ".*")
+      list = this.addList(lists, list, key + ".*")
     }
 
-    idKey = idKey + (
+    key = key + (
       id.length <= 1 ? "" : "." + id[id.length - 2]
     )
 
-    list = this.addList(list, lists, idKey)
+    list = this.addList(lists, list, key)
 
     return list
   }
 
   private addList(
-    list: string[], lists: ListenersAnyType, key: string
+    lists: ListenersAnyType, list: string[], key: string
   ): string[] {
     if (lists[key]) {
       return list.concat(lists[key])

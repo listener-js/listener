@@ -45,16 +45,16 @@ Defined in index.ts:10
 
 ### `Private` addList
 
-▸ **addList**(`list`: string[], `lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `key`: string): *string[]*
+▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: string[], `key`: string): *string[]*
 
-Defined in index.ts:165
+Defined in index.ts:164
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`list` | string[] |
 `lists` | [ListenersAnyType](../modules/_index_.md#listenersanytype) |
+`list` | string[] |
 `key` | string |
 
 **Returns:** *string[]*
@@ -63,16 +63,15 @@ ___
 
 ### `Private` buildList
 
-▸ **buildList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `key`: string, `id`: string[]): *any[]*
+▸ **buildList**(`fnId`: string, `id`: string[]): *any[]*
 
-Defined in index.ts:131
+Defined in index.ts:129
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`lists` | [ListenersAnyType](../modules/_index_.md#listenersanytype) |
-`key` | string |
+`fnId` | string |
 `id` | string[] |
 
 **Returns:** *any[]*
@@ -81,7 +80,7 @@ ___
 
 ### `Private` emit
 
-▸ **emit**(`key`: string, `id`: string[], ...`args`: any[]): *any*
+▸ **emit**(`fnId`: string, `id`: string[], ...`args`: any[]): *any*
 
 Defined in index.ts:60
 
@@ -89,7 +88,7 @@ Defined in index.ts:60
 
 Name | Type |
 ------ | ------ |
-`key` | string |
+`fnId` | string |
 `id` | string[] |
 `...args` | any[] |
 
@@ -133,9 +132,9 @@ ___
 
 ### `Private` listenerWrapper
 
-▸ **listenerWrapper**(`fn`: any, `instance`: any, `key`: string): *`Function`*
+▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:99
+Defined in index.ts:97
 
 **Parameters:**
 
@@ -143,7 +142,7 @@ Name | Type |
 ------ | ------ |
 `fn` | any |
 `instance` | any |
-`key` | string |
+`fnId` | string |
 
 **Returns:** *`Function`*
 
@@ -153,6 +152,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:124
+Defined in index.ts:122
 
 **Returns:** *void*
