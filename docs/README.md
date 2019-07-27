@@ -101,7 +101,7 @@ The last element of the identifier array is the "function id" of the current fun
 
 ## Connect listeners by identifier
 
-The `listen` function also accepts identifiers, meaning we can listen to `MyClass.helloAgain`, but only in cases it receives `MyClass.hello` as a single identifier (the case in the [previous example](#identifier-argument)):
+The `listen` function also accepts identifiers, meaning we can listen to `MyClass.helloAgain`, but only in cases it receives `MyClass.hello` as a single identifier (as is the case in the [previous example](#identifier-argument)):
 
 ```ts
 import { listen } from "@listener-js/listener"
@@ -147,4 +147,46 @@ class MyClass {
     return "hi again"
   }
 }
+```
+
+## Wildcard listeners
+
+### Double asterisk (\*\*)
+
+Double asterisks match identifiers recursively.
+
+Use double asterisks to listen to **all listeners**:
+
+```ts
+import { listen } from "@listener-js/listener"
+
+listen(["**"], ["MyClass.helloAgain"])
+```
+
+Or listen to **`MyClass.hello` with any identifier**:
+
+```ts
+import { listen } from "@listener-js/listener"
+
+listen(["MyClass.hello", "**"], ["MyClass.helloAgain"])
+```
+
+### Single asterisk (\*)
+
+A single asterisk matches identifiers only one level deep.
+
+The following listens to **any listener call with no identifiers**:
+
+```ts
+import { listen } from "@listener-js/listener"
+
+listen(["*"], ["MyClass.helloAgain"])
+```
+
+And this listens to **`MyClass.hello` called with any single identifier**:
+
+```ts
+import { listen } from "@listener-js/listener"
+
+listen(["MyClass.hello", "*"], ["MyClass.helloAgain"])
 ```
