@@ -10,9 +10,9 @@ Type-safe event emitter with a simple & unobtrusive API
 
 ## Goals
 
-Turn existing class functions into event listeners.
+Easily turn existing class functions into event listeners.
 
-Call listener class functions like normal (with the same types).
+Call listener functions like normal (and preserve original types).
 
 Make it easy to connect listener functions to each other.
 
