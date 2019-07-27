@@ -16,7 +16,7 @@ Call listener class functions in the same way (with the same types).
 
 Make it easy to connect listener functions to each other.
 
-Incorporate a readable identifier system for programmatic context.
+Incorporate a readable identifier system for programmatic context and debugging.
 
 ## Install
 
@@ -82,7 +82,7 @@ Because the return value of `MyClass.helloAgain` is not falsey, it becomes the f
 
 ## Identifier argument
 
-The first argument to the listener is always an identifier argument (`string[]`). The identifier allows you to get a glimpse of the call stack, but can be useful in other contexts.
+The first argument to the listener is always an identifier argument (`string[]`). The identifier adds programmatic context to all listeners, which can have a lot of interesting uses. The most immediate way you'll see its usefulness is around logging and debugging.
 
 When you call a listener, its name is pushed onto the identifier array. In the [above example](#connect-listeners), the identifier argument for the `MyClass.helloAgain` function would look like:
 
