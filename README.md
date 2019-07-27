@@ -78,7 +78,9 @@ Because the return value of `MyClass.helloAgain` is not falsey, it becomes the f
 
 ## Identifier argument
 
-The first argument to the listener is always an identifier argument (`string[]`). The identifier adds programmatic context to all listeners, which can have a lot of interesting uses. The most immediate way you'll see its usefulness is around logging and debugging.
+The first argument to the listener is always an identifier argument (`string[]`).
+
+The identifier adds programmatic context to all listeners. The most immediate way you'll see its usefulness is around logging and debugging.
 
 When you call a listener, its name is pushed onto the identifier array. In the [above example](#connect-listeners), the identifier argument for the `MyClass.helloAgain` function would look like:
 
@@ -91,7 +93,11 @@ class MyClass {
 }
 ```
 
+As you can see, the last element of the identifier array contains the function identifier of the current function, preceeded by the identifier of the function that called it, and so on.
+
 ## Extend the identifier
+
+Sometimes you need to add some additional context to the identifier, such as a record id, if you want to attach listeners to changes on specific records.
 
 If you pass an initial identifier to the listener call (e.g. `MyClass.hello(["initialId"])`), the identifier argument for the `MyClass.helloAgain` function would look like:
 
@@ -115,7 +121,7 @@ class MyClass {
 }
 ```
 
-This also introduces an opportunity to extend the identifier:
+This also introduces an opportunity to extend the identifier mid-flight:
 
 ```ts
 class MyClass {
