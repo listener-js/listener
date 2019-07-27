@@ -4,11 +4,11 @@ Type-safe event emitter with a simple & unobtrusive API
 
 ![listener](media/listener.gif)
 
-## Goal
+## Goals
 
-Design an event emitter that can turn existing class functions into event listeners.
+Turn existing class functions into event listeners.
 
-Call listener class functions in the same way (with the same types).
+Call listener class functions like normal (with the same types).
 
 Make it easy to connect listener functions to each other.
 
