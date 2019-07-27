@@ -6,7 +6,7 @@ export type ListenersAnyType = Record<string, any[]>
 export type ListenerBindingsType = Record<string, string[]>
 
 export class Listener {
-  private bindings: ListenerBindingsType = { "*": [] }
+  private bindings: ListenerBindingsType = {}
   private listeners: ListenersType = {}
 
   public listen(
@@ -63,12 +63,12 @@ export class Listener {
     let promise
     let out
 
-    if (this.bindings["*"].indexOf(key) > -1) {
+    if (this.bindings["**"].indexOf(key) > -1) {
       return
     }
 
     const binds = this.buildList(
-      this.bindings, this.bindings["*"], key, id
+      this.bindings, key, id
     )
 
     for (const target of binds) {
@@ -76,9 +76,11 @@ export class Listener {
         continue
       }
 
-      const listens = this.buildList(
-        this.listeners, [], target, id
-      )
+      const listens = this.listeners[target]
+
+      if (!listens) {
+        continue
+      }
 
       for (const fn of listens) {
         out = promise ?
@@ -114,9 +116,7 @@ export class Listener {
         )
       } else {
         const emitOut = this.emit(key, id, ...args)
-
-        return emitOut && emitOut.then ?
-          out : (emitOut || out)
+        return emitOut || out
       }
     }
   }
@@ -125,29 +125,49 @@ export class Listener {
     for (var key in this.bindings) {
       delete this.bindings[key]
     }
-    this.bindings["*"] = []
+    this.bindings["**"] = []
   }
 
   private buildList(
     lists: ListenersAnyType,
-    initialList: any[],
     key: string,
     id: string[]
   ): any[] {
-    let list = initialList
+    let list = []
     let idKey = key
 
-    if (lists[idKey]) {
-      list = list.concat(lists[idKey])
+    list = this.addList(list, lists, "**")
+
+    if (id.length > 1) {
+      list = this.addList(list, lists, idKey + ".**")
     }
 
-    for (const i of id) {
+    for (const i of id.slice(0, -2)) {
       idKey = idKey + "." + i
-      if (lists[idKey]) {
-        list = list.concat(lists[idKey])
-      }
+      list = this.addList(list, lists, idKey + ".**")
     }
 
+    if (id.length <= 1) {
+      list = this.addList(list, lists, "*")
+    } else {
+      list = this.addList(list, lists, idKey + ".*")
+    }
+
+    idKey = idKey + (
+      id.length <= 1 ? "" : "." + id[id.length - 2]
+    )
+
+    list = this.addList(list, lists, idKey)
+
+    return list
+  }
+
+  private addList(
+    list: string[], lists: ListenersAnyType, key: string
+  ): string[] {
+    if (lists[key]) {
+      return list.concat(lists[key])
+    }
     return list
   }
 }

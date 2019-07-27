@@ -12,10 +12,12 @@
 
 ### Properties
 
+* [bindings](_index_.listener.md#private-bindings)
 * [listeners](_index_.listener.md#private-listeners)
 
 ### Methods
 
+* [addList](_index_.listener.md#private-addlist)
 * [buildList](_index_.listener.md#private-buildlist)
 * [emit](_index_.listener.md#private-emit)
 * [listen](_index_.listener.md#listen)
@@ -23,11 +25,15 @@
 * [listenerWrapper](_index_.listener.md#private-listenerwrapper)
 * [reset](_index_.listener.md#reset)
 
-### Object literals
-
-* [bindings](_index_.listener.md#private-bindings)
-
 ## Properties
+
+### `Private` bindings
+
+• **bindings**: *[ListenerBindingsType](../modules/_index_.md#listenerbindingstype)*
+
+Defined in index.ts:9
+
+___
 
 ### `Private` listeners
 
@@ -37,9 +43,27 @@ Defined in index.ts:10
 
 ## Methods
 
+### `Private` addList
+
+▸ **addList**(`list`: string[], `lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `key`: string): *string[]*
+
+Defined in index.ts:165
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`list` | string[] |
+`lists` | [ListenersAnyType](../modules/_index_.md#listenersanytype) |
+`key` | string |
+
+**Returns:** *string[]*
+
+___
+
 ### `Private` buildList
 
-▸ **buildList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `initialList`: any[], `key`: string, `id`: string[]): *any[]*
+▸ **buildList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `key`: string, `id`: string[]): *any[]*
 
 Defined in index.ts:131
 
@@ -48,7 +72,6 @@ Defined in index.ts:131
 Name | Type |
 ------ | ------ |
 `lists` | [ListenersAnyType](../modules/_index_.md#listenersanytype) |
-`initialList` | any[] |
 `key` | string |
 `id` | string[] |
 
@@ -112,7 +135,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `key`: string): *`Function`*
 
-Defined in index.ts:97
+Defined in index.ts:99
 
 **Parameters:**
 
@@ -133,17 +156,3 @@ ___
 Defined in index.ts:124
 
 **Returns:** *void*
-
-## Object literals
-
-### `Private` bindings
-
-### ▪ **bindings**: *object*
-
-Defined in index.ts:9
-
-###  *
-
-• *****: *undefined[]* =  []
-
-Defined in index.ts:9

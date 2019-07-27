@@ -12,7 +12,7 @@ Call listener class functions in the same way (with the same types).
 
 Make it easy to connect listener functions to each other.
 
-Incorporate an identifier system that makes it easy to get a glimpse of the event's call stack.
+Incorporate a readable identifier system for programmatic context.
 
 ## Install
 
