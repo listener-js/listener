@@ -189,6 +189,24 @@ test("listen * and id", (): void => {
   })
 })
 
+test("listen id and *", (): void => {
+  listen(["MyClass.fn", "*"], ["MyClass2.fn2"])
+
+  expect(MyClass.fn([], true)).toEqual({
+    "fn": true, "id": ["MyClass.fn"], "someArg": true
+  })
+
+  expect(MyClass.fn(["id"], true)).toEqual({
+    "fn2": true,
+    "id": ["MyClass2.fn2", "MyClass.fn", "id"],
+    "someArg": true
+  })
+
+  expect(MyClass.fn(["id", "id2"], true)).toEqual({
+    "fn": true, "id": ["MyClass.fn", "id", "id2"], "someArg": true
+  })
+})
+
 test("listen ** and id", (): void => {
   listen(["**", "id2"], ["MyClass2.fn2"])
 
@@ -205,6 +223,26 @@ test("listen ** and id", (): void => {
   expect(MyClass.fn(["id", "id2", "id3"], true)).toEqual({
     "fn": true,
     "id": ["MyClass.fn", "id", "id2", "id3"],
+    "someArg": true
+  })
+})
+
+test("listen id and **", (): void => {
+  listen(["MyClass.fn", "**"], ["MyClass2.fn2"])
+
+  expect(MyClass.fn([], true)).toEqual({
+    "fn": true, "id": ["MyClass.fn"], "someArg": true
+  })
+
+  expect(MyClass.fn(["id"], true)).toEqual({
+    "fn2": true,
+    "id": ["MyClass2.fn2", "MyClass.fn", "id"],
+    "someArg": true
+  })
+
+  expect(MyClass.fn(["id", "id2"], true)).toEqual({
+    "fn2": true,
+    "id": ["MyClass2.fn2", "MyClass.fn", "id", "id2"],
     "someArg": true
   })
 })

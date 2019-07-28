@@ -70,7 +70,7 @@ export class Listener {
       return
     }
 
-    const binds = this.buildList(fnId, id)
+    const binds = this.buildList(id)
 
     for (const target of binds) {
       if (fnId === target) {
@@ -128,13 +128,11 @@ export class Listener {
     }
   }
 
-  private buildList(
-    fnId: string,
-    id: string[]
-  ): any[] {
+  private buildList(id: string[]): any[] {
     const lists = this.bindings
 
-    let key
+    let key: string
+    let key2: string
     let list = []
 
     list = this.addList(lists, list, "**")
@@ -144,10 +142,16 @@ export class Listener {
       list = this.addList(lists, list, "**." + key)
     }
 
+    for (const i of id.slice(0, -1)) {
+      key2 = key2 ? key2 + "." + i : i
+      list = this.addList(lists, list, key2 + ".**")
+    }
+
     if (id.length <= 1) {
       list = this.addList(lists, list, "*")
     } else {
       list = this.addList(lists, list, "*." + key)
+      list = this.addList(lists, list, key2 + ".*")
     }
 
     if (key && id.length) {

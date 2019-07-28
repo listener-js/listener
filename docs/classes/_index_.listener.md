@@ -47,7 +47,7 @@ Defined in index.ts:10
 
 ▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: string[], `key`: string): *string[]*
 
-Defined in index.ts:168
+Defined in index.ts:172
 
 **Parameters:**
 
@@ -63,7 +63,7 @@ ___
 
 ### `Private` buildList
 
-▸ **buildList**(`fnId`: string, `id`: string[]): *any[]*
+▸ **buildList**(`id`: string[]): *any[]*
 
 Defined in index.ts:131
 
@@ -71,7 +71,6 @@ Defined in index.ts:131
 
 Name | Type |
 ------ | ------ |
-`fnId` | string |
 `id` | string[] |
 
 **Returns:** *any[]*

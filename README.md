@@ -157,44 +157,15 @@ class MyClass {
 
 You may provide wildcard parameters to the [first argument of `listen`](#connect-listeners).
 
-Wildcards may only appear at the beginning of the identifier array.
-
-### Double asterisk (\*\*)
-
-Double asterisks match identifiers recursively.
-
-Use double asterisks to listen to **all listeners**:
+Wildcards may only appear at the beginning or end of the identifier array. A single asterisk matches only the first or last identifier. Double asterisks match recursively.
 
 ```ts
 import { listen } from "@listener-js/listener"
 
-listen(["**"], ["MyClass.helloAgain"])
-```
-
-Or listen to **any event originating from `MyClass.hello`**:
-
-```ts
-import { listen } from "@listener-js/listener"
-
-listen(["**", "MyClass.hello"], ["MyClass.helloAgain"])
-```
-
-### Single asterisk (\*)
-
-A single asterisk matches identifiers only one level deep.
-
-The following listens to **any listener call with no identifiers**:
-
-```ts
-import { listen } from "@listener-js/listener"
-
+listen(["**"], ["MyClass.helloAgain"]) // match all listeners
 listen(["*"], ["MyClass.helloAgain"])
-```
-
-And this listens to **any event directly called by or connected to `MyClass.hello`**:
-
-```ts
-import { listen } from "@listener-js/listener"
-
+listen(["**", "MyClass.hello"], ["MyClass.helloAgain"])
 listen(["*", "MyClass.hello"], ["MyClass.helloAgain"])
+listen(["MyClass.hello", "**"], ["MyClass.helloAgain"])
+listen(["MyClass.hello", "*"], ["MyClass.helloAgain"])
 ```
