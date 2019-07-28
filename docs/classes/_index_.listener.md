@@ -45,27 +45,27 @@ Defined in index.ts:10
 
 ### `Private` addList
 
-▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: string[], `key`: string): *string[]*
+▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: `Set<string>`, `key`: string): *void*
 
-Defined in index.ts:172
+Defined in index.ts:170
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `lists` | [ListenersAnyType](../modules/_index_.md#listenersanytype) |
-`list` | string[] |
+`list` | `Set<string>` |
 `key` | string |
 
-**Returns:** *string[]*
+**Returns:** *void*
 
 ___
 
 ### `Private` buildList
 
-▸ **buildList**(`id`: string[]): *any[]*
+▸ **buildList**(`id`: string[]): *`Set<string>`*
 
-Defined in index.ts:131
+Defined in index.ts:129
 
 **Parameters:**
 
@@ -73,7 +73,7 @@ Name | Type |
 ------ | ------ |
 `id` | string[] |
 
-**Returns:** *any[]*
+**Returns:** *`Set<string>`*
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:100
+Defined in index.ts:98
 
 **Parameters:**
 
@@ -151,6 +151,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:125
+Defined in index.ts:123
 
 **Returns:** *void*

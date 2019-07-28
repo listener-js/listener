@@ -60,8 +60,8 @@ export class Listener {
   private emit(
     fnId: string, id: string[], ...args: any[]
   ): any {
-    let promise
-    let out
+    let promise: Promise<any>
+    let out: any
 
     if (
       this.bindings["**"] &&
@@ -70,17 +70,15 @@ export class Listener {
       return
     }
 
-    const binds = this.buildList(id)
-
-    for (const target of binds) {
+    this.buildList(id).forEach((target): void => {
       if (fnId === target) {
-        continue
+        return
       }
 
       const listens = this.listeners[target]
 
       if (!listens) {
-        continue
+        return
       }
 
       for (const fn of listens) {
@@ -92,7 +90,7 @@ export class Listener {
           promise = out
         }
       }
-    }
+    })
 
     return promise || out
   }
@@ -128,30 +126,30 @@ export class Listener {
     }
   }
 
-  private buildList(id: string[]): any[] {
+  private buildList(id: string[]): Set<string> {
     const lists = this.bindings
 
     let key: string
     let key2: string
-    let list = []
+    let list: Set<string> = new Set()
 
-    list = this.addList(lists, list, "**")
+    this.addList(lists, list, "**")
     
     for (const i of id.slice(1).reverse()) {
       key = key ? i + "." + key : i
-      list = this.addList(lists, list, "**." + key)
+      this.addList(lists, list, "**." + key)
     }
 
     for (const i of id.slice(0, -1)) {
       key2 = key2 ? key2 + "." + i : i
-      list = this.addList(lists, list, key2 + ".**")
+      this.addList(lists, list, key2 + ".**")
     }
 
     if (id.length <= 1) {
-      list = this.addList(lists, list, "*")
+      this.addList(lists, list, "*")
     } else {
-      list = this.addList(lists, list, "*." + key)
-      list = this.addList(lists, list, key2 + ".*")
+      this.addList(lists, list, "*." + key)
+      this.addList(lists, list, key2 + ".*")
     }
 
     if (key && id.length) {
@@ -163,19 +161,20 @@ export class Listener {
     }
 
     if (key) {
-      list = this.addList(lists, list, key)
+      this.addList(lists, list, key)
     }
 
     return list
   }
 
   private addList(
-    lists: ListenersAnyType, list: string[], key: string
-  ): string[] {
+    lists: ListenersAnyType, list: Set<string>, key: string
+  ): void {
     if (lists[key]) {
-      return list.concat(lists[key])
+      for (const item of lists[key]) {
+        list.add(item)
+      }
     }
-    return list
   }
 }
 
