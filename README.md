@@ -157,7 +157,9 @@ class MyClass {
 
 You may provide wildcard parameters to the [first argument of `listen`](#connect-listeners).
 
-Wildcards may only appear at the beginning or end of the identifier array. A single asterisk matches only the first or last identifier. Double asterisks match recursively.
+Wildcards may only appear at the beginning or end of the identifier array.
+
+A single asterisk matches only the first or last identifier. Double asterisks match recursively.
 
 ```ts
 import { listen } from "@listener-js/listener"
