@@ -47,7 +47,7 @@ listener({ Log, MyClass, MyClass2 })
 
 beforeEach((): void => {
   reset()
-  // listen(["**"], ["Log.all"])
+  listen(["**"], ["Log.all"])
 })
 
 test("defined", (): void => {
