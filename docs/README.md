@@ -84,26 +84,24 @@ Because the return value of `MyClass.helloAgain` is not falsey, it becomes the f
 
 The first argument to the listener is always an identifier argument (`string[]`).
 
-The identifier adds programmatic context to all listeners. The most immediate way you'll see its usefulness is around logging and debugging.
+When you call a listener, its function id is added to the front of the identifier array.
 
-When you call a listener, it adds the function id to the identifier array. Using the [above example](#connect-listeners), let's see what the identifier argument looks like:
+Using the [previous example](#connect-listeners), let's see what the identifier argument looks like:
 
 ```ts
 class MyClass {
   public static helloAgain(id: string[]): string {
-    console.log(id) // ["MyClass.hello", "MyClass.helloAgain"]
+    console.log(id) // ["MyClass.helloAgain", "MyClass.hello"]
     return "hi again"
   }
 }
 ```
 
-The last element of the identifier array is the "function id" of the current function. The preceeding elements constitute the identifiers passed into the listener.
-
 ## Connect listeners by identifier
 
 The `listen` function also accepts identifiers.
 
-Let's listen to `MyClass.helloAgain` if it receives `MyClass.hello` as a single identifier (as it does in the [previous examples](#connect-listeners)).
+Let's listen to the exact identifier from the [previous examples](#identifier-argument):
 
 ```ts
 import { listen } from "@listener-js/listener"
@@ -113,6 +111,8 @@ listen(
   ["MyClass.helloAgainAndAgain"]
 )
 ```
+
+In this case, the listener connection only emits when `MyClass.hello` calls `MyClass.helloAgain`.
 
 ## Extend the identifier
 
@@ -129,7 +129,7 @@ Now `initialId` is at the beginning of the `MyClass.helloAgain` identifier argum
 ```ts
 class MyClass {
   public static helloAgain(id: string[]): string {
-    console.log(id) // ["initialId", "MyClass.hello", "MyClass.helloAgain"]
+    console.log(id) // ["MyClass.helloAgain", "MyClass.hello", "initialId"]
     return "hi again"
   }
 }
@@ -151,7 +151,7 @@ This also introduces an opportunity to extend the identifier mid-flight:
 ```ts
 class MyClass {
   public static helloAgain(id: string[]): string {
-    OtherClass.otherListener([...id, "customId"])
+    OtherClass.otherListener(["customId", ...id])
     return "hi again"
   }
 }
@@ -161,7 +161,7 @@ class MyClass {
 
 You may provide wildcard parameters to the [first argument of `listen`](#connect-listeners).
 
-Wildcards may only appear at the end of the identifier array.
+Wildcards may only appear at the beginning of the identifier array.
 
 ### Double asterisk (\*\*)
 
@@ -175,12 +175,12 @@ import { listen } from "@listener-js/listener"
 listen(["**"], ["MyClass.helloAgain"])
 ```
 
-Or listen to **`MyClass.hello` with any identifier**:
+Or listen to **any event originating from `MyClass.hello`**:
 
 ```ts
 import { listen } from "@listener-js/listener"
 
-listen(["MyClass.hello", "**"], ["MyClass.helloAgain"])
+listen(["**", "MyClass.hello"], ["MyClass.helloAgain"])
 ```
 
 ### Single asterisk (\*)
@@ -195,10 +195,10 @@ import { listen } from "@listener-js/listener"
 listen(["*"], ["MyClass.helloAgain"])
 ```
 
-And this listens to **`MyClass.hello` with any single identifier**:
+And this listens to **any event directly called by or connected to `MyClass.hello`**:
 
 ```ts
 import { listen } from "@listener-js/listener"
 
-listen(["MyClass.hello", "*"], ["MyClass.helloAgain"])
+listen(["*", "MyClass.hello"], ["MyClass.helloAgain"])
 ```

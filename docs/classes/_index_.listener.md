@@ -47,7 +47,7 @@ Defined in index.ts:10
 
 ▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: string[], `key`: string): *string[]*
 
-Defined in index.ts:164
+Defined in index.ts:168
 
 **Parameters:**
 
@@ -65,7 +65,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *any[]*
 
-Defined in index.ts:129
+Defined in index.ts:131
 
 **Parameters:**
 
@@ -134,7 +134,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:97
+Defined in index.ts:100
 
 **Parameters:**
 
@@ -152,6 +152,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:122
+Defined in index.ts:125
 
 **Returns:** *void*

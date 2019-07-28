@@ -63,7 +63,10 @@ export class Listener {
     let promise
     let out
 
-    if (this.bindings["**"].indexOf(fnId) > -1) {
+    if (
+      this.bindings["**"] &&
+      this.bindings["**"].indexOf(fnId) > -1
+    ) {
       return
     }
 
@@ -98,7 +101,7 @@ export class Listener {
     fn: any, instance: any, fnId: string
   ): Function {
     return (eid: string[], ...args: any[]): any => {
-      const id = eid.concat([fnId])
+      const id = [fnId].concat(eid)
       const out = fn.call(instance, id, ...args)
 
       if (out && out.then) {
@@ -123,7 +126,6 @@ export class Listener {
     for (var key in this.bindings) {
       delete this.bindings[key]
     }
-    this.bindings["**"] = []
   }
 
   private buildList(
@@ -132,31 +134,33 @@ export class Listener {
   ): any[] {
     const lists = this.bindings
 
+    let key
     let list = []
-    let key = fnId
 
     list = this.addList(lists, list, "**")
-
-    if (id.length > 1) {
-      list = this.addList(lists, list, key + ".**")
-    }
-
-    for (const i of id.slice(0, -2)) {
-      key = key + "." + i
-      list = this.addList(lists, list, key + ".**")
+    
+    for (const i of id.slice(1).reverse()) {
+      key = key ? i + "." + key : i
+      list = this.addList(lists, list, "**." + key)
     }
 
     if (id.length <= 1) {
       list = this.addList(lists, list, "*")
     } else {
-      list = this.addList(lists, list, key + ".*")
+      list = this.addList(lists, list, "*." + key)
     }
 
-    key = key + (
-      id.length <= 1 ? "" : "." + id[id.length - 2]
-    )
+    if (key && id.length) {
+      key = id[0] + "." + key
+    }
 
-    list = this.addList(lists, list, key)
+    if (!key && id.length) {
+      key = id[0]
+    }
+
+    if (key) {
+      list = this.addList(lists, list, key)
+    }
 
     return list
   }
