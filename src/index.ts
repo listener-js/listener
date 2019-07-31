@@ -75,7 +75,7 @@ export class Listener {
   public reset(): void {
     for (let instanceId in this.originals) {
       const og = this.originals[instanceId]
-      
+
       for (let fnId in og) {
         this.instances[instanceId][fnId] = og[fnId]
         delete this.instances[instanceId]._listeners
@@ -89,6 +89,9 @@ export class Listener {
     }
     for (let key in this.listeners) {
       delete this.listeners[key]
+    }
+    for (let key in this.originals) {
+      delete this.originals[key]
     }
   }
 
