@@ -43,11 +43,10 @@ class MyClass2 {
   }
 }
 
-listener({ Log, MyClass, MyClass2 })
 
 beforeEach((): void => {
   reset()
-  listen(["**"], ["Log.all"])
+  listener({ Log, MyClass, MyClass2 }, { logAll: true })
 })
 
 test("defined", (): void => {

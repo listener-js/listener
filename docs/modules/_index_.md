@@ -14,6 +14,7 @@
 
 * [ListenerBindingsType](_index_.md#listenerbindingstype)
 * [ListenerInstancesType](_index_.md#listenerinstancestype)
+* [ListenerOriginalsType](_index_.md#listeneroriginalstype)
 * [ListenerType](_index_.md#listenertype)
 * [ListenersAnyType](_index_.md#listenersanytype)
 * [ListenersType](_index_.md#listenerstype)
@@ -40,6 +41,14 @@ ___
 Ƭ **ListenerInstancesType**: *`Record<string, any>`*
 
 Defined in index.ts:7
+
+___
+
+###  ListenerOriginalsType
+
+Ƭ **ListenerOriginalsType**: *`Record<string, Record<string, ListenersType>>`*
+
+Defined in index.ts:8
 
 ___
 
@@ -82,7 +91,7 @@ Defined in index.ts:4
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:191
+Defined in index.ts:210
 
 ___
 
@@ -90,7 +99,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:193
+Defined in index.ts:212
 
 ___
 
@@ -98,7 +107,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:194
+Defined in index.ts:213
 
 ___
 
@@ -106,4 +115,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:195
+Defined in index.ts:214

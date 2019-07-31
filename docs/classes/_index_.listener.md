@@ -15,6 +15,7 @@
 * [bindings](_index_.listener.md#bindings)
 * [instances](_index_.listener.md#instances)
 * [listeners](_index_.listener.md#listeners)
+* [originals](_index_.listener.md#originals)
 
 ### Methods
 
@@ -32,7 +33,7 @@
 
 • **bindings**: *[ListenerBindingsType](../modules/_index_.md#listenerbindingstype)*
 
-Defined in index.ts:10
+Defined in index.ts:12
 
 ___
 
@@ -40,7 +41,7 @@ ___
 
 • **instances**: *[ListenerInstancesType](../modules/_index_.md#listenerinstancestype)*
 
-Defined in index.ts:11
+Defined in index.ts:13
 
 ___
 
@@ -48,7 +49,15 @@ ___
 
 • **listeners**: *[ListenersType](../modules/_index_.md#listenerstype)*
 
-Defined in index.ts:12
+Defined in index.ts:14
+
+___
+
+###  originals
+
+• **originals**: *[ListenerOriginalsType](../modules/_index_.md#listeneroriginalstype)*
+
+Defined in index.ts:15
 
 ## Methods
 
@@ -56,7 +65,7 @@ Defined in index.ts:12
 
 ▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: `Set<string>`, `key`: string): *void*
 
-Defined in index.ts:114
+Defined in index.ts:133
 
 **Parameters:**
 
@@ -74,7 +83,7 @@ ___
 
 ▸ **buildList**(`id`: string[]): *`Set<string>`*
 
-Defined in index.ts:124
+Defined in index.ts:143
 
 **Parameters:**
 
@@ -90,7 +99,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], ...`args`: any[]): *any*
 
-Defined in index.ts:76
+Defined in index.ts:95
 
 **Parameters:**
 
@@ -108,7 +117,7 @@ ___
 
 ▸ **listen**(`sourceId`: string[], `targetId`: string[]): *void*
 
-Defined in index.ts:14
+Defined in index.ts:17
 
 **Parameters:**
 
@@ -125,7 +134,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:26
+Defined in index.ts:29
 
 **Parameters:**
 
@@ -142,7 +151,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:165
+Defined in index.ts:184
 
 **Parameters:**
 
@@ -160,6 +169,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:64
+Defined in index.ts:75
 
 **Returns:** *void*

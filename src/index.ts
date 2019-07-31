@@ -5,11 +5,14 @@ export type ListenersType = Record<string, ListenerType[]>
 export type ListenersAnyType = Record<string, any[]>
 export type ListenerBindingsType = Record<string, string[]>
 export type ListenerInstancesType = Record<string, any>
+export type ListenerOriginalsType =
+  Record<string, Record<string, ListenersType>>
 
 export class Listener {
   public bindings: ListenerBindingsType = {}
   public instances: ListenerInstancesType = {}
   public listeners: ListenersType = {}
+  public originals: ListenerOriginalsType = {}
 
   public listen(
     sourceId: string[], targetId: string[]
@@ -32,9 +35,17 @@ export class Listener {
 
       if (
         !instance ||
-        !instance.listeners ||
-        instance._listeners
+        !instance.listeners
       ) {
+        continue
+      }
+
+      this.instances[instanceId] = instance
+      
+      const og = this.originals[instanceId] =
+        this.originals[instanceId] || {}
+
+      if (instance._listeners) {
         continue
       }
 
@@ -43,6 +54,8 @@ export class Listener {
       for (const fnName of instance.listeners) {
         const fn = instance[fnName]
         const fnId = `${instanceId}.${fnName}`
+
+        og[fnName] = og[fnName] || instance[fnName]
 
         instance[fnName] = this.listenerWrapper(
           fn, instance, fnId
@@ -53,8 +66,6 @@ export class Listener {
           .concat([instance[fnName]])
       }
 
-      this.instances[instanceId] = instance
-
       if (instance.listen) {
         instance.listen(this, options || {})
       }
@@ -62,14 +73,22 @@ export class Listener {
   }
 
   public reset(): void {
-    for (var key in this.bindings) {
+    for (let instanceId in this.originals) {
+      const og = this.originals[instanceId]
+      
+      for (let fnId in og) {
+        this.instances[instanceId][fnId] = og[fnId]
+        delete this.instances[instanceId]._listeners
+      }
+    }
+    for (let key in this.bindings) {
       delete this.bindings[key]
     }
-    for (var key in this.instances) {
+    for (let key in this.instances) {
       delete this.instances[key]
     }
-    for (var key in this.listeners) {
-      delete this.bindings[key]
+    for (let key in this.listeners) {
+      delete this.listeners[key]
     }
   }
 
