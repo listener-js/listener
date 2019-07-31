@@ -12,8 +12,9 @@
 
 ### Properties
 
-* [bindings](_index_.listener.md#private-bindings)
-* [listeners](_index_.listener.md#private-listeners)
+* [bindings](_index_.listener.md#bindings)
+* [instances](_index_.listener.md#instances)
+* [listeners](_index_.listener.md#listeners)
 
 ### Methods
 
@@ -27,19 +28,27 @@
 
 ## Properties
 
-### `Private` bindings
+###  bindings
 
 • **bindings**: *[ListenerBindingsType](../modules/_index_.md#listenerbindingstype)*
 
-Defined in index.ts:9
+Defined in index.ts:10
 
 ___
 
-### `Private` listeners
+###  instances
+
+• **instances**: *[ListenerInstancesType](../modules/_index_.md#listenerinstancestype)*
+
+Defined in index.ts:11
+
+___
+
+###  listeners
 
 • **listeners**: *[ListenersType](../modules/_index_.md#listenerstype)*
 
-Defined in index.ts:10
+Defined in index.ts:12
 
 ## Methods
 
@@ -47,7 +56,7 @@ Defined in index.ts:10
 
 ▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: `Set<string>`, `key`: string): *void*
 
-Defined in index.ts:170
+Defined in index.ts:114
 
 **Parameters:**
 
@@ -65,7 +74,7 @@ ___
 
 ▸ **buildList**(`id`: string[]): *`Set<string>`*
 
-Defined in index.ts:129
+Defined in index.ts:124
 
 **Parameters:**
 
@@ -81,7 +90,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], ...`args`: any[]): *any*
 
-Defined in index.ts:60
+Defined in index.ts:76
 
 **Parameters:**
 
@@ -99,7 +108,7 @@ ___
 
 ▸ **listen**(`sourceId`: string[], `targetId`: string[]): *void*
 
-Defined in index.ts:12
+Defined in index.ts:14
 
 **Parameters:**
 
@@ -116,7 +125,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:24
+Defined in index.ts:26
 
 **Parameters:**
 
@@ -133,7 +142,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:98
+Defined in index.ts:165
 
 **Parameters:**
 
@@ -151,6 +160,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:123
+Defined in index.ts:64
 
 **Returns:** *void*

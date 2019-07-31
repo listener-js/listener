@@ -4,10 +4,12 @@ export type ListenerType =
 export type ListenersType = Record<string, ListenerType[]>
 export type ListenersAnyType = Record<string, any[]>
 export type ListenerBindingsType = Record<string, string[]>
+export type ListenerInstancesType = Record<string, any>
 
 export class Listener {
-  private bindings: ListenerBindingsType = {}
-  private listeners: ListenersType = {}
+  public bindings: ListenerBindingsType = {}
+  public instances: ListenerInstancesType = {}
+  public listeners: ListenersType = {}
 
   public listen(
     sourceId: string[], targetId: string[]
@@ -51,9 +53,23 @@ export class Listener {
           .concat([instance[fnName]])
       }
 
+      this.instances[instanceId] = instance
+
       if (instance.listen) {
         instance.listen(this, options || {})
       }
+    }
+  }
+
+  public reset(): void {
+    for (var key in this.bindings) {
+      delete this.bindings[key]
+    }
+    for (var key in this.instances) {
+      delete this.instances[key]
+    }
+    for (var key in this.listeners) {
+      delete this.bindings[key]
     }
   }
 
@@ -95,34 +111,13 @@ export class Listener {
     return promise || out
   }
 
-  private listenerWrapper(
-    fn: any, instance: any, fnId: string
-  ): Function {
-    return (eid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(eid)
-      const out = fn.call(instance, id, ...args)
-
-      if (out && out.then) {
-        let firstValue: any
-
-        return out.then(
-          (value: any): any => {
-            firstValue = value
-            return this.emit(fnId, id, ...args)
-          }
-        ).then(
-          (value: any): any => value || firstValue
-        )
-      } else {
-        const emitOut = this.emit(fnId, id, ...args)
-        return emitOut || out
+  private addList(
+    lists: ListenersAnyType, list: Set<string>, key: string
+  ): void {
+    if (lists[key]) {
+      for (const item of lists[key]) {
+        list.add(item)
       }
-    }
-  }
-
-  public reset(): void {
-    for (var key in this.bindings) {
-      delete this.bindings[key]
     }
   }
 
@@ -167,12 +162,27 @@ export class Listener {
     return list
   }
 
-  private addList(
-    lists: ListenersAnyType, list: Set<string>, key: string
-  ): void {
-    if (lists[key]) {
-      for (const item of lists[key]) {
-        list.add(item)
+  private listenerWrapper(
+    fn: any, instance: any, fnId: string
+  ): Function {
+    return (eid: string[], ...args: any[]): any => {
+      const id = [fnId].concat(eid)
+      const out = fn.call(instance, id, ...args)
+
+      if (out && out.then) {
+        let firstValue: any
+
+        return out.then(
+          (value: any): any => {
+            firstValue = value
+            return this.emit(fnId, id, ...args)
+          }
+        ).then(
+          (value: any): any => value || firstValue
+        )
+      } else {
+        const emitOut = this.emit(fnId, id, ...args)
+        return emitOut || out
       }
     }
   }

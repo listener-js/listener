@@ -13,6 +13,7 @@
 ### Type aliases
 
 * [ListenerBindingsType](_index_.md#listenerbindingstype)
+* [ListenerInstancesType](_index_.md#listenerinstancestype)
 * [ListenerType](_index_.md#listenertype)
 * [ListenersAnyType](_index_.md#listenersanytype)
 * [ListenersType](_index_.md#listenerstype)
@@ -31,6 +32,14 @@
 Ƭ **ListenerBindingsType**: *`Record<string, string[]>`*
 
 Defined in index.ts:6
+
+___
+
+###  ListenerInstancesType
+
+Ƭ **ListenerInstancesType**: *`Record<string, any>`*
+
+Defined in index.ts:7
 
 ___
 
@@ -73,7 +82,7 @@ Defined in index.ts:4
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:181
+Defined in index.ts:191
 
 ___
 
@@ -81,7 +90,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:183
+Defined in index.ts:193
 
 ___
 
@@ -89,7 +98,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:184
+Defined in index.ts:194
 
 ___
 
@@ -97,4 +106,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:185
+Defined in index.ts:195
