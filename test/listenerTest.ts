@@ -73,7 +73,7 @@ test("listener", (): void => {
 })
 
 test("listen", (): void => {
-  listen(["MyClass.fn"], ["MyClass2.fn2"])
+  listen(["MyClass.fn"], ["MyClass2.fn2"], { useReturn: true})
   
   expect(MyClass.fn([], true)).toEqual({
     "fn2": true,
@@ -103,7 +103,11 @@ test("async listener", async (): Promise<void> => {
 })
 
 test("async listen", async (): Promise<void> => {
-  listen(["MyClass.asyncFn"], ["MyClass2.asyncFn2"])
+  listen(
+    ["MyClass.asyncFn"],
+    ["MyClass2.asyncFn2"],
+    { useReturn: true }
+  )
 
   expect(await MyClass.asyncFn([], true)).toEqual({
     "asyncFn2": true,
@@ -121,7 +125,11 @@ test("async listen", async (): Promise<void> => {
 test(
   "async listen with no return on bound listener",
   async (): Promise<void> => {
-    listen(["MyClass.asyncFn"], ["MyClass2.asyncFn3"])
+    listen(
+      ["MyClass.asyncFn"],
+      ["MyClass2.asyncFn3"],
+      { useReturn: true }
+    )
 
     expect(await MyClass.asyncFn(["id"], true))
       .toEqual({
@@ -133,7 +141,11 @@ test(
 )
 
 test("listen id", (): void => {
-  listen(["MyClass.fn", "id"], ["MyClass2.fn2"])
+  listen(
+    ["MyClass.fn", "id"],
+    ["MyClass2.fn2"],
+    { useReturn: true }
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     "fn": true, "id": ["MyClass.fn"], "someArg": true
@@ -153,7 +165,7 @@ test("listen id", (): void => {
 })
 
 test("listen *", (): void => {
-  listen(["*"], ["MyClass2.fn2"])
+  listen(["*"], ["MyClass2.fn2"], { useReturn: true })
 
   expect(MyClass.fn([], true)).toEqual({
     "fn2": true,
@@ -167,7 +179,7 @@ test("listen *", (): void => {
 })
 
 test("listen **", (): void => {
-  listen(["**"], ["MyClass2.fn2"])
+  listen(["**"], ["MyClass2.fn2"], { useReturn: true })
 
   expect(MyClass.fn(["id"], true)).toEqual({
     "fn2": true,
@@ -177,7 +189,7 @@ test("listen **", (): void => {
 })
 
 test("listen * and id", (): void => {
-  listen(["*", "id"], ["MyClass2.fn2"])
+  listen(["*", "id"], ["MyClass2.fn2"], { useReturn: true })
 
   expect(MyClass.fn([], true)).toEqual({
     "fn": true, "id": ["MyClass.fn"], "someArg": true
@@ -195,7 +207,11 @@ test("listen * and id", (): void => {
 })
 
 test("listen id and *", (): void => {
-  listen(["MyClass.fn", "*"], ["MyClass2.fn2"])
+  listen(
+    ["MyClass.fn", "*"],
+    ["MyClass2.fn2"],
+    { useReturn: true }
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     "fn": true, "id": ["MyClass.fn"], "someArg": true
@@ -213,7 +229,11 @@ test("listen id and *", (): void => {
 })
 
 test("listen ** and id", (): void => {
-  listen(["**", "id2"], ["MyClass2.fn2"])
+  listen(
+    ["**", "id2"],
+    ["MyClass2.fn2"],
+    { useReturn: true }
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     "fn": true, "id": ["MyClass.fn"], "someArg": true
@@ -233,7 +253,11 @@ test("listen ** and id", (): void => {
 })
 
 test("listen id and **", (): void => {
-  listen(["MyClass.fn", "**"], ["MyClass2.fn2"])
+  listen(
+    ["MyClass.fn", "**"],
+    ["MyClass2.fn2"],
+    { useReturn: true }
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     "fn": true, "id": ["MyClass.fn"], "someArg": true
@@ -253,8 +277,17 @@ test("listen id and **", (): void => {
 })
 
 test("prepend option", (): void => {
-  listen(["MyClass.fn"], ["MyClass2.fn2"])
-  listen(["MyClass.fn"], ["MyClass2.fn3"], { prepend: true })
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn2"],
+    { useReturn: true }
+  )
+  
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn3"],
+    { prepend: true, useReturn: true }
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     "fn2": true,
@@ -264,8 +297,17 @@ test("prepend option", (): void => {
 })
 
 test("append option", (): void => {
-  listen(["MyClass.fn"], ["MyClass2.fn3"], { append: true })
-  listen(["MyClass.fn"], ["MyClass2.fn2"])
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn3"],
+    { append: true, useReturn: true }
+  )
+
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn2"],
+    { useReturn: true }
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     "fn3": true,

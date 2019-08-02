@@ -10,14 +10,18 @@
 
 * [Listener](../classes/_index_.listener.md)
 
+### Interfaces
+
+* [ListenerOptions](../interfaces/_index_.listeneroptions.md)
+
 ### Type aliases
 
 * [ListenerBindingItem](_index_.md#listenerbindingitem)
+* [ListenerBindingOptions](_index_.md#listenerbindingoptions)
 * [ListenerBindings](_index_.md#listenerbindings)
 * [ListenerBindingsListSorter](_index_.md#listenerbindingslistsorter)
 * [ListenerFunction](_index_.md#listenerfunction)
 * [ListenerInstances](_index_.md#listenerinstances)
-* [ListenerOptions](_index_.md#listeneroptions)
 * [Listeners](_index_.md#listeners)
 
 ### Variables
@@ -32,9 +36,17 @@
 
 ###  ListenerBindingItem
 
-Ƭ **ListenerBindingItem**: *[string, object]*
+Ƭ **ListenerBindingItem**: *[string, [ListenerOptions](../interfaces/_index_.listeneroptions.md)]*
 
-Defined in index.ts:8
+Defined in index.ts:13
+
+___
+
+###  ListenerBindingOptions
+
+Ƭ **ListenerBindingOptions**: *`Record<string, ListenerOptions>`*
+
+Defined in index.ts:15
 
 ___
 
@@ -42,7 +54,7 @@ ___
 
 Ƭ **ListenerBindings**: *`Record<string, string[]>`*
 
-Defined in index.ts:5
+Defined in index.ts:11
 
 ___
 
@@ -50,7 +62,7 @@ ___
 
 Ƭ **ListenerBindingsListSorter**: *function*
 
-Defined in index.ts:10
+Defined in index.ts:18
 
 #### Type declaration:
 
@@ -69,7 +81,7 @@ ___
 
 Ƭ **ListenerFunction**: *function*
 
-Defined in index.ts:1
+Defined in index.ts:7
 
 #### Type declaration:
 
@@ -88,15 +100,7 @@ ___
 
 Ƭ **ListenerInstances**: *`Record<string, any>`*
 
-Defined in index.ts:6
-
-___
-
-###  ListenerOptions
-
-Ƭ **ListenerOptions**: *`Record<string, object>`*
-
-Defined in index.ts:7
+Defined in index.ts:12
 
 ___
 
@@ -104,7 +108,7 @@ ___
 
 Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
 
-Defined in index.ts:4
+Defined in index.ts:10
 
 ## Variables
 
@@ -112,7 +116,7 @@ Defined in index.ts:4
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:250
+Defined in index.ts:256
 
 ___
 
@@ -120,7 +124,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:252
+Defined in index.ts:258
 
 ___
 
@@ -128,7 +132,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:253
+Defined in index.ts:259
 
 ___
 
@@ -136,7 +140,7 @@ ___
 
 • **listenerIdRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)/i
 
-Defined in index.ts:14
+Defined in index.ts:21
 
 ___
 
@@ -144,4 +148,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:254
+Defined in index.ts:260

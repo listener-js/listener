@@ -1,15 +1,22 @@
+export interface ListenerOptions {
+  append?: boolean
+  prepend?: boolean
+  useReturn?: boolean
+}
+
 export type ListenerFunction =
   (id: string[], ...arg: any[]) => any
 
 export type Listeners = Record<string, ListenerFunction>
 export type ListenerBindings = Record<string, string[]>
 export type ListenerInstances = Record<string, any>
-export type ListenerOptions = Record<string, object>
-export type ListenerBindingItem = [string, object]
+export type ListenerBindingItem = [string, ListenerOptions]
+
+export type ListenerBindingOptions =
+  Record<string, ListenerOptions>
 
 export type ListenerBindingsListSorter =
-  (a: ListenerBindingItem, b: ListenerBindingItem)
-    => number
+  (a: ListenerBindingItem, b: ListenerBindingItem) => number
 
 const listenerIdRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
@@ -18,12 +25,12 @@ export class Listener {
   public instances: ListenerInstances = {}
   public listeners: Listeners = {}
   public originals: Listeners = {}
-  public options: ListenerOptions = {}
+  public options: ListenerBindingOptions = {}
 
   public listen(
     sourceId: string[],
     targetId: string[],
-    options?: object
+    options?: ListenerOptions
   ): void {
     const source = sourceId.join(".")
     const target = targetId.join(".")
@@ -104,42 +111,6 @@ export class Listener {
     }
   }
 
-  private emit(
-    fnId: string, id: string[], ...args: any[]
-  ): any {
-    let promise: Promise<any>
-    let out: any
-
-    if (
-      this.bindings["**"] &&
-      this.bindings["**"].indexOf(fnId) > -1
-    ) {
-      return
-    }
-
-    for (const [target] of this.buildList(id)) {
-      if (fnId === target) {
-        continue
-      }
-
-      const fn = this.listeners[target]
-
-      if (!fn) {
-        continue
-      }
-
-      out = promise ?
-        promise.then((): any => fn(id, ...args)) :
-        fn(id, ...args)
-
-      if (out && out.then) {
-        promise = out
-      }
-    }
-
-    return promise || out
-  }
-
   private addList(
     lists: ListenerBindings,
     list: ListenerBindingItem[],
@@ -160,7 +131,7 @@ export class Listener {
 
     let key: string
     let key2: string
-    let list: [string, object][] = []
+    let list: ListenerBindingItem[] = []
 
     this.addList(lists, list, "**")
     
@@ -199,28 +170,63 @@ export class Listener {
     return list
   }
 
+  private emit(
+    fnId: string,
+    id: string[],
+    ogOut: any,
+    ...args: any[]
+  ): any {
+    let promise: Promise<any>
+    let out: any
+    let finalOut: any
+
+    if (ogOut && ogOut.then) {
+      promise = ogOut
+    } else {
+      out = ogOut
+    }
+
+    if (
+      this.bindings["**"] &&
+      this.bindings["**"].indexOf(fnId) > -1
+    ) {
+      return ogOut
+    }
+
+    for (const [target, options] of this.buildList(id)) {
+      if (fnId === target) {
+        continue
+      }
+
+      const fn = this.listeners[target]
+
+      if (!fn) {
+        continue
+      }
+
+      out = promise ?
+        promise.then((): any => fn(id, ...args)) :
+        fn(id, ...args)
+
+      if (out && out.then) {
+        promise = out
+      }
+
+      if (options && options.useReturn) {
+        finalOut = promise || out
+      }
+    }
+
+    return finalOut || ogOut
+  }
+
   private listenerWrapper(
     fn: any, instance: any, fnId: string
   ): Function {
     return (eid: string[], ...args: any[]): any => {
       const id = [fnId].concat(eid)
       const out = fn.call(instance, id, ...args)
-
-      if (out && out.then) {
-        let firstValue: any
-
-        return out.then(
-          (value: any): any => {
-            firstValue = value
-            return this.emit(fnId, id, ...args)
-          }
-        ).then(
-          (value: any): any => value || firstValue
-        )
-      } else {
-        const emitOut = this.emit(fnId, id, ...args)
-        return emitOut || out
-      }
+      return this.emit(fnId, id, out, ...args)
     }
   }
 
@@ -231,8 +237,8 @@ export class Listener {
       [, aOpts = {}]: ListenerBindingItem,
       [, bOpts = {}]: ListenerBindingItem
     ): number {
-      const propA = aOpts[prepend ? "prepend" : "append"]
-      const propB = bOpts[prepend ? "prepend" : "append"]
+      const propA = prepend ? aOpts.prepend : aOpts.append
+      const propB = prepend ? bOpts.prepend : bOpts.append
 
       let comparison = 0
 

@@ -68,13 +68,7 @@ import { listen } from "@listener-js/listener"
 listen(["MyClass.hello"], ["MyClass.helloAgain"])
 ```
 
-Now a call to `MyClass.hello` also calls `MyClass.helloAgain`:
-
-```ts
-MyClass.hello([]) // "hi again"
-```
-
-Because the return value of `MyClass.helloAgain` is not falsey, it becomes the final return value.
+Now a call to `MyClass.hello` also calls `MyClass.helloAgain`.
 
 ## Identifier argument
 
