@@ -1,18 +1,17 @@
-export type ListenerType =
+export type ListenerFunction =
   (id: string[], ...arg: any[]) => any
 
-export type ListenersType = Record<string, ListenerType[]>
-export type ListenersAnyType = Record<string, any[]>
-export type ListenerBindingsType = Record<string, string[]>
-export type ListenerInstancesType = Record<string, any>
-export type ListenerOriginalsType =
-  Record<string, Record<string, ListenersType>>
+export type Listeners = Record<string, ListenerFunction>
+export type ListenerBindings = Record<string, string[]>
+export type ListenerInstances = Record<string, any>
+
+const listenerIdRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
 export class Listener {
-  public bindings: ListenerBindingsType = {}
-  public instances: ListenerInstancesType = {}
-  public listeners: ListenersType = {}
-  public originals: ListenerOriginalsType = {}
+  public bindings: ListenerBindings = {}
+  public instances: ListenerInstances = {}
+  public listeners: Listeners = {}
+  public originals: Listeners = {}
 
   public listen(
     sourceId: string[], targetId: string[]
@@ -42,9 +41,6 @@ export class Listener {
 
       this.instances[instanceId] = instance
       
-      const og = this.originals[instanceId] =
-        this.originals[instanceId] || {}
-
       if (instance._listeners) {
         continue
       }
@@ -55,15 +51,13 @@ export class Listener {
         const fn = instance[fnName]
         const fnId = `${instanceId}.${fnName}`
 
-        og[fnName] = og[fnName] || instance[fnName]
+        this.originals[fnId] = instance[fnName]
 
         instance[fnName] = this.listenerWrapper(
           fn, instance, fnId
         )
 
-        this.listeners[fnId] = this.listeners[fnId] || []
-        this.listeners[fnId] = this.listeners[fnId]
-          .concat([instance[fnName]])
+        this.listeners[fnId] = instance[fnName]
       }
 
       if (instance.listen) {
@@ -73,13 +67,14 @@ export class Listener {
   }
 
   public reset(): void {
-    for (let instanceId in this.originals) {
-      const og = this.originals[instanceId]
+    for (let key in this.originals) {
+      const [instanceId, fnId] =
+        key.match(listenerIdRegex).slice(2)
 
-      for (let fnId in og) {
-        this.instances[instanceId][fnId] = og[fnId]
-        delete this.instances[instanceId]._listeners
-      }
+      this.instances[instanceId][fnId] = this.originals[key]
+
+      delete this.instances[instanceId]._listeners
+      delete this.originals[key]
     }
     for (let key in this.bindings) {
       delete this.bindings[key]
@@ -113,20 +108,18 @@ export class Listener {
         return
       }
 
-      const listens = this.listeners[target]
+      const fn = this.listeners[target]
 
-      if (!listens) {
+      if (!fn) {
         return
       }
 
-      for (const fn of listens) {
-        out = promise ?
-          promise.then((): any => fn(id, ...args)) :
-          fn(id, ...args)
+      out = promise ?
+        promise.then((): any => fn(id, ...args)) :
+        fn(id, ...args)
 
-        if (out && out.then) {
-          promise = out
-        }
+      if (out && out.then) {
+        promise = out
       }
     })
 
@@ -134,7 +127,9 @@ export class Listener {
   }
 
   private addList(
-    lists: ListenersAnyType, list: Set<string>, key: string
+    lists: ListenerBindings | ListenerInstances,
+    list: Set<string>,
+    key: string
   ): void {
     if (lists[key]) {
       for (const item of lists[key]) {

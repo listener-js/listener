@@ -31,47 +31,47 @@
 
 ###  bindings
 
-• **bindings**: *[ListenerBindingsType](../modules/_index_.md#listenerbindingstype)*
+• **bindings**: *[ListenerBindings](../modules/_index_.md#listenerbindings)*
 
-Defined in index.ts:12
+Defined in index.ts:11
 
 ___
 
 ###  instances
 
-• **instances**: *[ListenerInstancesType](../modules/_index_.md#listenerinstancestype)*
+• **instances**: *[ListenerInstances](../modules/_index_.md#listenerinstances)*
 
-Defined in index.ts:13
+Defined in index.ts:12
 
 ___
 
 ###  listeners
 
-• **listeners**: *[ListenersType](../modules/_index_.md#listenerstype)*
+• **listeners**: *[Listeners](../modules/_index_.md#listeners)*
 
-Defined in index.ts:14
+Defined in index.ts:13
 
 ___
 
 ###  originals
 
-• **originals**: *[ListenerOriginalsType](../modules/_index_.md#listeneroriginalstype)*
+• **originals**: *[Listeners](../modules/_index_.md#listeners)*
 
-Defined in index.ts:15
+Defined in index.ts:14
 
 ## Methods
 
 ### `Private` addList
 
-▸ **addList**(`lists`: [ListenersAnyType](../modules/_index_.md#listenersanytype), `list`: `Set<string>`, `key`: string): *void*
+▸ **addList**(`lists`: [ListenerBindings](../modules/_index_.md#listenerbindings) | [ListenerInstances](../modules/_index_.md#listenerinstances), `list`: `Set<string>`, `key`: string): *void*
 
-Defined in index.ts:136
+Defined in index.ts:129
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`lists` | [ListenersAnyType](../modules/_index_.md#listenersanytype) |
+`lists` | [ListenerBindings](../modules/_index_.md#listenerbindings) \| [ListenerInstances](../modules/_index_.md#listenerinstances) |
 `list` | `Set<string>` |
 `key` | string |
 
@@ -83,7 +83,7 @@ ___
 
 ▸ **buildList**(`id`: string[]): *`Set<string>`*
 
-Defined in index.ts:146
+Defined in index.ts:141
 
 **Parameters:**
 
@@ -99,7 +99,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], ...`args`: any[]): *any*
 
-Defined in index.ts:98
+Defined in index.ts:93
 
 **Parameters:**
 
@@ -117,7 +117,7 @@ ___
 
 ▸ **listen**(`sourceId`: string[], `targetId`: string[]): *void*
 
-Defined in index.ts:17
+Defined in index.ts:16
 
 **Parameters:**
 
@@ -134,7 +134,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:29
+Defined in index.ts:28
 
 **Parameters:**
 
@@ -151,7 +151,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:187
+Defined in index.ts:182
 
 **Parameters:**
 
@@ -169,6 +169,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:75
+Defined in index.ts:69
 
 **Returns:** *void*
