@@ -54,7 +54,7 @@ test("defined", (): void => {
   expect(listen).not.toBeUndefined()
 })
 
-test.only("listener", (): void => {
+test("listener", (): void => {
   expect(MyClass.fn(["id"], true)).toEqual({
     "fn": true, "id": ["MyClass.fn", "id"], "someArg": true
   })
@@ -66,7 +66,7 @@ test.only("listener", (): void => {
   })
 })
 
-test.only("listen", (): void => {
+test("listen", (): void => {
   listen(["MyClass.fn"], ["MyClass2.fn2"])
   
   expect(MyClass.fn([], true)).toEqual({
