@@ -4,6 +4,12 @@ export type ListenerFunction =
 export type Listeners = Record<string, ListenerFunction>
 export type ListenerBindings = Record<string, string[]>
 export type ListenerInstances = Record<string, any>
+export type ListenerOptions = Record<string, object>
+export type ListenerBindingItem = [string, object]
+
+export type ListenerBindingsListSorter =
+  (a: ListenerBindingItem, b: ListenerBindingItem)
+    => number
 
 const listenerIdRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
@@ -12,9 +18,12 @@ export class Listener {
   public instances: ListenerInstances = {}
   public listeners: Listeners = {}
   public originals: Listeners = {}
+  public options: ListenerOptions = {}
 
   public listen(
-    sourceId: string[], targetId: string[]
+    sourceId: string[],
+    targetId: string[],
+    options?: object
   ): void {
     const source = sourceId.join(".")
     const target = targetId.join(".")
@@ -23,6 +32,11 @@ export class Listener {
     
     this.bindings[source] =
       this.bindings[source].concat([target])
+    
+    if (options) {
+      this.options[source] = this.options[source] || {}
+      this.options[source][target] = options
+    }
   }
 
   public listener(
@@ -85,8 +99,8 @@ export class Listener {
     for (let key in this.listeners) {
       delete this.listeners[key]
     }
-    for (let key in this.originals) {
-      delete this.originals[key]
+    for (let key in this.options) {
+      delete this.options[key]
     }
   }
 
@@ -103,15 +117,15 @@ export class Listener {
       return
     }
 
-    this.buildList(id).forEach((target): void => {
+    for (const [target] of this.buildList(id)) {
       if (fnId === target) {
-        return
+        continue
       }
 
       const fn = this.listeners[target]
 
       if (!fn) {
-        return
+        continue
       }
 
       out = promise ?
@@ -121,29 +135,32 @@ export class Listener {
       if (out && out.then) {
         promise = out
       }
-    })
+    }
 
     return promise || out
   }
 
   private addList(
-    lists: ListenerBindings | ListenerInstances,
-    list: Set<string>,
+    lists: ListenerBindings,
+    list: ListenerBindingItem[],
     key: string
   ): void {
     if (lists[key]) {
       for (const item of lists[key]) {
-        list.add(item)
+        list.push([
+          item,
+          this.options[key] ? this.options[key][item] : {}
+        ])
       }
     }
   }
 
-  private buildList(id: string[]): Set<string> {
+  private buildList(id: string[]): ListenerBindingItem[] {
     const lists = this.bindings
 
     let key: string
     let key2: string
-    let list: Set<string> = new Set()
+    let list: [string, object][] = []
 
     this.addList(lists, list, "**")
     
@@ -176,6 +193,9 @@ export class Listener {
       this.addList(lists, list, key)
     }
 
+    list = list.sort(this.listSort(true))
+    list = list.sort(this.listSort(false))
+
     return list
   }
 
@@ -201,6 +221,28 @@ export class Listener {
         const emitOut = this.emit(fnId, id, ...args)
         return emitOut || out
       }
+    }
+  }
+
+  private listSort(
+    prepend: boolean
+  ): ListenerBindingsListSorter {
+    return function (
+      [, aOpts = {}]: ListenerBindingItem,
+      [, bOpts = {}]: ListenerBindingItem
+    ): number {
+      const propA = aOpts[prepend ? "prepend" : "append"]
+      const propB = bOpts[prepend ? "prepend" : "append"]
+
+      let comparison = 0
+
+      if (propA && !propB) {
+        comparison = prepend ? -1 : 1
+      } else if (!propA && propB) {
+        comparison = prepend ? 1 : -1
+      }
+
+      return comparison
     }
   }
 }

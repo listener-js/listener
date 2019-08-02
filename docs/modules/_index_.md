@@ -12,9 +12,12 @@
 
 ### Type aliases
 
+* [ListenerBindingItem](_index_.md#listenerbindingitem)
 * [ListenerBindings](_index_.md#listenerbindings)
+* [ListenerBindingsListSorter](_index_.md#listenerbindingslistsorter)
 * [ListenerFunction](_index_.md#listenerfunction)
 * [ListenerInstances](_index_.md#listenerinstances)
+* [ListenerOptions](_index_.md#listeneroptions)
 * [Listeners](_index_.md#listeners)
 
 ### Variables
@@ -27,11 +30,38 @@
 
 ## Type aliases
 
+###  ListenerBindingItem
+
+Ƭ **ListenerBindingItem**: *[string, object]*
+
+Defined in index.ts:8
+
+___
+
 ###  ListenerBindings
 
 Ƭ **ListenerBindings**: *`Record<string, string[]>`*
 
 Defined in index.ts:5
+
+___
+
+###  ListenerBindingsListSorter
+
+Ƭ **ListenerBindingsListSorter**: *function*
+
+Defined in index.ts:10
+
+#### Type declaration:
+
+▸ (`a`: [ListenerBindingItem](_index_.md#listenerbindingitem), `b`: [ListenerBindingItem](_index_.md#listenerbindingitem)): *number*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`a` | [ListenerBindingItem](_index_.md#listenerbindingitem) |
+`b` | [ListenerBindingItem](_index_.md#listenerbindingitem) |
 
 ___
 
@@ -62,6 +92,14 @@ Defined in index.ts:6
 
 ___
 
+###  ListenerOptions
+
+Ƭ **ListenerOptions**: *`Record<string, object>`*
+
+Defined in index.ts:7
+
+___
+
 ###  Listeners
 
 Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
@@ -74,7 +112,7 @@ Defined in index.ts:4
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:208
+Defined in index.ts:250
 
 ___
 
@@ -82,7 +120,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:210
+Defined in index.ts:252
 
 ___
 
@@ -90,7 +128,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:211
+Defined in index.ts:253
 
 ___
 
@@ -98,7 +136,7 @@ ___
 
 • **listenerIdRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)/i
 
-Defined in index.ts:8
+Defined in index.ts:14
 
 ___
 
@@ -106,4 +144,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:212
+Defined in index.ts:254

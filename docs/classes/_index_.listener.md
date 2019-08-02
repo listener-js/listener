@@ -15,6 +15,7 @@
 * [bindings](_index_.listener.md#bindings)
 * [instances](_index_.listener.md#instances)
 * [listeners](_index_.listener.md#listeners)
+* [options](_index_.listener.md#options)
 * [originals](_index_.listener.md#originals)
 
 ### Methods
@@ -22,6 +23,7 @@
 * [addList](_index_.listener.md#private-addlist)
 * [buildList](_index_.listener.md#private-buildlist)
 * [emit](_index_.listener.md#private-emit)
+* [listSort](_index_.listener.md#private-listsort)
 * [listen](_index_.listener.md#listen)
 * [listener](_index_.listener.md#listener)
 * [listenerWrapper](_index_.listener.md#private-listenerwrapper)
@@ -33,7 +35,7 @@
 
 • **bindings**: *[ListenerBindings](../modules/_index_.md#listenerbindings)*
 
-Defined in index.ts:11
+Defined in index.ts:17
 
 ___
 
@@ -41,7 +43,7 @@ ___
 
 • **instances**: *[ListenerInstances](../modules/_index_.md#listenerinstances)*
 
-Defined in index.ts:12
+Defined in index.ts:18
 
 ___
 
@@ -49,7 +51,15 @@ ___
 
 • **listeners**: *[Listeners](../modules/_index_.md#listeners)*
 
-Defined in index.ts:13
+Defined in index.ts:19
+
+___
+
+###  options
+
+• **options**: *[ListenerOptions](../modules/_index_.md#listeneroptions)*
+
+Defined in index.ts:21
 
 ___
 
@@ -57,22 +67,22 @@ ___
 
 • **originals**: *[Listeners](../modules/_index_.md#listeners)*
 
-Defined in index.ts:14
+Defined in index.ts:20
 
 ## Methods
 
 ### `Private` addList
 
-▸ **addList**(`lists`: [ListenerBindings](../modules/_index_.md#listenerbindings) | [ListenerInstances](../modules/_index_.md#listenerinstances), `list`: `Set<string>`, `key`: string): *void*
+▸ **addList**(`lists`: [ListenerBindings](../modules/_index_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[], `key`: string): *void*
 
-Defined in index.ts:129
+Defined in index.ts:143
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`lists` | [ListenerBindings](../modules/_index_.md#listenerbindings) \| [ListenerInstances](../modules/_index_.md#listenerinstances) |
-`list` | `Set<string>` |
+`lists` | [ListenerBindings](../modules/_index_.md#listenerbindings) |
+`list` | [ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[] |
 `key` | string |
 
 **Returns:** *void*
@@ -81,9 +91,9 @@ ___
 
 ### `Private` buildList
 
-▸ **buildList**(`id`: string[]): *`Set<string>`*
+▸ **buildList**(`id`: string[]): *[ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[]*
 
-Defined in index.ts:141
+Defined in index.ts:158
 
 **Parameters:**
 
@@ -91,7 +101,7 @@ Name | Type |
 ------ | ------ |
 `id` | string[] |
 
-**Returns:** *`Set<string>`*
+**Returns:** *[ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[]*
 
 ___
 
@@ -99,7 +109,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], ...`args`: any[]): *any*
 
-Defined in index.ts:93
+Defined in index.ts:107
 
 **Parameters:**
 
@@ -113,11 +123,27 @@ Name | Type |
 
 ___
 
+### `Private` listSort
+
+▸ **listSort**(`prepend`: boolean): *[ListenerBindingsListSorter](../modules/_index_.md#listenerbindingslistsorter)*
+
+Defined in index.ts:227
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`prepend` | boolean |
+
+**Returns:** *[ListenerBindingsListSorter](../modules/_index_.md#listenerbindingslistsorter)*
+
+___
+
 ###  listen
 
-▸ **listen**(`sourceId`: string[], `targetId`: string[]): *void*
+▸ **listen**(`sourceId`: string[], `targetId`: string[], `options?`: object): *void*
 
-Defined in index.ts:16
+Defined in index.ts:23
 
 **Parameters:**
 
@@ -125,6 +151,7 @@ Name | Type |
 ------ | ------ |
 `sourceId` | string[] |
 `targetId` | string[] |
+`options?` | object |
 
 **Returns:** *void*
 
@@ -134,7 +161,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:28
+Defined in index.ts:42
 
 **Parameters:**
 
@@ -151,7 +178,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:182
+Defined in index.ts:202
 
 **Parameters:**
 
@@ -169,6 +196,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:69
+Defined in index.ts:83
 
 **Returns:** *void*

@@ -24,12 +24,18 @@ class MyClass {
 }
 
 class MyClass2 {
-  public static listeners = ["fn2", "asyncFn2", "asyncFn3"]
+  public static listeners = ["fn2", "fn3", "asyncFn2", "asyncFn3"]
 
   public static fn2(
     id: string[], someArg: boolean
   ): object {
     return { fn2: true, id, someArg }
+  }
+
+  public static fn3(
+    id: string[], someArg: boolean
+  ): object {
+    return { fn3: true, id, someArg }
   }
 
   public static async asyncFn2(
@@ -242,6 +248,28 @@ test("listen id and **", (): void => {
   expect(MyClass.fn(["id", "id2"], true)).toEqual({
     "fn2": true,
     "id": ["MyClass2.fn2", "MyClass.fn", "id", "id2"],
+    "someArg": true
+  })
+})
+
+test("prepend option", (): void => {
+  listen(["MyClass.fn"], ["MyClass2.fn2"])
+  listen(["MyClass.fn"], ["MyClass2.fn3"], { prepend: true })
+
+  expect(MyClass.fn([], true)).toEqual({
+    "fn2": true,
+    "id": ["MyClass2.fn2", "MyClass.fn"],
+    "someArg": true
+  })
+})
+
+test("append option", (): void => {
+  listen(["MyClass.fn"], ["MyClass2.fn3"], { append: true })
+  listen(["MyClass.fn"], ["MyClass2.fn2"])
+
+  expect(MyClass.fn([], true)).toEqual({
+    "fn3": true,
+    "id": ["MyClass2.fn3", "MyClass.fn"],
     "someArg": true
   })
 })
