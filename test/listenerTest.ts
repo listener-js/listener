@@ -24,7 +24,8 @@ class MyClass {
 }
 
 class MyClass2 {
-  public static listeners = ["fn2", "fn3", "asyncFn2", "asyncFn3"]
+  public static listeners =
+    ["fn2", "fn3", "asyncFn2", "asyncFn3"]
 
   public static fn2(
     id: string[], someArg: boolean
@@ -72,7 +73,7 @@ test("listener", (): void => {
   })
 })
 
-test("listen", (): void => {
+test("listen return", (): void => {
   listen(["MyClass.fn"], ["MyClass2.fn2"], { useReturn: true})
   
   expect(MyClass.fn([], true)).toEqual({
@@ -86,6 +87,20 @@ test("listen", (): void => {
     "id": ["MyClass2.fn2", "id"],
     "someArg": true
   })
+})
+
+test("listen", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (): void => { expect(1).toBe(1) },
+    listeners: ["fn"]
+  }
+
+  listener({ Test })
+  listen(["MyClass.fn"], ["Test.fn"])
+
+  MyClass.fn([], true)
 })
 
 test("async listener", async (): Promise<void> => {
@@ -123,7 +138,7 @@ test("async listen", async (): Promise<void> => {
 })
 
 test(
-  "async listen with no return on bound listener",
+  "async listen null return",
   async (): Promise<void> => {
     listen(
       ["MyClass.asyncFn"],
@@ -131,12 +146,7 @@ test(
       { useReturn: true }
     )
 
-    expect(await MyClass.asyncFn(["id"], true))
-      .toEqual({
-        "asyncFn": true,
-        "id": ["MyClass.asyncFn", "id"],
-        "someArg": true
-      })
+    expect(await MyClass.asyncFn([], true)).toBe(null)
   }
 )
 

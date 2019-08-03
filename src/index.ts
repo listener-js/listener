@@ -9,8 +9,8 @@ export type ListenerFunction =
 
 export type Listeners = Record<string, ListenerFunction>
 export type ListenerBindings = Record<string, string[]>
-export type ListenerInstances = Record<string, any>
 export type ListenerBindingItem = [string, ListenerOptions]
+export type ListenerInstances = Record<string, any>
 
 export type ListenerBindingOptions =
   Record<string, ListenerOptions>
@@ -217,7 +217,7 @@ export class Listener {
       }
     }
 
-    return finalOut || ogOut
+    return finalOut === undefined ? ogOut : finalOut
   }
 
   private listenerWrapper(

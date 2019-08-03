@@ -38,7 +38,7 @@
 
 Ƭ **ListenerBindingItem**: *[string, [ListenerOptions](../interfaces/_index_.listeneroptions.md)]*
 
-Defined in index.ts:13
+Defined in index.ts:12
 
 ___
 
@@ -100,7 +100,7 @@ ___
 
 Ƭ **ListenerInstances**: *`Record<string, any>`*
 
-Defined in index.ts:12
+Defined in index.ts:13
 
 ___
 
