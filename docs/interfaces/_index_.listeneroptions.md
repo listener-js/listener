@@ -20,7 +20,7 @@
 
 ### `Optional` append
 
-• **append**? : *boolean*
+• **append**? : *boolean | number*
 
 Defined in index.ts:2
 
@@ -28,7 +28,7 @@ ___
 
 ### `Optional` prepend
 
-• **prepend**? : *boolean*
+• **prepend**? : *boolean | number*
 
 Defined in index.ts:3
 

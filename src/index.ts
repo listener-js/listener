@@ -1,6 +1,6 @@
 export interface ListenerOptions {
-  append?: boolean
-  prepend?: boolean
+  append?: boolean | number
+  prepend?: boolean | number
   useReturn?: boolean
 }
 
@@ -237,14 +237,17 @@ export class Listener {
       [, aOpts = {}]: ListenerBindingItem,
       [, bOpts = {}]: ListenerBindingItem
     ): number {
-      const propA = prepend ? aOpts.prepend : aOpts.append
-      const propB = prepend ? bOpts.prepend : bOpts.append
+      const a = prepend ? aOpts.prepend : aOpts.append
+      const b = prepend ? bOpts.prepend : bOpts.append
+
+      const x = typeof a === "number" ? a : a ? 1 : 0
+      const y = typeof b === "number" ? b : b ? 1 : 0
 
       let comparison = 0
 
-      if (propA && !propB) {
+      if (x > y) {
         comparison = prepend ? -1 : 1
-      } else if (!propA && propB) {
+      } else if (x < y) {
         comparison = prepend ? 1 : -1
       }
 

@@ -306,6 +306,26 @@ test("prepend option", (): void => {
   })
 })
 
+test("prepend option (numeric)", (): void => {
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn2"],
+    { prepend: 1, useReturn: true }
+  )
+
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn3"],
+    { prepend: 2, useReturn: true }
+  )
+
+  expect(MyClass.fn([], true)).toEqual({
+    "fn2": true,
+    "id": ["MyClass2.fn2", "MyClass.fn"],
+    "someArg": true
+  })
+})
+
 test("append option", (): void => {
   listen(
     ["MyClass.fn"],
@@ -317,6 +337,26 @@ test("append option", (): void => {
     ["MyClass.fn"],
     ["MyClass2.fn2"],
     { useReturn: true }
+  )
+
+  expect(MyClass.fn([], true)).toEqual({
+    "fn3": true,
+    "id": ["MyClass2.fn3", "MyClass.fn"],
+    "someArg": true
+  })
+})
+
+test("append option (numeric)", (): void => {
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn3"],
+    { append: 2, useReturn: true }
+  )
+
+  listen(
+    ["MyClass.fn"],
+    ["MyClass2.fn2"],
+    { append: 1, useReturn: true }
   )
 
   expect(MyClass.fn([], true)).toEqual({
