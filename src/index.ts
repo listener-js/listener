@@ -1,23 +1,11 @@
-export interface ListenerOptions {
-  append?: boolean | number
-  index?: number
-  prepend?: boolean | number
-  useReturn?: boolean
-}
-
-export type ListenerFunction =
-  (id: string[], ...arg: any[]) => any
-
-export type Listeners = Record<string, ListenerFunction>
-export type ListenerBindings = Record<string, string[]>
-export type ListenerBindingItem = [string, ListenerOptions]
-export type ListenerInstances = Record<string, any>
-
-export type ListenerBindingOptions =
-  Record<string, ListenerOptions>
-
-export type ListenerBindingsListSorter =
-  (a: ListenerBindingItem, b: ListenerBindingItem) => number
+import {
+  ListenerBindings,
+  ListenerInstances,
+  Listeners,
+  ListenerBindingOptions,
+  ListenerOptions,
+  ListenerBindingItem
+} from "./types"
 
 const listenerIdRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
@@ -25,8 +13,8 @@ export class Listener {
   public bindings: ListenerBindings = {}
   public instances: ListenerInstances = {}
   public listeners: Listeners = {}
-  public originals: Listeners = {}
   public options: ListenerBindingOptions = {}
+  public originals: Listeners = {}
 
   public listen(
     sourceId: string[],
@@ -169,7 +157,7 @@ export class Listener {
     }
 
     list = list.sort(this.listSort.bind(this))
-    
+
     return list
   }
 

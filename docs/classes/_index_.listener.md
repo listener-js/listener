@@ -34,56 +34,56 @@
 
 ###  bindings
 
-• **bindings**: *[ListenerBindings](../modules/_index_.md#listenerbindings)*
+• **bindings**: *[ListenerBindings](../modules/_types_.md#listenerbindings)*
 
-Defined in index.ts:25
+Defined in index.ts:13
 
 ___
 
 ###  instances
 
-• **instances**: *[ListenerInstances](../modules/_index_.md#listenerinstances)*
+• **instances**: *[ListenerInstances](../modules/_types_.md#listenerinstances)*
 
-Defined in index.ts:26
+Defined in index.ts:14
 
 ___
 
 ###  listeners
 
-• **listeners**: *[Listeners](../modules/_index_.md#listeners)*
+• **listeners**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:27
+Defined in index.ts:15
 
 ___
 
 ###  options
 
-• **options**: *[ListenerBindingOptions](../modules/_index_.md#listenerbindingoptions)*
+• **options**: *[ListenerBindingOptions](../modules/_types_.md#listenerbindingoptions)*
 
-Defined in index.ts:29
+Defined in index.ts:16
 
 ___
 
 ###  originals
 
-• **originals**: *[Listeners](../modules/_index_.md#listeners)*
+• **originals**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:28
+Defined in index.ts:17
 
 ## Methods
 
 ### `Private` addList
 
-▸ **addList**(`lists`: [ListenerBindings](../modules/_index_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[], `key`: string): *void*
+▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *void*
 
-Defined in index.ts:114
+Defined in index.ts:102
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`lists` | [ListenerBindings](../modules/_index_.md#listenerbindings) |
-`list` | [ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[] |
+`lists` | [ListenerBindings](../modules/_types_.md#listenerbindings) |
+`list` | [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[] |
 `key` | string |
 
 **Returns:** *void*
@@ -92,9 +92,9 @@ ___
 
 ### `Private` buildList
 
-▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[]*
+▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:129
+Defined in index.ts:117
 
 **Parameters:**
 
@@ -103,7 +103,7 @@ Name | Type |
 `fnId` | string |
 `id` | string[] |
 
-**Returns:** *[ListenerBindingItem](../modules/_index_.md#listenerbindingitem)[]*
+**Returns:** *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:176
+Defined in index.ts:164
 
 **Parameters:**
 
@@ -128,16 +128,16 @@ ___
 
 ### `Private` listSort
 
-▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_index_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_index_.listeneroptions.md)]): *number*
+▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:248
+Defined in index.ts:236
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`__namedParameters` | [undefined, [ListenerOptions](../interfaces/_index_.listeneroptions.md)] |
-`__namedParameters` | [undefined, [ListenerOptions](../interfaces/_index_.listeneroptions.md)] |
+`__namedParameters` | [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)] |
+`__namedParameters` | [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)] |
 
 **Returns:** *number*
 
@@ -145,9 +145,9 @@ ___
 
 ###  listen
 
-▸ **listen**(`sourceId`: string[], `targetId`: string[], `options?`: [ListenerOptions](../interfaces/_index_.listeneroptions.md)): *void*
+▸ **listen**(`sourceId`: string[], `targetId`: string[], `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
 
-Defined in index.ts:31
+Defined in index.ts:19
 
 **Parameters:**
 
@@ -155,7 +155,7 @@ Name | Type |
 ------ | ------ |
 `sourceId` | string[] |
 `targetId` | string[] |
-`options?` | [ListenerOptions](../interfaces/_index_.listeneroptions.md) |
+`options?` | [ListenerOptions](../interfaces/_types_.listeneroptions.md) |
 
 **Returns:** *void*
 
@@ -165,7 +165,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:50
+Defined in index.ts:38
 
 **Parameters:**
 
@@ -182,7 +182,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:239
+Defined in index.ts:227
 
 **Parameters:**
 
@@ -197,15 +197,15 @@ ___
 
 ### `Private` optsToIndex
 
-▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_index_.listeneroptions.md)): *number*
+▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:259
+Defined in index.ts:247
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`opts` | [ListenerOptions](../interfaces/_index_.listeneroptions.md) |
+`opts` | [ListenerOptions](../interfaces/_types_.listeneroptions.md) |
 
 **Returns:** *number*
 
@@ -215,6 +215,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:90
+Defined in index.ts:78
 
 **Returns:** *void*
