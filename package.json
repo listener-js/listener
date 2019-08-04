@@ -1,11 +1,12 @@
 {
   "name": "@listener-js/listener",
   "version": "1.6.0",
-  "description": "Type-safe event emitter with a simple & unobtrusive API",
+  "description": "Type-friendly awesome event emitter",
   "keywords": [
+    "typed",
+    "typescript",
     "event",
-    "emitter",
-    "typescript"
+    "emitter"
   ],
   "author": "Listener <emit@listener.events>",
   "main": "dist/index.js",

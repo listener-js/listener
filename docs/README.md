@@ -4,19 +4,19 @@
 
 # listener
 
-Type-safe event emitter with a simple & unobtrusive API
+Type-friendly awesome event emitter
 
 ![listener](media/listener.gif)
 
 ## Goals
 
-Easily turn existing class functions into event listeners.
+Easily turn existing class/instance functions into event listeners.
 
-Call listener functions like normal (and preserve original types).
+Call listener functions as always and preserve original types.
 
 Make it easy to connect listener functions to each other.
 
-Incorporate a readable identifier system for programmatic context and debugging.
+Incorporate a contextual identifier system for listener calls.
 
 ## Install
 
