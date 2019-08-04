@@ -217,6 +217,12 @@ export class Listener {
       }
     }
 
+    if (promise) {
+      return promise.then((): any =>
+        finalOut === undefined ? ogOut : finalOut
+      )
+    }
+
     return finalOut === undefined ? ogOut : finalOut
   }
 

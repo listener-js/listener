@@ -128,7 +128,7 @@ ___
 
 ▸ **listSort**(`prepend`: boolean): *[ListenerBindingsListSorter](../modules/_index_.md#listenerbindingslistsorter)*
 
-Defined in index.ts:233
+Defined in index.ts:239
 
 **Parameters:**
 
@@ -179,7 +179,7 @@ ___
 
 ▸ **listenerWrapper**(`fn`: any, `instance`: any, `fnId`: string): *`Function`*
 
-Defined in index.ts:223
+Defined in index.ts:229
 
 **Parameters:**
 

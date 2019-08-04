@@ -1,7 +1,7 @@
 import { listener, listen, reset } from "../"
 import { Log } from "@listener-js/log"
 
-function delay(t: number, v: any): Promise<any> {
+function delay(t: number, v?: any): Promise<any> {
   return new Promise((resolve): void => {
     setTimeout(resolve.bind(null, v), t)
   })
@@ -117,7 +117,7 @@ test("async listener", async (): Promise<void> => {
   })
 })
 
-test("async listen", async (): Promise<void> => {
+test("async listen return", async (): Promise<void> => {
   listen(
     ["MyClass.asyncFn"],
     ["MyClass2.asyncFn2"],
@@ -135,6 +135,23 @@ test("async listen", async (): Promise<void> => {
     "id": ["MyClass2.asyncFn2", "id"],
     "someArg": true
   })
+})
+
+test("async listen", async (): Promise<void> => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: async (): Promise<void> => {
+      await delay(1)
+      expect(1).toBe(1)
+    },
+    listeners: ["fn"]
+  }
+
+  listener({ Test })
+  listen(["MyClass.asyncFn"], ["Test.fn"])
+
+  await MyClass.asyncFn([], true)
 })
 
 test(
