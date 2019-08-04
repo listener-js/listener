@@ -13,6 +13,7 @@
 ### Properties
 
 * [append](_index_.listeneroptions.md#optional-append)
+* [index](_index_.listeneroptions.md#optional-index)
 * [prepend](_index_.listeneroptions.md#optional-prepend)
 * [useReturn](_index_.listeneroptions.md#optional-usereturn)
 
@@ -26,11 +27,19 @@ Defined in index.ts:2
 
 ___
 
+### `Optional` index
+
+• **index**? : *number*
+
+Defined in index.ts:3
+
+___
+
 ### `Optional` prepend
 
 • **prepend**? : *boolean | number*
 
-Defined in index.ts:3
+Defined in index.ts:4
 
 ___
 
@@ -38,4 +47,4 @@ ___
 
 • **useReturn**? : *boolean*
 
-Defined in index.ts:4
+Defined in index.ts:5

@@ -1,5 +1,6 @@
 export interface ListenerOptions {
   append?: boolean | number
+  index?: number
   prepend?: boolean | number
   useReturn?: boolean
 }
@@ -69,13 +70,12 @@ export class Listener {
       instance._listeners = true
 
       for (const fnName of instance.listeners) {
-        const fn = instance[fnName]
         const fnId = `${instanceId}.${fnName}`
 
         this.originals[fnId] = instance[fnName]
 
         instance[fnName] = this.listenerWrapper(
-          fn, instance, fnId
+          fnId, instanceId
         )
 
         this.listeners[fnId] = instance[fnName]
@@ -126,12 +126,16 @@ export class Listener {
     }
   }
 
-  private buildList(id: string[]): ListenerBindingItem[] {
+  private buildList(
+    fnId: string, id: string[]
+  ): ListenerBindingItem[] {
     const lists = this.bindings
 
     let key: string
     let key2: string
-    let list: ListenerBindingItem[] = []
+    let list: ListenerBindingItem[] = [
+      [fnId, { index: 0 }]
+    ]
 
     this.addList(lists, list, "**")
     
@@ -164,41 +168,44 @@ export class Listener {
       this.addList(lists, list, key)
     }
 
-    list = list.sort(this.listSort(true))
-    list = list.sort(this.listSort(false))
-
+    list = list.sort(this.listSort.bind(this))
+    
     return list
   }
 
   private emit(
     fnId: string,
     id: string[],
-    ogOut: any,
+    instanceId: string,
     ...args: any[]
   ): any {
     let promise: Promise<any>
     let out: any
     let finalOut: any
 
-    if (ogOut && ogOut.then) {
-      promise = ogOut
-    } else {
-      out = ogOut
-    }
-
     if (
       this.bindings["**"] &&
       this.bindings["**"].indexOf(fnId) > -1
     ) {
-      return ogOut
+      return this.originals[fnId].call(
+        this.instances[instanceId], id, ...args
+      )
     }
 
-    for (const [target, options] of this.buildList(id)) {
-      if (fnId === target) {
+    const list = this.buildList(fnId, id)
+
+    for (const [target, options] of list) {
+      const isMainFn = options && options.index === 0
+
+      if (!isMainFn && fnId === target) {
         continue
       }
 
-      const fn = this.listeners[target]
+      const fn = isMainFn ?
+        this.originals[fnId].bind(
+          this.instances[instanceId]
+        ) :
+        this.listeners[target]
 
       if (!fn) {
         continue
@@ -212,53 +219,62 @@ export class Listener {
         promise = out
       }
 
-      if (options && options.useReturn) {
+      if (options &&
+        (
+          (!finalOut && isMainFn) ||
+          options.useReturn
+        )
+      ) {
         finalOut = promise || out
       }
     }
 
     if (promise) {
-      return promise.then((): any =>
-        finalOut === undefined ? ogOut : finalOut
-      )
+      return promise.then((): any => finalOut)
     }
 
-    return finalOut === undefined ? ogOut : finalOut
+    return finalOut
   }
 
   private listenerWrapper(
-    fn: any, instance: any, fnId: string
+    fnId: string, instanceId: string
   ): Function {
     return (eid: string[], ...args: any[]): any => {
       const id = [fnId].concat(eid)
-      const out = fn.call(instance, id, ...args)
-      return this.emit(fnId, id, out, ...args)
+      return this.emit(fnId, id, instanceId, ...args)
     }
   }
 
   private listSort(
-    prepend: boolean
-  ): ListenerBindingsListSorter {
-    return function (
-      [, aOpts = {}]: ListenerBindingItem,
-      [, bOpts = {}]: ListenerBindingItem
-    ): number {
-      const a = prepend ? aOpts.prepend : aOpts.append
-      const b = prepend ? bOpts.prepend : bOpts.append
+    [, a = {}]: ListenerBindingItem,
+    [, b = {}]: ListenerBindingItem
+  ): number {
+    const aIndex = this.optsToIndex(a)
+    const bIndex = this.optsToIndex(b)
 
-      const x = typeof a === "number" ? a : a ? 1 : 0
-      const y = typeof b === "number" ? b : b ? 1 : 0
+    return (aIndex > bIndex) ? 1 :
+      (aIndex < bIndex) ? -1 : 0
+  }
 
-      let comparison = 0
-
-      if (x > y) {
-        comparison = prepend ? -1 : 1
-      } else if (x < y) {
-        comparison = prepend ? 1 : -1
-      }
-
-      return comparison
+  private optsToIndex(opts: ListenerOptions): number {
+    if (typeof opts.index === "number") {
+      return opts.index
     }
+    if (opts.prepend) {
+      if (typeof opts.prepend === "number") {
+        return opts.prepend * -1
+      } else {
+        return -1
+      }
+    }
+    if (opts.append) {
+      if (typeof opts.append === "number") {
+        return opts.append
+      } else {
+        return 1
+      }
+    }
+    return 1
   }
 }
 

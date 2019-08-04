@@ -327,7 +327,7 @@ test("append option", (): void => {
   listen(
     ["MyClass.fn"],
     ["MyClass2.fn3"],
-    { append: true, useReturn: true }
+    { append: 2, useReturn: true }
   )
 
   listen(
