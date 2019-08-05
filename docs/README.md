@@ -14,7 +14,7 @@ Turn existing class functions into event listeners with minimal changes.
 
 No type definitions outside of usual function definitions.
 
-Extra "boilerplate" functions only on setup, not during usage.
+Extra "boilerplate" functions only necessary on setup, not during usage.
 
 Provide a listener identifier based on the call stack (for debugging and programmatic context).
 
