@@ -23,7 +23,7 @@
 
 • **append**? : *boolean | number*
 
-*Defined in [types.ts:2](https://github.com/listener-js/listener/blob/02261ac/src/types.ts#L2)*
+*Defined in [types.ts:2](https://github.com/listener-js/listener/blob/1872991/src/types.ts#L2)*
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 • **index**? : *number*
 
-*Defined in [types.ts:3](https://github.com/listener-js/listener/blob/02261ac/src/types.ts#L3)*
+*Defined in [types.ts:3](https://github.com/listener-js/listener/blob/1872991/src/types.ts#L3)*
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 • **prepend**? : *boolean | number*
 
-*Defined in [types.ts:4](https://github.com/listener-js/listener/blob/02261ac/src/types.ts#L4)*
+*Defined in [types.ts:4](https://github.com/listener-js/listener/blob/1872991/src/types.ts#L4)*
 
 ___
 
@@ -47,4 +47,4 @@ ___
 
 • **useReturn**? : *boolean*
 
-*Defined in [types.ts:5](https://github.com/listener-js/listener/blob/02261ac/src/types.ts#L5)*
+*Defined in [types.ts:5](https://github.com/listener-js/listener/blob/1872991/src/types.ts#L5)*

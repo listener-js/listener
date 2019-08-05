@@ -24,7 +24,7 @@
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-*Defined in [index.ts:269](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L269)*
+*Defined in [index.ts:269](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L269)*
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-*Defined in [index.ts:271](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L271)*
+*Defined in [index.ts:271](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L271)*
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-*Defined in [index.ts:272](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L272)*
+*Defined in [index.ts:272](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L272)*
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 • **listenerIdRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)/i
 
-*Defined in [index.ts:10](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L10)*
+*Defined in [index.ts:10](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L10)*
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-*Defined in [index.ts:273](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L273)*
+*Defined in [index.ts:273](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L273)*
