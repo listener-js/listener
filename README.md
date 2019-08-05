@@ -12,7 +12,7 @@ No type definitions outside of usual function definitions.
 
 Extra "boilerplate" functions only on setup, not during usage.
 
-Provide a listener identifier based on the call stack for debugging and programmatic context.
+Provide a listener identifier based on the call stack (for debugging and programmatic context).
 
 ## Install
 
