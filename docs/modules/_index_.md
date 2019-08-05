@@ -32,7 +32,7 @@
 
 Ƭ **logEvent**: *function*
 
-Defined in index.ts:12
+*Defined in [index.ts:12](https://github.com/listener-js/listener/blob/34983e2/src/index.ts#L12)*
 
 #### Type declaration:
 
@@ -52,7 +52,7 @@ Name | Type |
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:294
+*Defined in [index.ts:294](https://github.com/listener-js/listener/blob/34983e2/src/index.ts#L294)*
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:296
+*Defined in [index.ts:296](https://github.com/listener-js/listener/blob/34983e2/src/index.ts#L296)*
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:297
+*Defined in [index.ts:297](https://github.com/listener-js/listener/blob/34983e2/src/index.ts#L297)*
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 • **listenerIdRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)/i
 
-Defined in index.ts:10
+*Defined in [index.ts:10](https://github.com/listener-js/listener/blob/34983e2/src/index.ts#L10)*
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:298
+*Defined in [index.ts:298](https://github.com/listener-js/listener/blob/34983e2/src/index.ts#L298)*
 
 ## Functions
 
@@ -92,6 +92,6 @@ Defined in index.ts:298
 
 ▸ **log**(): *void*
 
-Defined in index.ts:15
+*Defined in [index.ts:15](https://github.com/listener-js/listener/blob/34983e2/src/index.ts#L15)*
 
 **Returns:** *void*

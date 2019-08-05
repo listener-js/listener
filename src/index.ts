@@ -204,7 +204,7 @@ export class Listener {
     const list = this.buildList(fnId, id)
 
     if (id.indexOf("Log.logEvent") < 0) {
-      log(["emit", ...id], "listener", fnId, list)
+      log(["emit", ...id], "listener", list)
     }
 
     for (const [target, options] of list) {
