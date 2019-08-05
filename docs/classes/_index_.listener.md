@@ -36,7 +36,7 @@
 
 • **bindings**: *[ListenerBindings](../modules/_types_.md#listenerbindings)*
 
-Defined in index.ts:13
+*Defined in [index.ts:13](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L13)*
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 • **instances**: *[ListenerInstances](../modules/_types_.md#listenerinstances)*
 
-Defined in index.ts:14
+*Defined in [index.ts:14](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L14)*
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 • **listeners**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:15
+*Defined in [index.ts:15](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L15)*
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 • **options**: *[ListenerBindingOptions](../modules/_types_.md#listenerbindingoptions)*
 
-Defined in index.ts:16
+*Defined in [index.ts:16](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L16)*
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 • **originals**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:17
+*Defined in [index.ts:17](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L17)*
 
 ## Methods
 
@@ -76,7 +76,7 @@ Defined in index.ts:17
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *void*
 
-Defined in index.ts:102
+*Defined in [index.ts:102](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L102)*
 
 **Parameters:**
 
@@ -94,7 +94,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:117
+*Defined in [index.ts:117](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L117)*
 
 **Parameters:**
 
@@ -111,7 +111,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:164
+*Defined in [index.ts:164](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L164)*
 
 **Parameters:**
 
@@ -130,7 +130,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:236
+*Defined in [index.ts:236](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L236)*
 
 **Parameters:**
 
@@ -147,7 +147,7 @@ ___
 
 ▸ **listen**(`sourceId`: string[], `targetId`: string[], `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
 
-Defined in index.ts:19
+*Defined in [index.ts:19](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L19)*
 
 **Parameters:**
 
@@ -165,7 +165,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:38
+*Defined in [index.ts:38](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L38)*
 
 **Parameters:**
 
@@ -182,7 +182,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:227
+*Defined in [index.ts:227](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L227)*
 
 **Parameters:**
 
@@ -199,7 +199,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:247
+*Defined in [index.ts:247](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L247)*
 
 **Parameters:**
 
@@ -215,6 +215,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:78
+*Defined in [index.ts:78](https://github.com/listener-js/listener/blob/02261ac/src/index.ts#L78)*
 
 **Returns:** *void*
