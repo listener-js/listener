@@ -6,13 +6,13 @@ Type-friendly awesome event emitter
 
 ## Goals
 
-Easily turn existing class/instance functions into event listeners.
+Turn existing class functions into event listeners with minimal changes.
 
-Call listener functions as always and preserve original types.
+No type definitions outside of usual function definitions.
 
-Make it easy to connect listener functions to each other.
+Extra "boilerplate" functions only on setup, not during usage.
 
-Incorporate a contextual identifier system for listener calls.
+Incorporate an optional identifier system to provide programmatic context.
 
 ## Install
 
