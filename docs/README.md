@@ -12,7 +12,7 @@ Type-friendly awesome event emitter
 
 Turn existing class functions into event listeners with minimal changes.
 
-No type definitions outside of usual function definitions.
+No extra type definitions outside of usual function definitions.
 
 Extra "boilerplate" functions only necessary on setup, not during usage.
 
