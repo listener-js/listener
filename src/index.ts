@@ -9,6 +9,11 @@ import {
 
 const listenerIdRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
+type logEvent =
+  (id: string[], level: string, ...value: any[]) => void
+
+let log: logEvent = (): void => {}
+
 export class Listener {
   public bindings: ListenerBindings = {}
   public instances: ListenerInstances = {}
@@ -33,6 +38,8 @@ export class Listener {
       this.options[source] = this.options[source] || {}
       this.options[source][target] = options
     }
+
+    log(["listen"], "listener", sourceId, targetId, options)
   }
 
   public listener(
@@ -55,6 +62,8 @@ export class Listener {
         continue
       }
 
+      log(["listener"], "listener", instanceId, options)
+
       instance._listeners = true
 
       for (const fnName of instance.listeners) {
@@ -72,10 +81,18 @@ export class Listener {
       if (instance.listen) {
         instance.listen(this, options || {})
       }
+
+      if (instanceId === "Log") {
+        log = instance.logEvent
+      }
     }
   }
 
   public reset(): void {
+    log(["reset"], "listener")
+
+    log = (): void => {}
+    
     for (let key in this.originals) {
       const [instanceId, fnId] =
         key.match(listenerIdRegex).slice(2)
@@ -85,15 +102,19 @@ export class Listener {
       delete this.instances[instanceId]._listeners
       delete this.originals[key]
     }
+    
     for (let key in this.bindings) {
       delete this.bindings[key]
     }
+    
     for (let key in this.instances) {
       delete this.instances[key]
     }
+    
     for (let key in this.listeners) {
       delete this.listeners[key]
     }
+    
     for (let key in this.options) {
       delete this.options[key]
     }
@@ -181,6 +202,10 @@ export class Listener {
     }
 
     const list = this.buildList(fnId, id)
+
+    if (id.indexOf("Log.logEvent") < 0) {
+      log(["emit", ...id], "listener", fnId, list)
+    }
 
     for (const [target, options] of list) {
       const isMainFn = options && options.index === 0

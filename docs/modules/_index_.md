@@ -10,6 +10,10 @@
 
 * [Listener](../classes/_index_.listener.md)
 
+### Type aliases
+
+* [logEvent](_index_.md#logevent)
+
 ### Variables
 
 * [instance](_index_.md#const-instance)
@@ -18,13 +22,37 @@
 * [listenerIdRegex](_index_.md#const-listeneridregex)
 * [reset](_index_.md#const-reset)
 
+### Functions
+
+* [log](_index_.md#let-log)
+
+## Type aliases
+
+###  logEvent
+
+Ƭ **logEvent**: *function*
+
+*Defined in [index.ts:12](https://github.com/listener-js/listener/blob/2fb146f/src/index.ts#L12)*
+
+#### Type declaration:
+
+▸ (`id`: string[], `level`: string, ...`value`: any[]): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`id` | string[] |
+`level` | string |
+`...value` | any[] |
+
 ## Variables
 
 ### `Const` instance
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-*Defined in [index.ts:269](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L269)*
+*Defined in [index.ts:294](https://github.com/listener-js/listener/blob/2fb146f/src/index.ts#L294)*
 
 ___
 
@@ -32,7 +60,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-*Defined in [index.ts:271](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L271)*
+*Defined in [index.ts:296](https://github.com/listener-js/listener/blob/2fb146f/src/index.ts#L296)*
 
 ___
 
@@ -40,7 +68,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-*Defined in [index.ts:272](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L272)*
+*Defined in [index.ts:297](https://github.com/listener-js/listener/blob/2fb146f/src/index.ts#L297)*
 
 ___
 
@@ -48,7 +76,7 @@ ___
 
 • **listenerIdRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)/i
 
-*Defined in [index.ts:10](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L10)*
+*Defined in [index.ts:10](https://github.com/listener-js/listener/blob/2fb146f/src/index.ts#L10)*
 
 ___
 
@@ -56,4 +84,14 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-*Defined in [index.ts:273](https://github.com/listener-js/listener/blob/1872991/src/index.ts#L273)*
+*Defined in [index.ts:298](https://github.com/listener-js/listener/blob/2fb146f/src/index.ts#L298)*
+
+## Functions
+
+### `Let` log
+
+▸ **log**(): *void*
+
+*Defined in [index.ts:15](https://github.com/listener-js/listener/blob/2fb146f/src/index.ts#L15)*
+
+**Returns:** *void*
