@@ -37,7 +37,7 @@ export class Listener {
     }
 
     this.log(
-      ["listen"], "listener", sourceId, targetId, options
+      ["listener.listen"], "listener", sourceId, targetId, options
     )
   }
 
@@ -53,7 +53,7 @@ export class Listener {
         !instance.listeners
       ) {
         this.log(
-          ["listener"],
+          ["listener.listener"],
           "warn",
           `value "listeners" not found on "${instanceId}"`
         )
@@ -64,7 +64,7 @@ export class Listener {
       
       if (instance._listeners) {
         this.log(
-          ["listener"],
+          ["listener.listener"],
           "warn",
           `tried to attach instance "${instanceId}" more than once`
         )
@@ -72,7 +72,7 @@ export class Listener {
       }
 
       this.log(
-        ["listener"], "listener", instanceId, options
+        ["listener.listener"], "listener", instanceId, options
       )
 
       instance._listeners = true
@@ -80,7 +80,7 @@ export class Listener {
       for (const fnName of instance.listeners) {
         if (!instance[fnName]) {
           this.log(
-            ["listener"],
+            ["listener.listener"],
             "warn",
             `could not find function "${fnName}" on instance "${instanceId}"`
           )
@@ -109,7 +109,7 @@ export class Listener {
   }
 
   public reset(): void {
-    this.log(["reset"], "listener")
+    this.log(["listener.reset"], "listener")
     this.log = (): void => {}
     
     for (let key in this.originals) {
@@ -223,7 +223,7 @@ export class Listener {
     const list = this.buildList(fnId, id)
 
     if (id.indexOf("Log.logEvent") < 0) {
-      this.log(["emit", ...id], "listener", list)
+      this.log(["listener.emit", ...id], "listener", list)
     }
 
     for (const [target, options] of list) {
