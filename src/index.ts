@@ -4,22 +4,19 @@ import {
   Listeners,
   ListenerBindingOptions,
   ListenerOptions,
-  ListenerBindingItem
+  ListenerBindingItem,
+  logEvent
 } from "./types"
-
-const listenerIdRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
-
-type logEvent =
-  (id: string[], level: string, ...value: any[]) => void
-
-let log: logEvent = (): void => {}
 
 export class Listener {
   public bindings: ListenerBindings = {}
+  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
   public instances: ListenerInstances = {}
   public listeners: Listeners = {}
   public options: ListenerBindingOptions = {}
   public originals: Listeners = {}
+
+  private log: logEvent = (): void => { }
 
   public listen(
     sourceId: string[],
@@ -39,7 +36,9 @@ export class Listener {
       this.options[source][target] = options
     }
 
-    log(["listen"], "listener", sourceId, targetId, options)
+    this.log(
+      ["listen"], "listener", sourceId, targetId, options
+    )
   }
 
   public listener(
@@ -62,7 +61,9 @@ export class Listener {
         continue
       }
 
-      log(["listener"], "listener", instanceId, options)
+      this.log(
+        ["listener"], "listener", instanceId, options
+      )
 
       instance._listeners = true
 
@@ -83,19 +84,18 @@ export class Listener {
       }
 
       if (instanceId === "Log") {
-        log = instance.logEvent
+        this.log = instance.logEvent
       }
     }
   }
 
   public reset(): void {
-    log(["reset"], "listener")
-
-    log = (): void => {}
+    this.log(["reset"], "listener")
+    this.log = (): void => {}
     
     for (let key in this.originals) {
       const [instanceId, fnId] =
-        key.match(listenerIdRegex).slice(2)
+        key.match(this.idRegex).slice(2)
 
       this.instances[instanceId][fnId] = this.originals[key]
 
@@ -204,7 +204,7 @@ export class Listener {
     const list = this.buildList(fnId, id)
 
     if (id.indexOf("Log.logEvent") < 0) {
-      log(["emit", ...id], "listener", list)
+      this.log(["emit", ...id], "listener", list)
     }
 
     for (const [target, options] of list) {

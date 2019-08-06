@@ -13,6 +13,7 @@
 ### Properties
 
 * [bindings](_index_.listener.md#bindings)
+* [idRegex](_index_.listener.md#idregex)
 * [instances](_index_.listener.md#instances)
 * [listeners](_index_.listener.md#listeners)
 * [options](_index_.listener.md#options)
@@ -27,6 +28,7 @@
 * [listen](_index_.listener.md#listen)
 * [listener](_index_.listener.md#listener)
 * [listenerWrapper](_index_.listener.md#private-listenerwrapper)
+* [log](_index_.listener.md#private-log)
 * [optsToIndex](_index_.listener.md#private-optstoindex)
 * [reset](_index_.listener.md#reset)
 
@@ -36,7 +38,15 @@
 
 • **bindings**: *[ListenerBindings](../modules/_types_.md#listenerbindings)*
 
-Defined in index.ts:18
+Defined in index.ts:12
+
+___
+
+###  idRegex
+
+• **idRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)/i
+
+Defined in index.ts:13
 
 ___
 
@@ -44,7 +54,7 @@ ___
 
 • **instances**: *[ListenerInstances](../modules/_types_.md#listenerinstances)*
 
-Defined in index.ts:19
+Defined in index.ts:14
 
 ___
 
@@ -52,7 +62,7 @@ ___
 
 • **listeners**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:20
+Defined in index.ts:15
 
 ___
 
@@ -60,7 +70,7 @@ ___
 
 • **options**: *[ListenerBindingOptions](../modules/_types_.md#listenerbindingoptions)*
 
-Defined in index.ts:21
+Defined in index.ts:16
 
 ___
 
@@ -68,7 +78,7 @@ ___
 
 • **originals**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:22
+Defined in index.ts:17
 
 ## Methods
 
@@ -147,7 +157,7 @@ ___
 
 ▸ **listen**(`sourceId`: string[], `targetId`: string[], `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
 
-Defined in index.ts:24
+Defined in index.ts:21
 
 **Parameters:**
 
@@ -165,7 +175,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:45
+Defined in index.ts:44
 
 **Parameters:**
 
@@ -195,6 +205,16 @@ Name | Type |
 
 ___
 
+### `Private` log
+
+▸ **log**(): *void*
+
+Defined in index.ts:19
+
+**Returns:** *void*
+
+___
+
 ### `Private` optsToIndex
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
@@ -215,6 +235,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:91
+Defined in index.ts:92
 
 **Returns:** *void*

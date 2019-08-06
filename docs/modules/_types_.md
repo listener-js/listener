@@ -19,6 +19,7 @@
 * [ListenerFunction](_types_.md#listenerfunction)
 * [ListenerInstances](_types_.md#listenerinstances)
 * [Listeners](_types_.md#listeners)
+* [logEvent](_types_.md#logevent)
 
 ## Type aliases
 
@@ -97,3 +98,23 @@ ___
 Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
 
 Defined in types.ts:11
+
+___
+
+###  logEvent
+
+Ƭ **logEvent**: *function*
+
+Defined in types.ts:25
+
+#### Type declaration:
+
+▸ (`id`: string[], `level`: string, ...`value`: any[]): *void*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`id` | string[] |
+`level` | string |
+`...value` | any[] |
