@@ -148,15 +148,16 @@ export class Listener {
     lists: ListenerBindings,
     list: ListenerBindingItem[],
     key: string
-  ): void {
+  ): ListenerBindingItem[] {
     if (lists[key]) {
       for (const item of lists[key]) {
-        list.push([
-          item,
-          this.options[key] ? this.options[key][item] : {}
-        ])
+        const opts = this.options[key] ?
+          this.options[key][item] : {}
+        
+        list = list.concat([[ item, opts ]])
       }
     }
+    return list
   }
 
   private buildList(
@@ -170,23 +171,23 @@ export class Listener {
       [fnId, { index: 0 }]
     ]
 
-    this.addList(lists, list, "**")
+    list = this.addList(lists, list, "**")
     
     for (const i of id.slice(1).reverse()) {
       key = key ? i + "." + key : i
-      this.addList(lists, list, "**." + key)
+      list = this.addList(lists, list, "**." + key)
     }
 
     for (const i of id.slice(0, -1)) {
       key2 = key2 ? key2 + "." + i : i
-      this.addList(lists, list, key2 + ".**")
+      list = this.addList(lists, list, key2 + ".**")
     }
 
     if (id.length <= 1) {
-      this.addList(lists, list, "*")
+      list = this.addList(lists, list, "*")
     } else {
-      this.addList(lists, list, "*." + key)
-      this.addList(lists, list, key2 + ".*")
+      list = this.addList(lists, list, "*." + key)
+      list = this.addList(lists, list, key2 + ".*")
     }
 
     if (key && id.length) {
@@ -198,7 +199,7 @@ export class Listener {
     }
 
     if (key) {
-      this.addList(lists, list, key)
+      list = this.addList(lists, list, key)
     }
 
     list = list.sort(this.listSort.bind(this))

@@ -84,7 +84,7 @@ Defined in index.ts:17
 
 ### `Private` addList
 
-▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *void*
+▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
 Defined in index.ts:147
 
@@ -96,7 +96,7 @@ Name | Type |
 `list` | [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[] |
 `key` | string |
 
-**Returns:** *void*
+**Returns:** *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:162
+Defined in index.ts:163
 
 **Parameters:**
 
@@ -121,7 +121,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:209
+Defined in index.ts:210
 
 **Parameters:**
 
@@ -140,7 +140,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:285
+Defined in index.ts:286
 
 **Parameters:**
 
@@ -192,7 +192,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:276
+Defined in index.ts:277
 
 **Parameters:**
 
@@ -219,7 +219,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:296
+Defined in index.ts:297
 
 **Parameters:**
 
