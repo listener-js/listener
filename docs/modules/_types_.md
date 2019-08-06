@@ -26,7 +26,7 @@
 
 Ƭ **ListenerBindingItem**: *[string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]*
 
-*Defined in [types.ts:13](https://github.com/listener-js/listener/blob/34983e2/src/types.ts#L13)*
+Defined in types.ts:13
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 Ƭ **ListenerBindingOptions**: *`Record<string, ListenerOptions>`*
 
-*Defined in [types.ts:15](https://github.com/listener-js/listener/blob/34983e2/src/types.ts#L15)*
+Defined in types.ts:15
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 Ƭ **ListenerBindings**: *`Record<string, string[]>`*
 
-*Defined in [types.ts:18](https://github.com/listener-js/listener/blob/34983e2/src/types.ts#L18)*
+Defined in types.ts:18
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 Ƭ **ListenerBindingsListSorter**: *function*
 
-*Defined in [types.ts:20](https://github.com/listener-js/listener/blob/34983e2/src/types.ts#L20)*
+Defined in types.ts:20
 
 #### Type declaration:
 
@@ -69,7 +69,7 @@ ___
 
 Ƭ **ListenerFunction**: *function*
 
-*Defined in [types.ts:8](https://github.com/listener-js/listener/blob/34983e2/src/types.ts#L8)*
+Defined in types.ts:8
 
 #### Type declaration:
 
@@ -88,7 +88,7 @@ ___
 
 Ƭ **ListenerInstances**: *`Record<string, any>`*
 
-*Defined in [types.ts:23](https://github.com/listener-js/listener/blob/34983e2/src/types.ts#L23)*
+Defined in types.ts:23
 
 ___
 
@@ -96,4 +96,4 @@ ___
 
 Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
 
-*Defined in [types.ts:11](https://github.com/listener-js/listener/blob/34983e2/src/types.ts#L11)*
+Defined in types.ts:11
