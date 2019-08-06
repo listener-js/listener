@@ -37,7 +37,9 @@ export class Listener {
     }
 
     this.log(
-      ["listener.listen"], "listener", sourceId, targetId, options
+      ["listener.listen"],
+      "listener",
+      sourceId, targetId, options
     )
   }
 
@@ -72,7 +74,9 @@ export class Listener {
       }
 
       this.log(
-        ["listener.listener"], "listener", instanceId, options
+        ["listener.listener"],
+        "listener",
+        instanceId, options
       )
 
       instance._listeners = true
@@ -116,7 +120,8 @@ export class Listener {
       const [instanceId, fnId] =
         key.match(this.idRegex).slice(2)
 
-      this.instances[instanceId][fnId] = this.originals[key]
+      this.instances[instanceId][fnId] =
+        this.originals[key]
 
       delete this.instances[instanceId]._listeners
       delete this.originals[key]
