@@ -19,7 +19,7 @@
 * [ListenerFunction](_types_.md#listenerfunction)
 * [ListenerInstances](_types_.md#listenerinstances)
 * [Listeners](_types_.md#listeners)
-* [logEvent](_types_.md#logevent)
+* [LogEvent](_types_.md#logevent)
 
 ## Type aliases
 
@@ -101,9 +101,9 @@ Defined in types.ts:11
 
 ___
 
-###  logEvent
+###  LogEvent
 
-Ƭ **logEvent**: *function*
+Ƭ **LogEvent**: *function*
 
 Defined in types.ts:25
 

@@ -22,5 +22,5 @@ export type ListenerBindingsListSorter =
 
 export type ListenerInstances = Record<string, any>
 
-export type logEvent =
+export type LogEvent =
   (id: string[], level: string, ...value: any[]) => void

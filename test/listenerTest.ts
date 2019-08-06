@@ -73,6 +73,10 @@ test("listener", (): void => {
   })
 })
 
+test("listener bad arg", (): void => {
+  listener({ hi: {} })
+})
+
 test("listen return", (): void => {
   listen(["MyClass.fn"], ["MyClass2.fn2"], { useReturn: true})
   

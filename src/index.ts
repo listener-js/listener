@@ -5,7 +5,7 @@ import {
   ListenerBindingOptions,
   ListenerOptions,
   ListenerBindingItem,
-  logEvent
+  LogEvent
 } from "./types"
 
 export class Listener {
@@ -16,7 +16,7 @@ export class Listener {
   public options: ListenerBindingOptions = {}
   public originals: Listeners = {}
 
-  private log: logEvent = (): void => { }
+  private log: LogEvent = (): void => {}
 
   public listen(
     sourceId: string[],
@@ -52,12 +52,22 @@ export class Listener {
         !instance ||
         !instance.listeners
       ) {
+        this.log(
+          ["listener"],
+          "warn",
+          `value "listeners" not found on "${instanceId}"`
+        )
         continue
       }
 
       this.instances[instanceId] = instance
       
       if (instance._listeners) {
+        this.log(
+          ["listener"],
+          "warn",
+          `tried to attach instance "${instanceId}" more than once`
+        )
         continue
       }
 
@@ -68,6 +78,15 @@ export class Listener {
       instance._listeners = true
 
       for (const fnName of instance.listeners) {
+        if (!instance[fnName]) {
+          this.log(
+            ["listener"],
+            "warn",
+            `could not find function "${fnName}" on instance "${instanceId}"`
+          )
+          continue
+        }
+
         const fnId = `${instanceId}.${fnName}`
 
         this.originals[fnId] = instance[fnName]
