@@ -46,7 +46,7 @@ ___
 
 • **idRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)/i
 
-Defined in index.ts:13
+Defined in index.ts:18
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 • **instances**: *[ListenerInstances](../modules/_types_.md#listenerinstances)*
 
-Defined in index.ts:14
+Defined in index.ts:13
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 • **listeners**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:15
+Defined in index.ts:14
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 • **options**: *[ListenerBindingOptions](../modules/_types_.md#listenerbindingoptions)*
 
-Defined in index.ts:16
+Defined in index.ts:15
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 • **originals**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:17
+Defined in index.ts:16
 
 ## Methods
 
@@ -86,7 +86,7 @@ Defined in index.ts:17
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:147
+Defined in index.ts:148
 
 **Parameters:**
 
@@ -104,7 +104,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:163
+Defined in index.ts:164
 
 **Parameters:**
 
@@ -121,7 +121,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:210
+Defined in index.ts:211
 
 **Parameters:**
 
@@ -140,7 +140,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:286
+Defined in index.ts:287
 
 **Parameters:**
 
@@ -157,7 +157,7 @@ ___
 
 ▸ **listen**(`sourceId`: string[], `targetId`: string[], `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
 
-Defined in index.ts:21
+Defined in index.ts:22
 
 **Parameters:**
 
@@ -175,7 +175,7 @@ ___
 
 ▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:46
+Defined in index.ts:47
 
 **Parameters:**
 
@@ -192,7 +192,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:277
+Defined in index.ts:278
 
 **Parameters:**
 
@@ -209,7 +209,7 @@ ___
 
 ▸ **log**(): *void*
 
-Defined in index.ts:19
+Defined in index.ts:20
 
 **Returns:** *void*
 
@@ -219,7 +219,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:297
+Defined in index.ts:298
 
 **Parameters:**
 
@@ -235,6 +235,6 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:115
+Defined in index.ts:116
 
 **Returns:** *void*

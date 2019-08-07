@@ -10,11 +10,12 @@ import {
 
 export class Listener {
   public bindings: ListenerBindings = {}
-  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
   public instances: ListenerInstances = {}
   public listeners: Listeners = {}
   public options: ListenerBindingOptions = {}
   public originals: Listeners = {}
+
+  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
   private log: LogEvent = (): void => {}
 
@@ -38,7 +39,7 @@ export class Listener {
 
     this.log(
       ["listener.listen"],
-      "listener",
+      "internal",
       sourceId, targetId, options
     )
   }
@@ -57,7 +58,7 @@ export class Listener {
         this.log(
           ["listener.listener"],
           "warn",
-          `value "listeners" not found on "${instanceId}"`
+          `"listeners" array not found on instance "${instanceId}"`
         )
         continue
       }
@@ -68,14 +69,14 @@ export class Listener {
         this.log(
           ["listener.listener"],
           "warn",
-          `tried to attach instance "${instanceId}" more than once`
+          `tried to setup instance "${instanceId}" more than once`
         )
         continue
       }
 
       this.log(
         ["listener.listener"],
-        "listener",
+        "internal",
         instanceId, options
       )
 
@@ -106,14 +107,14 @@ export class Listener {
         instance.listen(this, options || {})
       }
 
-      if (instanceId === "Log") {
+      if (instanceId === "log") {
         this.log = instance.logEvent
       }
     }
   }
 
   public reset(): void {
-    this.log(["listener.reset"], "listener")
+    this.log(["listener.reset"], "internal")
     this.log = (): void => {}
     
     for (let key in this.originals) {
@@ -228,8 +229,8 @@ export class Listener {
 
     const list = this.buildList(fnId, id)
 
-    if (id.indexOf("Log.logEvent") < 0) {
-      this.log(["listener.emit", ...id], "listener", list)
+    if (id.indexOf("log.logEvent") < 0) {
+      this.log(["listener.emit", ...id], "internal", list)
     }
 
     for (const [target, options] of list) {
