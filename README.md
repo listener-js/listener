@@ -77,6 +77,10 @@ Use the `listen` function to connect listeners:
 
 ```ts
 import { listen } from "@listener-js/listener"
+import { bye } from "./bye"
+import { hello } from "./hello"
+
+listener({ bye, hello })
 
 listen(["hello.hello"], ["bye.bye"])
 ```
@@ -92,10 +96,10 @@ When you call a listener, its function id is added to the front of the identifie
 Using the [previous example](#connect-listeners), let's see what the identifier argument looks like:
 
 ```ts
-class Hello {
-  public static helloAgain(id: string[]): string {
+class Bye {
+  public static bye(id: string[]): string {
     console.log(id) // ["bye.bye", "hello.hello"]
-    return "hi again"
+    return "bye"
   }
 }
 ```
