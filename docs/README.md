@@ -18,48 +18,61 @@ Extra "boilerplate" functions only necessary on setup, not during usage.
 
 Provide a listener identifier based on the call stack (for debugging and programmatic context).
 
+## The ecosystem
+
+- [Listener cli](https://github.com/listener-js/cli) emits events from the command line
+- [Listener http](https://github.com/listener-js/http) makes http requests on client or server
+- [Listener log](https://github.com/listener-js/log) adds event logging with log levels and filtering
+- [Listener store](https://github.com/listener-js/store) adds immutable identifier-based storage
+- [Listener spawn](https://github.com/listener-js/spawn) executes shell commands using [node-pty](https://github.com/microsoft/node-pty)
+
 ## Install
 
 ```bash
 npm install @listener-js/listener
 ```
 
-## Class API
+## Define a listener class
 
-Listener classes have a `listeners` array that describes which functions are listener functions:
+Define a class with a listener function:
 
 ```ts
-class MyClass {
-  public static listeners = ["hello", "helloAgain"]
+export class Hello {
+  public listeners = ["hello"]
 
-  public static hello(id: string[]): string {
+  public hello(): string {
     return "hi"
   }
-
-  public static helloAgain(id: string[]): string {
-    return "hi again"
-  }
 }
+
+// As a convenience, also export an instance
+export const hello = new Hello()
 ```
 
-The listener function takes any number of arguments, but the first argument is always a `string[]` [identifier](#identifier-argument).
-
-Listener functions return whatever they like and are **synchronous or asynchronous**.
-
-## Make it a listener
-
-Mutate the class using the `listener` function before using it:
+## Add listener functionality
 
 ```ts
 import { listener } from "@listener-js/listener"
+import { hello } from "./hello"
 
-listener({ MyClass })
+listener({ hello })
 ```
 
 ## Call the listener
 
 ```ts
-MyClass.hello([]) // "hi"
+import { hello } from "./hello"
+hello.hello() // "hi"
+```
+
+## Add logging
+
+```ts
+import { listener } from "@listener-js/listener"
+import { log } from "@listener-js/log"
+import { hello } from "./hello"
+
+listener({ hello, log })
 ```
 
 ## Connect listeners
@@ -69,10 +82,10 @@ Use the `listen` function to connect listeners:
 ```ts
 import { listen } from "@listener-js/listener"
 
-listen(["MyClass.hello"], ["MyClass.helloAgain"])
+listen(["hello.hello"], ["bye.bye"])
 ```
 
-Now a call to `MyClass.hello` also calls `MyClass.helloAgain`.
+Now a call to `hello.hello` also calls `bye.bye` (if it exists).
 
 ## Identifier argument
 
@@ -83,9 +96,9 @@ When you call a listener, its function id is added to the front of the identifie
 Using the [previous example](#connect-listeners), let's see what the identifier argument looks like:
 
 ```ts
-class MyClass {
+class Hello {
   public static helloAgain(id: string[]): string {
-    console.log(id) // ["MyClass.helloAgain", "MyClass.hello"]
+    console.log(id) // ["bye.bye", "hello.hello"]
     return "hi again"
   }
 }
@@ -100,13 +113,10 @@ Let's listen to the exact identifier from the [previous examples](#identifier-ar
 ```ts
 import { listen } from "@listener-js/listener"
 
-listen(
-  ["MyClass.helloAgain", "MyClass.hello"],
-  ["MyClass.helloAgainAndAgain"]
-)
+listen(["bye.bye", "hello.hello"], ["miss.you"])
 ```
 
-In this case, the listener connection only emits when `MyClass.hello` calls `MyClass.helloAgain`.
+In this case, the listener `miss.you` is only called when `bye.bye` receives `["hello.hello"]` as its identifier.
 
 ## Extend the identifier
 
@@ -115,16 +125,16 @@ In some cases you need to add additional context to the identifier, such as a re
 Pass an initial identifier to the listener call:
 
 ```ts
-MyClass.hello(["initialId"])
+hello.hello(["knock.kock"])
 ```
 
-Now `initialId` is at the beginning of the `MyClass.helloAgain` identifier argument:
+Now `initialId` is at the beginning of the `bye.bye` identifier argument:
 
 ```ts
-class MyClass {
-  public static helloAgain(id: string[]): string {
-    console.log(id) // ["MyClass.helloAgain", "MyClass.hello", "initialId"]
-    return "hi again"
+class Bye {
+  public bye(id: string[]): string {
+    console.log(id) // ["bye.bye", "hello.hello", "knock.kock"]
+    return "bye"
   }
 }
 ```
@@ -132,10 +142,12 @@ class MyClass {
 If you manually call another listener, you should pass the current `id` down to it:
 
 ```ts
-class MyClass {
-  public static helloAgain(id: string[]): string {
-    OtherClass.otherListener(id)
-    return "hi again"
+import { miss } from "./miss"
+
+class Bye {
+  public bye(id: string[]): string {
+    miss.you(id)
+    return "bye"
   }
 }
 ```
@@ -143,10 +155,12 @@ class MyClass {
 This also introduces an opportunity to extend the identifier mid-flight:
 
 ```ts
-class MyClass {
-  public static helloAgain(id: string[]): string {
-    OtherClass.otherListener(["customId", ...id])
-    return "hi again"
+import { miss } from "./miss"
+
+class Bye {
+  public bye(id: string[]): string {
+    miss.you(["travel:Antarctica", ...id])
+    return "bye"
   }
 }
 ```
@@ -162,10 +176,10 @@ A single asterisk matches only the first or last identifier. Double asterisks ma
 ```ts
 import { listen } from "@listener-js/listener"
 
-listen(["**"], ["MyClass.helloAgain"]) // match all listeners
-listen(["*"], ["MyClass.helloAgain"])
-listen(["**", "MyClass.hello"], ["MyClass.helloAgain"])
-listen(["*", "MyClass.hello"], ["MyClass.helloAgain"])
-listen(["MyClass.hello", "**"], ["MyClass.helloAgain"])
-listen(["MyClass.hello", "*"], ["MyClass.helloAgain"])
+listen(["**"], ["bye.bye"]) // match all listeners
+listen(["*"], ["bye.bye"])
+listen(["**", "hello.hello"], ["bye.bye"])
+listen(["*", "hello.hello"], ["bye.bye"])
+listen(["hello.hello", "**"], ["bye.bye"])
+listen(["hello.hello", "*"], ["bye.bye"])
 ```
