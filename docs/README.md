@@ -49,7 +49,7 @@ export class Hello {
 export const hello = new Hello()
 ```
 
-## Add listener functionality
+## Add listener magic
 
 ```ts
 import { listener } from "@listener-js/listener"
@@ -89,7 +89,7 @@ listener({ bye, hello })
 listen(["hello.hello"], ["bye.bye"])
 ```
 
-Now a call to `hello.hello` also calls `bye.bye` (if it exists).
+Now a call to `hello.hello` also calls `bye.bye`.
 
 ## Identifier argument
 
@@ -120,7 +120,7 @@ import { listen } from "@listener-js/listener"
 listen(["bye.bye", "hello.hello"], ["miss.you"])
 ```
 
-In this case, the listener `miss.you` is only called when `bye.bye` receives `["hello.hello"]` as its identifier.
+Here we're saying that after `bye.bye` receives `["hello.hello"]` as its identifier, we want to call `miss.you`.
 
 ## Extend the identifier
 
