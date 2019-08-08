@@ -225,8 +225,8 @@ export class Hello {
     listener.join(this, "bye.bye")
   }
 
-  public hello(): string {
-    this.bye()
+  public hello(id: string[]): string {
+    this.bye(id)
     return "hi"
   }
 }
