@@ -126,7 +126,7 @@ listener({ bye, hello })
 
 listen(["hello.hello"], ["bye.bye"])
 
-hello.hello() // Calls bye.bye after execution
+hello.hello() // Calls hello.hello, then bye.bye
 ```
 
 The first argument to `listen` is the full identifier to match on, while the second argument is a list of individual identifiers to call once there is a match:
