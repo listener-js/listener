@@ -10,7 +10,7 @@ Prescribe a simple API for turning normal class instance functions into event li
 
 Each listener receives an array of strings as its first argument. This array contains a listener id call stack from newest to oldest (e.g. `["callee.listener", "caller.listener"]`), in addition to any identifiers appended programmatically.
 
-Listeners never explicitly depend on each other outside of `devDependencies` for types.
+Listener class libraries never explicitly depend on each other outside of `devDependencies` for types.
 
 ## High-level goals
 
@@ -102,9 +102,9 @@ import { hello } from "./hello"
 listener({ bye, hello })
 
 listen(["hello.hello"], ["bye.bye"])
-```
 
-Now a call to `hello.hello` also calls `bye.bye`.
+hello.hello() // Calls bye.bye after execution
+```
 
 ## Identifier argument
 
@@ -115,12 +115,16 @@ When you call a listener, its function id is added to the front of the identifie
 Using the [previous example](#connect-listeners), let's see what the identifier argument looks like:
 
 ```ts
-class Bye {
+// bye.ts
+//
+export class Bye {
   public static bye(id: string[]): string {
     console.log(id) // ["bye.bye", "hello.hello"]
     return "bye"
   }
 }
+
+export const bye = new Bye()
 ```
 
 ## Connect listeners by identifier
@@ -131,44 +135,61 @@ Let's listen to the exact identifier from the [previous examples](#identifier-ar
 
 ```ts
 import { listen } from "@listener-js/listener"
+import { bye } from "./bye"
+import { hello } from "./hello"
 
+listener({ bye, hello })
+
+listen(["hello.hello"], ["bye.bye"])
 listen(["bye.bye", "hello.hello"], ["miss.you"])
-```
 
-Here we're saying that after `bye.bye` receives `["hello.hello"]` as its identifier, we want to call `miss.you`.
+hello.hello() // Calls hello.hello, then bye.bye, then miss.you
+```
 
 ## Extend the identifier
 
 In some cases you need to add additional context to the identifier, such as a record id.
 
-Pass an initial identifier to the listener call:
+Let's pass an initial identifier to the listener call:
 
 ```ts
+import { listen } from "@listener-js/listener"
+import { bye } from "./bye"
+import { hello } from "./hello"
+
+listener({ bye, hello })
+
+listen(["hello.hello"], ["bye.bye"])
+
 hello.hello(["knock.kock"])
 ```
 
-Now `knock.knock` is at the beginning of the `bye.bye` identifier argument:
+Now `knock.knock` is now at the beginning of the identifier argument once `bye.bye` is finally called:
 
 ```ts
-class Bye {
+export class Bye {
   public bye(id: string[]): string {
     console.log(id) // ["bye.bye", "hello.hello", "knock.kock"]
     return "bye"
   }
 }
+
+export const bye = new Bye()
 ```
 
-If you manually call another listener, you should pass the current `id` down to it:
+If you manually call another listener (as an end-user), you should pass the current `id` down to it:
 
 ```ts
 import { miss } from "./miss"
 
-class Bye {
+export class Bye {
   public bye(id: string[]): string {
     miss.you(id)
     return "bye"
   }
 }
+
+export const bye = new Bye()
 ```
 
 This also introduces an opportunity to extend the identifier mid-flight:
@@ -176,12 +197,14 @@ This also introduces an opportunity to extend the identifier mid-flight:
 ```ts
 import { miss } from "./miss"
 
-class Bye {
+export class Bye {
   public bye(id: string[]): string {
     miss.you(["travel:Antarctica", ...id])
     return "bye"
   }
 }
+
+export const bye = new Bye()
 ```
 
 ## Listen callback
@@ -206,7 +229,7 @@ export class Hello {
 export const hello = new Hello()
 ```
 
-If you were to make this class into a library, the listener dependency should only be a `devDependency` (for its types).
+If you were to make this class into a library, the `Listener` dependency should only be a `devDependency` (for its types).
 
 ## Accessing other listeners
 
