@@ -94,24 +94,6 @@ Execute the script with `LOG=debug`:
 > 🐛 hello.hello
 ```
 
-## Connect listeners
-
-Use the `listen` function to connect listeners:
-
-```ts
-import { listen } from "@listener-js/listener"
-import { bye } from "./bye"
-import { hello } from "./hello"
-
-listener({ bye, hello })
-
-listen(["hello.hello"], ["bye.bye"])
-
-hello.hello() // Calls bye.bye after execution
-```
-
-The first argument to `listen` is the identifier array to match on, while the second argument is a list of individual identifiers to call once there is a match.
-
 ## Identifier argument
 
 The first argument to the listener is always an identifier argument (`string[]`).
@@ -132,6 +114,24 @@ export class Bye {
 
 export const bye = new Bye()
 ```
+
+## Connect listeners
+
+Use the `listen` function to connect listeners:
+
+```ts
+import { listen } from "@listener-js/listener"
+import { bye } from "./bye"
+import { hello } from "./hello"
+
+listener({ bye, hello })
+
+listen(["hello.hello"], ["bye.bye"])
+
+hello.hello() // Calls bye.bye after execution
+```
+
+The first argument to `listen` is the full identifier to match on, while the second argument is a list of individual identifiers to call once there is a match.
 
 ## Connect listeners by identifier
 
