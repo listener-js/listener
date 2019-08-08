@@ -133,13 +133,7 @@ listen(["hello.hello"], ["bye.bye"])
 hello.hello() // Calls bye.bye after execution
 ```
 
-The first argument to `listen` is the full identifier to match on, while the second argument is a list of individual identifiers to call once there is a match.
-
-## Connect listeners by identifier
-
-The `listen` function also accepts identifiers.
-
-Let's listen to the exact identifier from the [previous examples](#identifier-argument):
+The first argument to `listen` is the full identifier to match on, while the second argument is a list of individual identifiers to call once there is a match:
 
 ```ts
 import { listen } from "@listener-js/listener"
@@ -154,7 +148,11 @@ listen(["bye.bye", "hello.hello"], ["miss.you"])
 hello.hello() // Calls hello.hello, then bye.bye, then miss.you
 ```
 
-Technically the above example could also be achieved with a single `listen` call (e.g. `listen(["hello.hello"], ["bye.bye", "miss.you"])`)
+Technically the above example could also be achieved with a single `listen` call:
+
+```ts
+listen(["hello.hello"], ["bye.bye", "miss.you"])
+```
 
 ## Listen callback
 
