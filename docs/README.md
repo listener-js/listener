@@ -26,7 +26,7 @@ Leverage listener identifiers for enhanced logging, debugging, and programmatic 
 
 Empower the end-user/project — easily listen to any event and/or swap one listener for another.
 
-Create an ecosystem of small libraries that you can extend/listen/log/swap.
+Create an ecosystem of small libraries that you can call/extend/listen/log/swap.
 
 ## The ecosystem
 
@@ -68,21 +68,26 @@ import { hello } from "./hello"
 listener({ hello })
 ```
 
-## Call the listener
+## Call the listener (with logging)
 
 ```ts
-import { hello } from "./hello"
-hello.hello() // "hi"
-```
-
-## Add logging
-
-```ts
+// sayHello.ts
+//
 import { listener } from "@listener-js/listener"
 import { log } from "@listener-js/log"
 import { hello } from "./hello"
 
 listener({ hello, log })
+
+hello.hello()
+```
+
+Execute the script with `LOG=debug`:
+
+```bash
+> LOG=debug ts-node ./sayHello.ts
+>
+> 🐛 hello.hello
 ```
 
 ## Connect listeners
