@@ -10,13 +10,11 @@ Type-friendly awesome event emitter
 
 ## Low-level goals
 
-Turn existing class functions into event listeners with minimal changes.
+Prescribe a simple API for defining class instance-based event listeners.
 
-No extra type definitions outside of usual function definitions.
+Turn existing functions into listeners with minimal changes to call or implementation.
 
-Extra "boilerplate" functions only necessary on setup, not during usage.
-
-Provide a listener identifier based on the call stack of listeners before it.
+Provide a listener identifier based on the listener id call stack (e.g. `["callee.listener", "caller.listener"]`).
 
 Listeners never explicitly depend on each other outside of `devDependencies` for types.
 
