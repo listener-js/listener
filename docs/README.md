@@ -8,7 +8,7 @@ Type-friendly awesome event emitter
 
 ![listener](media/listener.gif)
 
-## Goals
+## Low-level goals
 
 Turn existing class functions into event listeners with minimal changes.
 
@@ -16,13 +16,23 @@ No extra type definitions outside of usual function definitions.
 
 Extra "boilerplate" functions only necessary on setup, not during usage.
 
-Provide a listener identifier based on the call stack (for debugging and programmatic context).
+Provide a listener identifier based on the call stack of listeners before it.
+
+Listeners never explicitly depend on each other outside of `devDependencies` for types.
+
+## High-level goals
+
+Leverage listener identifiers for enhanced logging, debugging, and programmatic context.
+
+Empower the end-user/project — easily listen to any event and/or swap one listener for another.
+
+Create an ecosystem of small libraries that you can extend/listen/log/swap.
 
 ## The ecosystem
 
-- [Listener cli](https://github.com/listener-js/cli) emits events from the command line
+- [Listener cli](https://github.com/listener-js/cli) calls listeners from the command line
 - [Listener http](https://github.com/listener-js/http) makes http requests on client or server
-- [Listener log](https://github.com/listener-js/log) adds event logging with log levels and filtering
+- [Listener log](https://github.com/listener-js/log) adds listener logging with log levels and filtering
 - [Listener store](https://github.com/listener-js/store) adds immutable identifier-based storage
 - [Listener spawn](https://github.com/listener-js/spawn) executes shell commands using [node-pty](https://github.com/microsoft/node-pty)
 
