@@ -98,22 +98,24 @@ Execute the script with `LOG=debug`:
 
 The first argument to the listener is always an identifier argument (`string[]`).
 
-When you call a listener, its function id is added to the front of the identifier array.
-
-Using the [previous example](#connect-listeners), let's see what the identifier argument looks like:
+When you call a listener, its function id is added to the front of the identifier array:
 
 ```ts
-// bye.ts
-//
-export class Bye {
-  public static bye(id: string[]): string {
-    console.log(id) // ["bye.bye", "hello.hello"]
-    return "bye"
+export class Hello {
+  public listeners = ["hello"]
+
+  public hello(id: string[]): string {
+    console.log(id) // ["hello.hello"]
+    return "hi"
   }
 }
 
-export const bye = new Bye()
+export const hello = new Hello()
 ```
+
+When listeners are connected or call each other, we pass the identifier down which gradually gets appended to as the call stack increases.
+
+Feel free to pass an initial identifier array and/or programmatically append to the identifier array if it fits your use case.
 
 ## Connect listeners
 
@@ -152,67 +154,6 @@ listen(["bye.bye", "hello.hello"], ["miss.you"])
 hello.hello() // Calls hello.hello, then bye.bye, then miss.you
 ```
 
-## Extend the identifier
-
-In some cases you need to add additional context to the identifier, such as a record id.
-
-Let's pass an initial identifier to the listener call:
-
-```ts
-import { listen } from "@listener-js/listener"
-import { bye } from "./bye"
-import { hello } from "./hello"
-
-listener({ bye, hello })
-
-listen(["hello.hello"], ["bye.bye"])
-
-hello.hello(["knock.kock"])
-```
-
-Now `knock.knock` is now at the beginning of the identifier argument once `bye.bye` is finally called:
-
-```ts
-export class Bye {
-  public bye(id: string[]): string {
-    console.log(id) // ["bye.bye", "hello.hello", "knock.kock"]
-    return "bye"
-  }
-}
-
-export const bye = new Bye()
-```
-
-If you manually call another listener (as an end-user), you should pass the current `id` down to it:
-
-```ts
-import { miss } from "./miss"
-
-export class Bye {
-  public bye(id: string[]): string {
-    miss.you(id)
-    return "bye"
-  }
-}
-
-export const bye = new Bye()
-```
-
-This also introduces an opportunity to extend the identifier mid-flight:
-
-```ts
-import { miss } from "./miss"
-
-export class Bye {
-  public bye(id: string[]): string {
-    miss.you(["travel:Antarctica", ...id])
-    return "bye"
-  }
-}
-
-export const bye = new Bye()
-```
-
 ## Listen callback
 
 If a `listen` function is present on your listener class, it is called when your class instance is passed to the `listen` function:
@@ -235,7 +176,7 @@ export class Hello {
 export const hello = new Hello()
 ```
 
-If you were to make this class into a library, the `Listener` dependency should only be a `devDependency` (for its types).
+If you were to make this class into a library, the `Listener` dependency should only be a soft `devDependency` for its types.
 
 ## Accessing other listeners
 
