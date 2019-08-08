@@ -24,9 +24,7 @@ Listeners never explicitly depend on each other outside of `devDependencies` for
 
 Leverage listener identifiers for enhanced logging, debugging, and programmatic context.
 
-Empower the end-user/project — easily listen to any event and/or swap one listener for another.
-
-Create an ecosystem of small libraries that you can call, log, listen to, extend, and swap.
+Create an ecosystem of libraries that empower the end user to listen to any event, modify its input or return value, swap one listener for another, and see coding in a different way.
 
 ## The ecosystem
 
