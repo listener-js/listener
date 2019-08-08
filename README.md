@@ -186,7 +186,7 @@ class Bye {
 
 ## Listen callback
 
-If a `listen` function is present, it is called when your class instance is passed to the `listen` function:
+If a `listen` function is present on your listener class, it is called when your class instance is passed to the `listen` function:
 
 ```ts
 import { Listener } from "@listener-js/listener"
@@ -219,16 +219,14 @@ import { bye } from "./bye"
 export class Hello {
   public listeners = ["hello"]
 
-  public bye: bye.bye
+  public bye: bye.bye = (): void => {}
 
   public listen(listener: Listener) {
     listener.join(this, "bye.bye")
   }
 
   public hello(): string {
-    if (this.bye) {
-      this.bye()
-    }
+    this.bye()
     return "hi"
   }
 }
