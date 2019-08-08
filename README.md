@@ -66,7 +66,7 @@ listener({ hello })
 
 You only need to do this once, and any file that imports `hello` will have the extended version.
 
-Passing listener class instances into the `listener` function should be the responsibility of the end-user, as it provides them control over the listener version and configuration options.
+Passing listener class instances into the `listener` function should be the responsibility of the end-user, as it provides them control over composition, versioning, and configuration.
 
 ## Call a listener (with logging)
 
