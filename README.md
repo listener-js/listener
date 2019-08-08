@@ -147,7 +147,7 @@ Pass an initial identifier to the listener call:
 hello.hello(["knock.kock"])
 ```
 
-Now `initialId` is at the beginning of the `bye.bye` identifier argument:
+Now `knock.knock` is at the beginning of the `bye.bye` identifier argument:
 
 ```ts
 class Bye {
