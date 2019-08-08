@@ -29,7 +29,7 @@ Create an ecosystem of libraries that empower the end user to listen to any even
 ## The ecosystem
 
 - [Listener cli](https://github.com/listener-js/cli) calls listeners from the command line
-- [Listener http](https://github.com/listener-js/http) makes http requests on client or server
+- [Listener http](https://github.com/listener-js/http) makes universal http requests
 - [Listener log](https://github.com/listener-js/log) adds listener logging with log levels and filtering
 - [Listener store](https://github.com/listener-js/store) adds immutable identifier-based storage
 - [Listener spawn](https://github.com/listener-js/spawn) executes shell commands using [node-pty](https://github.com/microsoft/node-pty)

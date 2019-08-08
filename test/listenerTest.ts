@@ -73,6 +73,21 @@ test("listener", (): void => {
   })
 })
 
+test("listener no arg", (): void => {
+  expect.assertions(2)
+
+  const test = {
+    fn: (): number => {
+      expect(1).toBe(1)
+      return 1
+    },
+    listeners: ["fn"]
+  }
+
+  listener({ test })
+  expect(test.fn()).toBe(1)
+})
+
 test("listener bad arg", (): void => {
   listener({ hi: {} })
 })

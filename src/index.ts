@@ -104,7 +104,7 @@ export class Listener {
       }
 
       if (instance.listen) {
-        instance.listen(this, options || {})
+        instance.listen(instanceId, this, options || {})
       }
 
       if (instanceId === "log") {
