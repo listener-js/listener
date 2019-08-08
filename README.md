@@ -217,9 +217,9 @@ import { Listener } from "@listener-js/listener"
 import { bye } from "./bye"
 
 export class Hello {
-  public listeners = ["hello"]
-
   public bye: typeof bye.bye = (): void => {}
+
+  public listeners = ["hello"]
 
   public listen(listener: Listener) {
     listener.join(this, "bye.bye")
