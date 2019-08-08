@@ -47,6 +47,8 @@ npm install @listener-js/listener
 Define a class with a listener function:
 
 ```ts
+// hello.ts
+//
 export class Hello {
   public listeners = ["hello"]
 
@@ -59,7 +61,9 @@ export class Hello {
 export const hello = new Hello()
 ```
 
-## Add listener magic
+## Listener setup
+
+Pass the listener class instance into the `listener` function to set it up:
 
 ```ts
 import { listener } from "@listener-js/listener"
@@ -68,7 +72,9 @@ import { hello } from "./hello"
 listener({ hello })
 ```
 
-## Call the listener (with logging)
+You only need to do this once, and any file that imports `hello` will have the extended version.
+
+## Call a listener (with logging)
 
 ```ts
 // sayHello.ts
