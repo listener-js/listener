@@ -14,7 +14,7 @@ Prescribe a simple API for defining class instance-based event listeners.
 
 Turn existing functions into listeners with minimal changes to call or implementation.
 
-Provide a listener identifier based on the listener id call stack (e.g. `["callee.listener", "caller.listener"]`).
+With each listener call, compose an identifier comprised of the listener call stack (e.g. `["callee.listener", "caller.listener"]`) and dynamically added custom identifiers (e.g. `["callee.listener", "record:21", "caller.listener"]`).
 
 Listeners never explicitly depend on each other outside of `devDependencies` for types.
 
