@@ -241,9 +241,9 @@ listen(["**"], ["bye.bye"], { append: true }) // boolean
 listen(["**"], ["bye.bye"], { append: 1000 }) // index
 ```
 
-Using an integer value can be a way to ensure your listener absolutely runs first or last. When boolean is used, the sort index defaults to 1.
+Using an integer value can be a way to ensure your listener absolutely runs first or last.
 
-The default strategy is `{ append: true }` when no sort option is provided.
+The sort index defaults to 1 with a boolean sort value. The default strategy is `{ append: 1 }` when no sort option is provided.
 
 ## Async listeners
 
@@ -253,11 +253,11 @@ In general, the idea is to always wait for listener connections when possible an
 
 ### Async example scenarios
 
-The following scenarios assume an "appended" (default) connection:
+The following scenarios assume an "appended" (default) listener connection:
 
-- If you connect async listener 1 ⬅ async listener 2, calling async listener 1 will wait for async listener 2 before resolving, and return the output of async listener 1.
-- If you connect synchronous listener 1 ⬅ async listener 2, calling synchronous listener 1 returns its original output and the following listener connections run "untethered".
-- If you connect async listener 1 ⬅ synchronous listener 2, calling async listener 1 returns a promise that waits for all sync/async listeners.
+- If you connect `async.fn` ⇦ `async.fn2`, calling `async.fn` will wait for `async.fn2` before resolving, and return the output of `async.fn`.
+- If you connect `sync.fn` ⇦ `async.fn`, calling `sync.fn` returns its original output and the following listener connections run "untethered".
+- If you connect `async.fn` ⇦ `sync.fn`, calling `async.fn` returns a promise that waits for all sync/async listeners.
 
 ## Overwriting the return value
 
