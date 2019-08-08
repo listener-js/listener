@@ -106,6 +106,8 @@ listen(["hello.hello"], ["bye.bye"])
 hello.hello() // Calls bye.bye after execution
 ```
 
+The first argument to `listen` is the identifier array to match on, while the second argument is a list of individual identifiers to call once there is a match.
+
 ## Identifier argument
 
 The first argument to the listener is always an identifier argument (`string[]`).
