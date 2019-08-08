@@ -219,7 +219,7 @@ import { bye } from "./bye"
 export class Hello {
   public listeners = ["hello"]
 
-  public bye: bye.bye = (): void => {}
+  public bye: typeof bye.bye = (): void => {}
 
   public listen(listener: Listener) {
     listener.join(this, "bye.bye")
