@@ -96,7 +96,7 @@ Execute the script with `LOG=debug`:
 
 ## Identifier argument
 
-The first argument to the listener is always an identifier argument (`string[]`).
+The first argument to the listener is always an identifier argument (`string[]`). The rest can be whatever you like.
 
 When you call a listener, its function id is added to the front of the identifier array:
 
