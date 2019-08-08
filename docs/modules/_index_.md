@@ -13,6 +13,7 @@
 ### Variables
 
 * [instance](_index_.md#const-instance)
+* [join](_index_.md#const-join)
 * [listen](_index_.md#const-listen)
 * [listener](_index_.md#const-listener)
 * [reset](_index_.md#const-reset)
@@ -23,7 +24,15 @@
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:320
+Defined in index.ts:352
+
+___
+
+### `Const` join
+
+• **join**: *any* =  instance.join.bind(instance)
+
+Defined in index.ts:354
 
 ___
 
@@ -31,7 +40,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:322
+Defined in index.ts:355
 
 ___
 
@@ -39,7 +48,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:323
+Defined in index.ts:356
 
 ___
 
@@ -47,4 +56,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:324
+Defined in index.ts:357

@@ -19,6 +19,32 @@ export class Listener {
 
   private log: LogEvent = (): void => {}
 
+  public join(
+    parentInstance: any, ...instanceIds: string[]
+  ): void {
+    for (const id of instanceIds) {
+      let fnId: string
+      let instanceId: string
+
+      const match = id.match(this.idRegex)
+
+      if (match) {
+        [instanceId, fnId] =
+          id.match(this.idRegex).slice(2)
+      } else {
+        instanceId = id
+      }
+
+      const instance = this.instances[instanceId]
+      
+      if (instance && match && instance[fnId]) {
+        parentInstance[fnId] = instance[fnId]
+      } else if (instance) {
+        parentInstance[instanceId] = instance
+      }
+    }
+  }
+
   public listen(
     sourceId: string[],
     targetId: string[],
@@ -103,12 +129,18 @@ export class Listener {
         this.listeners[fnId] = instance[fnName]
       }
 
-      if (instance.listen) {
-        instance.listen(instanceId, this, options || {})
-      }
-
       if (instanceId === "log") {
         this.log = instance.logEvent
+      }
+    }
+
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (instance && instance.listen) {
+        instance.listen(
+          this, { ...(options || {}), instanceId }
+        )
       }
     }
   }
@@ -319,6 +351,7 @@ export class Listener {
 
 const instance = new Listener()
 
+export const join = instance.join.bind(instance)
 export const listen = instance.listen.bind(instance)
 export const listener = instance.listener.bind(instance)
 export const reset = instance.reset.bind(instance)

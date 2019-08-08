@@ -66,6 +66,8 @@ listener({ hello })
 
 You only need to do this once, and any file that imports `hello` will have the extended version.
 
+Passing listener class instances into the `listener` function should be the responsibility of the end-user, as it provides them control over the listener version and configuration options.
+
 ## Call a listener (with logging)
 
 ```ts
@@ -181,6 +183,64 @@ class Bye {
   }
 }
 ```
+
+## Listen callback
+
+If a `listen` function is present, it is called when your class instance is passed to the `listen` function:
+
+```ts
+import { Listener } from "@listener-js/listener"
+
+export class Hello {
+  public listeners = ["hello"]
+
+  public listen(listener: Listener) {
+    // Add listener connections, etc...
+  }
+
+  public hello(): string {
+    return "hi"
+  }
+}
+
+export const hello = new Hello()
+```
+
+If you were to make this class into a library, the listener dependency should only be a `devDependency` (for its types).
+
+## Accessing other listeners
+
+Using the listener callback, let's join our instance to other listeners:
+
+```ts
+import { Listener } from "@listener-js/listener"
+import { bye } from "./bye"
+
+export class Hello {
+  public listeners = ["hello"]
+
+  public bye: bye.bye
+
+  public listen(listener: Listener) {
+    listener.join(this, "bye.bye")
+  }
+
+  public hello(): string {
+    if (this.bye) {
+      this.bye()
+    }
+    return "hi"
+  }
+}
+
+export const hello = new Hello()
+```
+
+First we import `./bye` solely to define the `bye` variable using the `bye.bye` type (not a "hard" dependency).
+
+When the `listen` callback fires, we assign the listener instance function dynamically using the `listener.join` function.
+
+We now have access to the `bye` listener function **without introducing any hard dependencies to it**.
 
 ## Wildcard listeners
 

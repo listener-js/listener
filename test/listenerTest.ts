@@ -1,5 +1,5 @@
-import { listener, listen, reset } from "../"
-import { log } from "@listener-js/log"
+import { Listener, listener, listen, reset } from "../"
+// import { log } from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
   return new Promise((resolve): void => {
@@ -53,7 +53,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset()
-  listener({ MyClass, MyClass2, log })
+  listener({ MyClass, MyClass2 })
 })
 
 test("defined", (): void => {
@@ -400,4 +400,35 @@ test("numeric append option", (): void => {
     "id": ["MyClass2.fn3", "MyClass.fn"],
     "someArg": true
   })
+})
+
+test("join", (): void => {
+  expect.assertions(5)
+
+  const test = {
+    fn: (): number => {
+      expect(1).toBe(1)
+      return 1
+    },
+    fn2: (): void => {},
+    listen(listener: Listener): void {
+      listener.join(this, "test2", "test2.fn2")
+    },
+    listeners: ["fn"],
+    test2: undefined
+  }
+
+  const test2 = {
+    fn2: (): number => {
+      expect(1).toBe(1)
+      return 2
+    },
+    listeners: ["fn2"]
+  }
+
+  listener({ test, test2 })
+
+  expect(test.fn()).toBe(1)
+  expect(test.fn2()).toBe(2)
+  expect(test.test2).toBe(test2)
 })
