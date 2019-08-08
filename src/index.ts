@@ -46,27 +46,28 @@ export class Listener {
   }
 
   public listen(
-    sourceId: string[],
-    targetId: string[],
+    matchId: string[],
+    targetIds: string[],
     options?: ListenerOptions
   ): void {
-    const source = sourceId.join(".")
-    const target = targetId.join(".")
+    const match = matchId.join(".")
 
-    this.bindings[source] = this.bindings[source] || []
+    this.bindings[match] = this.bindings[match] || []
     
-    this.bindings[source] =
-      this.bindings[source].concat([target])
+    this.bindings[match] =
+      this.bindings[match].concat(targetIds)
     
     if (options) {
-      this.options[source] = this.options[source] || {}
-      this.options[source][target] = options
+      this.options[match] = this.options[match] || {}
+      for (const target of targetIds) {
+        this.options[match][target] = options
+      }
     }
 
     this.log(
       ["listener.listen"],
       "internal",
-      sourceId, targetId, options
+      matchId, targetIds, options
     )
   }
 
