@@ -234,9 +234,9 @@ export class Hello {
 export const hello = new Hello()
 ```
 
-First we import `./bye` solely to define the `bye` variable using the `bye.bye` type (not a "hard" dependency).
+First we import `Listener` and `bye` solely for their types (not a "hard" dependency).
 
-When the `listen` callback fires, we assign the listener instance function dynamically using the `listener.join` function.
+When the `listen` callback fires, we assign the listener function to our class instance dynamically using the `listener.join` function.
 
 We now have access to the `bye` listener function **without introducing any hard dependencies to it**.
 
