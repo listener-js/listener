@@ -53,7 +53,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset()
-  listener({ MyClass, MyClass2, log }, { logAll: true })
+  listener({ MyClass, MyClass2, log })
 })
 
 test("defined", (): void => {
