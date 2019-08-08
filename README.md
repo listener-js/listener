@@ -150,6 +150,8 @@ listen(["bye.bye", "hello.hello"], ["miss.you"])
 hello.hello() // Calls hello.hello, then bye.bye, then miss.you
 ```
 
+Technically the above example could also be achieved with a single `listen` call (e.g. `listen(["hello.hello"], ["bye.bye", "miss.you"])`)
+
 ## Listen callback
 
 If a `listen` function is present on your listener class, it is called when your class instance is passed to the `listen` function:
