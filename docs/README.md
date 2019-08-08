@@ -228,3 +228,47 @@ listen(["*", "hello.hello"], ["bye.bye"])
 listen(["hello.hello", "**"], ["bye.bye"])
 listen(["hello.hello", "*"], ["bye.bye"])
 ```
+
+## Listener execution order
+
+Listeners always run in succession, based on a sort index (prepend: -1, main: 0, append: 1).
+
+In some cases you might want to make sure your listener runs before all calls, or conversely make sure it runs last:
+
+```ts
+import { listen } from "@listener-js/listener"
+
+listen(["**"], ["hello.hello"], { prepend: true }) // boolean
+listen(["**"], ["hello.hello"], { prepend: 1000 }) // index
+
+listen(["**"], ["bye.bye"], { append: true }) // boolean
+listen(["**"], ["bye.bye"], { append: 1000 }) // index
+```
+
+Using an integer value can be a way to ensure your listener absolutely runs first or last. When boolean is used, the sort index defaults to 1.
+
+The default strategy is `{ append: true }` when no sort option is provided.
+
+## Async listeners
+
+Listeners still run in succession, even if their connections are a mix of sync and async. (Connection-specific promise configuration options coming soon.)
+
+In general, the idea is to always wait for listener connections when possible and preserve the output synchronicity of the main listener function regardless of connection output.
+
+### Async example scenarios
+
+The following scenarios assume an "appended" (default) connection:
+
+- If you connect async listener 1 ⬅ async listener 2, calling async listener 1 will wait for async listener 2 before resolving, and return the output of async listener 1.
+- If you connect synchronous listener 1 ⬅ async listener 2, calling synchronous listener 1 returns its original output and the following listener connections run "untethered".
+- If you connect async listener 1 ⬅ synchronous listener 2, calling async listener 1 returns a promise that waits for all sync/async listeners.
+
+## Overwriting the return value
+
+When defining a connection, the `useReturn` option allows the connection to overwrite the return value:
+
+```ts
+listen(["**"], ["hello.hello"], { useReturn: true })
+```
+
+The [last listener connection](#listener-execution-order) has precedence for overwriting return values.

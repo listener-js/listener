@@ -301,7 +301,7 @@ export class Listener {
       }
     }
 
-    if (promise) {
+    if (promise && finalOut.then) {
       return promise.then((): any => finalOut)
     }
 
