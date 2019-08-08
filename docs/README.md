@@ -68,7 +68,7 @@ import { hello } from "./hello"
 listener({ hello })
 ```
 
-You only need to do this once, and any file that imports `hello` will have the extended version.
+You only need to do this once, and if the end-user imports `hello` later on, it will return the correct "extended version" of the listener instance.
 
 Passing listener class instances into the `listener` function should be the responsibility of the end-user, as it provides them control over composition, versioning, and configuration.
 
