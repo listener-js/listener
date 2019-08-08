@@ -22,7 +22,7 @@ Leverage listener identifiers for enhanced logging, debugging, and programmatic 
 
 Empower the end-user/project — easily listen to any event and/or swap one listener for another.
 
-Create an ecosystem of small libraries that you can call/extend/listen/log/swap.
+Create an ecosystem of small libraries that you can call, log, listen to, extend, and swap.
 
 ## The ecosystem
 
