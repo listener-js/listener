@@ -178,7 +178,7 @@ If you were to make this class into a library, the `Listener` dependency should 
 
 ## Accessing other listeners
 
-Using the listener callback, let's join our instance to other listeners:
+Using the `listen` callback, let's join our instance to other listeners:
 
 ```ts
 import { Listener } from "@listener-js/listener"
