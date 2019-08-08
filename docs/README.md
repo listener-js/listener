@@ -122,7 +122,7 @@ Feel free to pass an initial identifier array and/or programmatically append to 
 Use the `listen` function to connect listeners:
 
 ```ts
-import { listen } from "@listener-js/listener"
+import { listen, listener } from "@listener-js/listener"
 import { bye } from "./bye"
 import { hello } from "./hello"
 
@@ -136,7 +136,7 @@ hello.hello() // Calls bye.bye after execution
 The first argument to `listen` is the full identifier to match on, while the second argument is a list of individual identifiers to call once there is a match:
 
 ```ts
-import { listen } from "@listener-js/listener"
+import { listen, listener } from "@listener-js/listener"
 import { bye } from "./bye"
 import { hello } from "./hello"
 
