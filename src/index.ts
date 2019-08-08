@@ -311,7 +311,7 @@ export class Listener {
     fnId: string, instanceId: string
   ): Function {
     return (eid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(eid)
+      const id = [fnId].concat(eid || [])
       return this.emit(fnId, id, instanceId, ...args)
     }
   }

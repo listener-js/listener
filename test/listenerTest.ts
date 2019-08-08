@@ -1,5 +1,5 @@
 import { Listener, listener, listen, reset } from "../"
-// import { log } from "@listener-js/log"
+import { log } from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
   return new Promise((resolve): void => {
@@ -53,7 +53,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset()
-  listener({ MyClass, MyClass2 })
+  listener({ MyClass, MyClass2, log })
 })
 
 test("defined", (): void => {
