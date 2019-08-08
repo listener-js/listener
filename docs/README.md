@@ -24,6 +24,8 @@ Listeners never explicitly depend on each other outside of `devDependencies` for
 
 Leverage listener identifiers for enhanced logging, debugging, and programmatic context.
 
+Make it easy for listeners to use each other's functionality, if present, without depending on it.
+
 Create an ecosystem of libraries that empower the end user to listen to any event, modify its input or return value, swap one listener for another, and see coding in a different way.
 
 ## The ecosystem
