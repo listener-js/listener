@@ -10,11 +10,9 @@ Type-friendly awesome event emitter
 
 ## Low-level goals
 
-Prescribe a simple API for defining class instance-based event listeners.
+Prescribe a simple API for turning normal class instance functions into event listeners, with minimal changes to call or implementation.
 
-Turn existing functions into listeners with minimal changes to call or implementation.
-
-Each listener receives an array containing a listener id call stack from newest to oldest (e.g. `["callee.listener", "caller.listener"]`), in addition to any identifiers appended programmatically.
+Each listener receives an array of strings as its first argument. This array contains a listener id call stack from newest to oldest (e.g. `["callee.listener", "caller.listener"]`), in addition to any identifiers appended programmatically.
 
 Listeners never explicitly depend on each other outside of `devDependencies` for types.
 
