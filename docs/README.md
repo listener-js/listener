@@ -231,7 +231,7 @@ listen(["hello.hello", "*"], ["bye.bye"])
 
 ## Listener execution order
 
-Listeners always run in succession, based on a sort index (prepend: -1, main: 0, append: 1).
+Listeners always run in succession, based on a sort index (prepend: -1, main: 0, append: 1). The default strategy is `{ append: 1 }` when no sort option is provided.
 
 In some cases you might want to make sure your listener runs before all calls, or conversely make sure it runs last:
 
@@ -245,9 +245,7 @@ listen(["**"], ["bye.bye"], { append: true }) // boolean
 listen(["**"], ["bye.bye"], { append: 1000 }) // index
 ```
 
-Using an integer value can be a way to ensure your listener absolutely runs first or last.
-
-The sort index defaults to 1 with a boolean sort value. The default strategy is `{ append: 1 }` when no sort option is provided.
+The sort index defaults to `1` with a boolean (`true`) sort value. Using an integer value can be a way to ensure your listener absolutely runs first or last.
 
 ## Async listeners
 
@@ -272,3 +270,5 @@ listen(["**"], ["hello.hello"], { useReturn: true })
 ```
 
 The [last listener connection](#listener-execution-order) has precedence for overwriting return values.
+
+With great power comes great responsibility. Make sure your return types match the original listener call.

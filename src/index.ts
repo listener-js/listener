@@ -22,6 +22,8 @@ export class Listener {
   public join(
     parentInstance: any, ...instanceIds: string[]
   ): void {
+    const instances: Set<string> = new Set()
+
     for (const id of instanceIds) {
       let fnId: string
       let instanceId: string
@@ -39,10 +41,19 @@ export class Listener {
       
       if (instance && match && instance[fnId]) {
         parentInstance[fnId] = instance[fnId]
+        instances.add(instanceId)
       } else if (instance) {
         parentInstance[instanceId] = instance
+        instances.add(instanceId)
       }
     }
+
+    instances.forEach((instanceId): void => {
+      const instance = this.instances[instanceId]
+      if (instance.join) {
+        instance.join(parentInstance)
+      }
+    })
   }
 
   public listen(

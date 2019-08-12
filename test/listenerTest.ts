@@ -432,3 +432,27 @@ test("join", (): void => {
   expect(test.fn2()).toBe(2)
   expect(test.test2).toBe(test2)
 })
+
+
+test("join callback", (): void => {
+  expect.assertions(1)
+
+  const test = {
+    fn: (): void => {},
+    listen(listener: Listener): void {
+      listener.join(this, "test2")
+    },
+    listeners: ["fn"],
+    test2: undefined
+  }
+
+  const test2 = {
+    fn: (): void => {},
+    join: (instance): void => {
+      expect(instance).toBe(test)
+    },
+    listeners: ["fn"]
+  }
+
+  listener({ test, test2 })
+})
