@@ -176,7 +176,7 @@ If you were to make this class into a library, the `Listener` dependency should 
 
 ## Accessing other listeners
 
-Using the `listen` callback, let's join our instance to other listeners:
+Specify external listener functions in your `listeners` array:
 
 ```ts
 import { Listener } from "@listener-js/listener"
@@ -185,11 +185,7 @@ import { bye } from "./bye"
 export class Hello {
   private bye: typeof bye.bye = (): void => {}
 
-  public listeners = ["hello"]
-
-  public listen(listener: Listener) {
-    listener.join(this, "bye.bye")
-  }
+  public listeners = ["bye.bye", "hello"]
 
   public hello(id: string[]): string {
     this.bye(id)
@@ -202,9 +198,9 @@ export const hello = new Hello()
 
 First we import `Listener` and `bye` solely for their types (not a "hard" dependency).
 
-When the `listen` callback fires, we assign the listener function to our class instance dynamically using the `listener.join` function.
+Next, we add `bye.bye` to the `listeners` array.
 
-We now have access to the `bye` listener function **without introducing any hard dependencies to it**.
+We now have access to the `bye.bye` listener function **without introducing any hard dependencies to it**.
 
 ## Wildcard listeners
 

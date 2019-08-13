@@ -402,57 +402,26 @@ test("numeric append option", (): void => {
   })
 })
 
-test("join", (): void => {
-  expect.assertions(5)
+test("instance listener", (): void => {
+  expect.assertions(3)
 
   const test = {
-    fn: (): number => {
-      expect(1).toBe(1)
-      return 1
-    },
-    fn2: (): void => {},
-    listen(listener: Listener): void {
-      listener.join(this, "test2", "test2.fn2")
-    },
-    listeners: ["fn"],
-    test2: undefined
+    fn: undefined,
+    listeners: ["test2.fn"]
   }
 
   const test2 = {
-    fn2: (): number => {
-      expect(1).toBe(1)
-      return 2
+    fn: (id: string[]): void => {
+      expect(id).toEqual(["test2.fn", "test.fn", "hi"])
     },
-    listeners: ["fn2"]
-  }
-
-  listener({ test, test2 })
-
-  expect(test.fn()).toBe(1)
-  expect(test.fn2()).toBe(2)
-  expect(test.test2).toBe(test2)
-})
-
-
-test("join callback", (): void => {
-  expect.assertions(1)
-
-  const test = {
-    fn: (): void => {},
-    listen(listener: Listener): void {
-      listener.join(this, "test2")
-    },
-    listeners: ["fn"],
-    test2: undefined
-  }
-
-  const test2 = {
-    fn: (): void => {},
-    join: (instance): void => {
-      expect(instance).toBe(test)
+    join: (instanceId, instance): void => {
+      expect(instanceId).toEqual("test")
+      expect(instance).toEqual(test)
     },
     listeners: ["fn"]
   }
 
   listener({ test, test2 })
+
+  test.fn(["hi"])
 })

@@ -19,43 +19,6 @@ export class Listener {
 
   private log: LogEvent = (): void => {}
 
-  public join(
-    parentInstance: any, ...instanceIds: string[]
-  ): void {
-    const instances: Set<string> = new Set()
-
-    for (const id of instanceIds) {
-      let fnId: string
-      let instanceId: string
-
-      const match = id.match(this.idRegex)
-
-      if (match) {
-        [instanceId, fnId] =
-          id.match(this.idRegex).slice(2)
-      } else {
-        instanceId = id
-      }
-
-      const instance = this.instances[instanceId]
-      
-      if (instance && match && instance[fnId]) {
-        parentInstance[fnId] = instance[fnId]
-        instances.add(instanceId)
-      } else if (instance) {
-        parentInstance[instanceId] = instance
-        instances.add(instanceId)
-      }
-    }
-
-    instances.forEach((instanceId): void => {
-      const instance = this.instances[instanceId]
-      if (instance.join) {
-        instance.join(parentInstance)
-      }
-    })
-  }
-
   public listen(
     matchId: string[],
     targetIds: string[],
@@ -122,11 +85,6 @@ export class Listener {
 
       for (const fnName of instance.listeners) {
         if (!instance[fnName]) {
-          this.log(
-            ["listener.listener"],
-            "warn",
-            `could not find function "${fnName}" on instance "${instanceId}"`
-          )
           continue
         }
 
@@ -148,8 +106,62 @@ export class Listener {
 
     for (const instanceId in instances) {
       const instance = instances[instanceId]
+      const joinInstanceIds: Set<string> = new Set()
 
-      if (instance && instance.listen) {
+      if (!instance || !instance.listeners) {
+        continue
+      }
+
+      for (const id of instance.listeners) {
+        if (instance[id]) {
+          continue
+        }
+
+        const [joinInstanceId, fnId] =
+          id.match(this.idRegex).slice(2)
+        
+        if (!joinInstanceId || !fnId) {
+          continue
+        }
+
+        if (!this.instances[joinInstanceId]) {
+          this.log(
+            ["listener.listener"],
+            "warn",
+            `could not find instance "${joinInstanceId}"`
+          )
+          continue
+        }
+
+        if (!this.instances[joinInstanceId][fnId]) {
+          this.log(
+            ["listener.listener"],
+            "warn",
+            `could not find function "${fnId}" on instance "${joinInstanceId}"`
+          )
+          continue
+        }
+
+        joinInstanceIds.add(joinInstanceId)
+
+        instance[fnId] =
+          (id: string[], ...args: any[]): any => {
+            return this.instances[joinInstanceId][fnId](
+              [`${instanceId}.${fnId}`, ...id],
+              ...args
+            )
+          }
+      }
+
+      joinInstanceIds.forEach((joinInstanceId): void => {
+        if (this.instances[joinInstanceId].join) {
+          this.instances[joinInstanceId].join(
+            instanceId, instances[instanceId]
+          )
+        }
+      })
+
+      if (instance.listen) {
         instance.listen(
           this, { ...(options || {}), instanceId }
         )
@@ -363,7 +375,6 @@ export class Listener {
 
 const instance = new Listener()
 
-export const join = instance.join.bind(instance)
 export const listen = instance.listen.bind(instance)
 export const listener = instance.listener.bind(instance)
 export const reset = instance.reset.bind(instance)
