@@ -15,7 +15,7 @@ export class Listener {
   public options: ListenerBindingOptions = {}
   public originals: Listeners = {}
 
-  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
+  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
 
   private log: LogEvent = (): void => {}
 
@@ -117,10 +117,17 @@ export class Listener {
           continue
         }
 
-        const [joinInstanceId, fnId] =
-          id.match(this.idRegex).slice(2)
+        const match = id.match(this.idRegex)
         
-        if (!joinInstanceId || !fnId) {
+        let joinInstanceId: string
+        let fnId: string
+
+        if (match) {
+          [joinInstanceId, fnId] = match.slice(2)
+          joinInstanceId = joinInstanceId || match[4]
+        }
+        
+        if (!joinInstanceId) {
           continue
         }
 
@@ -133,6 +140,15 @@ export class Listener {
           continue
         }
 
+        joinInstanceIds.add(joinInstanceId)
+
+        if (!fnId) {
+          instance[joinInstanceId] =
+            this.instances[joinInstanceId]
+          
+          continue
+        }
+
         if (!this.instances[joinInstanceId][fnId]) {
           this.log(
             ["listener.listener"],
@@ -142,15 +158,8 @@ export class Listener {
           continue
         }
 
-        joinInstanceIds.add(joinInstanceId)
-
         instance[fnId] =
-          (id: string[], ...args: any[]): any => {
-            return this.instances[joinInstanceId][fnId](
-              [`${instanceId}.${fnId}`, ...id],
-              ...args
-            )
-          }
+          this.instances[joinInstanceId][fnId]
       }
 
       joinInstanceIds.forEach((joinInstanceId): void => {

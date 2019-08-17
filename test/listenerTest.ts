@@ -402,7 +402,7 @@ test("numeric append option", (): void => {
   })
 })
 
-test("instance listener", (): void => {
+test("instance listener function", (): void => {
   expect.assertions(3)
 
   const test = {
@@ -412,7 +412,7 @@ test("instance listener", (): void => {
 
   const test2 = {
     fn: (id: string[]): void => {
-      expect(id).toEqual(["test2.fn", "test.fn", "hi"])
+      expect(id).toEqual(["test2.fn", "hi"])
     },
     join: (instanceId, instance): void => {
       expect(instanceId).toEqual("test")
@@ -424,4 +424,35 @@ test("instance listener", (): void => {
   listener({ test, test2 })
 
   test.fn(["hi"])
+})
+
+test("instance listener", (): void => {
+  expect.assertions(3)
+
+  class Test {
+    public listeners = ["test2"]
+    public test2: Test2
+  }
+
+  const test = new Test()
+
+  class Test2 {
+    public listeners = ["fn"]
+    
+    public fn(id: string[]): void {
+      expect(id).toEqual(["test2.fn", "hi"])
+    }
+    
+    public join(instanceId, instance): void {
+      expect(instanceId).toEqual("test")
+      expect(instance).toEqual(test)
+    }
+    
+  }
+
+  const test2 = new Test2()
+
+  listener({ test, test2 })
+
+  test.test2.fn(["hi"])
 })
