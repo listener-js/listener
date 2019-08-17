@@ -1,4 +1,4 @@
-import { Listener, listener, listen, reset } from "../"
+import { listener, listen, reset } from "../"
 import { log } from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
