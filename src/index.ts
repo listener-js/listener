@@ -49,6 +49,40 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (!instance) {
+        this.log(
+          ["listener.listener"],
+          "warn",
+          `instance "${instanceId}" not found`
+        )
+        return
+      }
+
+      if (
+        !instance.listeners &&
+        !instance.listenerInstances
+      ) {
+        this.log(
+          ["listener.listener"],
+          "warn",
+          `neither "listeners" or "listenerInstances" array found on instance "${instanceId}"`
+        )
+        return
+      }
+
+      if (instance._listeners) {
+        this.log(
+          ["listener.listener"],
+          "warn",
+          `tried to setup instance "${instanceId}" more than once`
+        )
+        return
+      }
+    }
+
     this.wrapListeners(instances, options)
     this.joinListenerInstances(instances)
 
@@ -259,7 +293,7 @@ export class Listener {
           this.log(
             ["listener.listener"],
             "warn",
-            `could not find instance "${joinInstanceId}"`
+            `could not find instance "${joinInstanceId}" to join`
           )
           continue
         }
@@ -277,7 +311,7 @@ export class Listener {
           this.log(
             ["listener.listener"],
             "warn",
-            `could not find function "${fnId}" on instance "${joinInstanceId}"`
+            `could not find function "${fnId}" on instance "${joinInstanceId}" to join`
           )
           continue
         }
@@ -344,40 +378,11 @@ export class Listener {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
-      if (!instance) {
-        this.log(
-          ["listener.listener"],
-          "warn",
-          `instance "${instanceId}" not found`
-        )
-        continue
-      }
-
-      if (
-        !instance.listeners &&
-        !instance.listenerInstances
-      ) {
-        this.log(
-          ["listener.listener"],
-          "warn",
-          `neither "listeners" or "listenerInstances" array found on instance "${instanceId}"`
-        )
-      }
-
       if (!instance.listeners) {
         continue
       }
 
       this.instances[instanceId] = instance
-
-      if (instance._listeners) {
-        this.log(
-          ["listener.listener"],
-          "warn",
-          `tried to setup instance "${instanceId}" more than once`
-        )
-        continue
-      }
 
       this.log(
         ["listener.listener"],
