@@ -232,11 +232,11 @@ export class Listener {
       const instance = instances[instanceId]
       const joinInstanceIds: Set<string> = new Set()
 
-      if (!instance || !instance.listeners) {
+      if (!instance || !instance.listenerInstances) {
         continue
       }
 
-      for (const id of instance.listeners) {
+      for (const id of instance.listenerInstances) {
         if (instance[id]) {
           continue
         }
@@ -296,15 +296,6 @@ export class Listener {
     }
   }
 
-  private listenerWrapper(
-    fnId: string, instanceId: string
-  ): Function {
-    return (eid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(eid || [])
-      return this.emit(fnId, id, instanceId, ...args)
-    }
-  }
-
   private listSort(
     [, a = {}]: ListenerBindingItem,
     [, b = {}]: ListenerBindingItem
@@ -337,6 +328,15 @@ export class Listener {
     return 1
   }
 
+  private listenerWrapper(
+    fnId: string, instanceId: string
+  ): Function {
+    return (eid: string[], ...args: any[]): any => {
+      const id = [fnId].concat(eid || [])
+      return this.emit(fnId, id, instanceId, ...args)
+    }
+  }
+
   private wrapListeners(
     instances: Record<string, any>,
     options?: Record<string, any>
@@ -344,15 +344,27 @@ export class Listener {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
+      if (!instance) {
+        this.log(
+          ["listener.listener"],
+          "warn",
+          `instance "${instanceId}" not found`
+        )
+        continue
+      }
+
       if (
-        !instance ||
-        !instance.listeners
+        !instance.listeners &&
+        !instance.listenerInstances
       ) {
         this.log(
           ["listener.listener"],
           "warn",
-          `"listeners" array not found on instance "${instanceId}"`
+          `neither "listeners" or "listenerInstances" array found on instance "${instanceId}"`
         )
+      }
+
+      if (!instance.listeners) {
         continue
       }
 

@@ -407,7 +407,7 @@ test("instance listener function", (): void => {
 
   const test = {
     fn: undefined,
-    listeners: ["test2.fn"]
+    listenerInstances: ["test2.fn"]
   }
 
   const test2 = {
@@ -430,7 +430,7 @@ test("instance listener", (): void => {
   expect.assertions(3)
 
   class Test {
-    public listeners = ["test2"]
+    public listenerInstances = ["test2"]
     public test2: Test2
   }
 
