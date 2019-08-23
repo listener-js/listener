@@ -49,126 +49,11 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
-
-      if (
-        !instance ||
-        !instance.listeners
-      ) {
-        this.log(
-          ["listener.listener"],
-          "warn",
-          `"listeners" array not found on instance "${instanceId}"`
-        )
-        continue
-      }
-
-      this.instances[instanceId] = instance
-      
-      if (instance._listeners) {
-        this.log(
-          ["listener.listener"],
-          "warn",
-          `tried to setup instance "${instanceId}" more than once`
-        )
-        continue
-      }
-
-      this.log(
-        ["listener.listener"],
-        "internal",
-        instanceId, options
-      )
-
-      instance._listeners = true
-
-      for (const fnName of instance.listeners) {
-        if (!instance[fnName]) {
-          continue
-        }
-
-        const fnId = `${instanceId}.${fnName}`
-
-        this.originals[fnId] = instance[fnName]
-
-        instance[fnName] = this.listenerWrapper(
-          fnId, instanceId
-        )
-
-        this.listeners[fnId] = instance[fnName]
-      }
-
-      if (instanceId === "log") {
-        this.log = instance.logEvent
-      }
-    }
+    this.wrapListeners(instances, options)
+    this.joinListenerInstances(instances)
 
     for (const instanceId in instances) {
       const instance = instances[instanceId]
-      const joinInstanceIds: Set<string> = new Set()
-
-      if (!instance || !instance.listeners) {
-        continue
-      }
-
-      for (const id of instance.listeners) {
-        if (instance[id]) {
-          continue
-        }
-
-        const match = id.match(this.idRegex)
-        
-        let joinInstanceId: string
-        let fnId: string
-
-        if (match) {
-          [joinInstanceId, fnId] = match.slice(2)
-          joinInstanceId = joinInstanceId || match[4]
-        }
-        
-        if (!joinInstanceId) {
-          continue
-        }
-
-        if (!this.instances[joinInstanceId]) {
-          this.log(
-            ["listener.listener"],
-            "warn",
-            `could not find instance "${joinInstanceId}"`
-          )
-          continue
-        }
-
-        joinInstanceIds.add(joinInstanceId)
-
-        if (!fnId) {
-          instance[joinInstanceId] =
-            this.instances[joinInstanceId]
-          
-          continue
-        }
-
-        if (!this.instances[joinInstanceId][fnId]) {
-          this.log(
-            ["listener.listener"],
-            "warn",
-            `could not find function "${fnId}" on instance "${joinInstanceId}"`
-          )
-          continue
-        }
-
-        instance[fnId] =
-          this.instances[joinInstanceId][fnId]
-      }
-
-      joinInstanceIds.forEach((joinInstanceId): void => {
-        if (this.instances[joinInstanceId].join) {
-          this.instances[joinInstanceId].join(
-            instanceId, instances[instanceId]
-          )
-        }
-      })
 
       if (instance.listen) {
         instance.listen(
@@ -340,6 +225,77 @@ export class Listener {
     return finalOut
   }
 
+  private joinListenerInstances(
+    instances: Record<string, any>
+  ): void {
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+      const joinInstanceIds: Set<string> = new Set()
+
+      if (!instance || !instance.listeners) {
+        continue
+      }
+
+      for (const id of instance.listeners) {
+        if (instance[id]) {
+          continue
+        }
+
+        const match = id.match(this.idRegex)
+
+        let joinInstanceId: string
+        let fnId: string
+
+        if (match) {
+          [joinInstanceId, fnId] = match.slice(2)
+          joinInstanceId = joinInstanceId || match[4]
+        }
+
+        if (!joinInstanceId) {
+          continue
+        }
+
+        if (!this.instances[joinInstanceId]) {
+          this.log(
+            ["listener.listener"],
+            "warn",
+            `could not find instance "${joinInstanceId}"`
+          )
+          continue
+        }
+
+        joinInstanceIds.add(joinInstanceId)
+
+        if (!fnId) {
+          instance[joinInstanceId] =
+            this.instances[joinInstanceId]
+
+          continue
+        }
+
+        if (!this.instances[joinInstanceId][fnId]) {
+          this.log(
+            ["listener.listener"],
+            "warn",
+            `could not find function "${fnId}" on instance "${joinInstanceId}"`
+          )
+          continue
+        }
+
+        instance[fnId] =
+          this.instances[joinInstanceId][fnId]
+      }
+
+      joinInstanceIds.forEach((joinInstanceId): void => {
+        if (this.instances[joinInstanceId].join) {
+          this.instances[joinInstanceId].join(
+            instanceId, instances[instanceId]
+          )
+        }
+      })
+    }
+  }
+
   private listenerWrapper(
     fnId: string, instanceId: string
   ): Function {
@@ -379,6 +335,66 @@ export class Listener {
       }
     }
     return 1
+  }
+
+  private wrapListeners(
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void {
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (
+        !instance ||
+        !instance.listeners
+      ) {
+        this.log(
+          ["listener.listener"],
+          "warn",
+          `"listeners" array not found on instance "${instanceId}"`
+        )
+        continue
+      }
+
+      this.instances[instanceId] = instance
+
+      if (instance._listeners) {
+        this.log(
+          ["listener.listener"],
+          "warn",
+          `tried to setup instance "${instanceId}" more than once`
+        )
+        continue
+      }
+
+      this.log(
+        ["listener.listener"],
+        "internal",
+        instanceId, options
+      )
+
+      instance._listeners = true
+
+      for (const fnName of instance.listeners) {
+        if (!instance[fnName]) {
+          continue
+        }
+
+        const fnId = `${instanceId}.${fnName}`
+
+        this.originals[fnId] = instance[fnName]
+
+        instance[fnName] = this.listenerWrapper(
+          fnId, instanceId
+        )
+
+        this.listeners[fnId] = instance[fnName]
+      }
+
+      if (instanceId === "log") {
+        this.log = instance.logEvent
+      }
+    }
   }
 }
 

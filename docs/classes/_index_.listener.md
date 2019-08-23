@@ -24,6 +24,7 @@
 * [addList](_index_.listener.md#private-addlist)
 * [buildList](_index_.listener.md#private-buildlist)
 * [emit](_index_.listener.md#private-emit)
+* [joinListenerInstances](_index_.listener.md#private-joinlistenerinstances)
 * [listSort](_index_.listener.md#private-listsort)
 * [listen](_index_.listener.md#listen)
 * [listener](_index_.listener.md#listener)
@@ -31,6 +32,7 @@
 * [log](_index_.listener.md#private-log)
 * [optsToIndex](_index_.listener.md#private-optstoindex)
 * [reset](_index_.listener.md#reset)
+* [wrapListeners](_index_.listener.md#private-wraplisteners)
 
 ## Properties
 
@@ -86,7 +88,7 @@ Defined in index.ts:16
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:213
+Defined in index.ts:98
 
 **Parameters:**
 
@@ -104,7 +106,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:229
+Defined in index.ts:114
 
 **Parameters:**
 
@@ -121,7 +123,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:276
+Defined in index.ts:161
 
 **Parameters:**
 
@@ -136,11 +138,27 @@ Name | Type |
 
 ___
 
+### `Private` joinListenerInstances
+
+▸ **joinListenerInstances**(`instances`: `Record<string, any>`): *void*
+
+Defined in index.ts:228
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`instances` | `Record<string, any>` |
+
+**Returns:** *void*
+
+___
+
 ### `Private` listSort
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:352
+Defined in index.ts:308
 
 **Parameters:**
 
@@ -192,7 +210,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:343
+Defined in index.ts:299
 
 **Parameters:**
 
@@ -219,7 +237,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:363
+Defined in index.ts:319
 
 **Parameters:**
 
@@ -235,6 +253,23 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:181
+Defined in index.ts:66
+
+**Returns:** *void*
+
+___
+
+### `Private` wrapListeners
+
+▸ **wrapListeners**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
+
+Defined in index.ts:340
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`instances` | `Record<string, any>` |
+`options?` | `Record<string, any>` |
 
 **Returns:** *void*
