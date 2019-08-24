@@ -456,3 +456,33 @@ test("instance listener", (): void => {
 
   test.test2.fn(["hi"])
 })
+
+test("intercept", (): void => {
+  expect.assertions(2)
+
+  class Test {
+    public listeners = ["test"]
+    
+    public test(): boolean {
+      return true
+    }
+  }
+
+  const test = new Test()
+
+  class Test2 {
+    public listeners = ["test"]
+
+    public test(id: string[], value: boolean): void {
+      expect(id).toEqual(["test2.test", "test.test"])
+      expect(value).toBe(true)
+    }
+  }
+
+  const test2 = new Test2()
+
+  listener({ test, test2 })
+  listen(["test.test"], ["test2.test"], { intercept: true })
+
+  test.test()
+})
