@@ -458,12 +458,14 @@ test("instance listener", (): void => {
 })
 
 test("intercept", (): void => {
-  expect.assertions(2)
+  expect.assertions(5)
 
   class Test {
     public listeners = ["test"]
     
-    public test(): boolean {
+    public test(id: string[], arg: string): boolean {
+      expect(id).toEqual(["test.test"])
+      expect(arg).toBe("hi")
       return true
     }
   }
@@ -473,9 +475,12 @@ test("intercept", (): void => {
   class Test2 {
     public listeners = ["test"]
 
-    public test(id: string[], value: boolean): void {
+    public test(
+      id: string[], value: boolean, arg: string
+    ): void {
       expect(id).toEqual(["test2.test", "test.test"])
       expect(value).toBe(true)
+      expect(arg).toBe("hi")
     }
   }
 
@@ -484,5 +489,5 @@ test("intercept", (): void => {
   listener({ test, test2 })
   listen(["test.test"], ["test2.test"], { intercept: true })
 
-  test.test()
+  test.test([], "hi")
 })
