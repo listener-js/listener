@@ -15,6 +15,7 @@
 * [append](_types_.listeneroptions.md#optional-append)
 * [index](_types_.listeneroptions.md#optional-index)
 * [intercept](_types_.listeneroptions.md#optional-intercept)
+* [peek](_types_.listeneroptions.md#optional-peek)
 * [prepend](_types_.listeneroptions.md#optional-prepend)
 * [return](_types_.listeneroptions.md#optional-return)
 
@@ -44,11 +45,19 @@ Defined in types.ts:4
 
 ___
 
+### `Optional` peek
+
+• **peek**? : *boolean*
+
+Defined in types.ts:5
+
+___
+
 ### `Optional` prepend
 
 • **prepend**? : *boolean | number*
 
-Defined in types.ts:5
+Defined in types.ts:6
 
 ___
 
@@ -56,4 +65,4 @@ ___
 
 • **return**? : *boolean*
 
-Defined in types.ts:6
+Defined in types.ts:7

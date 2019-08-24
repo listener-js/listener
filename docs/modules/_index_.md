@@ -23,7 +23,7 @@
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:439
+Defined in index.ts:440
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 • **listen**: *any* =  instance.listen.bind(instance)
 
-Defined in index.ts:441
+Defined in index.ts:442
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 • **listener**: *any* =  instance.listener.bind(instance)
 
-Defined in index.ts:442
+Defined in index.ts:443
 
 ___
 
@@ -47,4 +47,4 @@ ___
 
 • **reset**: *any* =  instance.reset.bind(instance)
 
-Defined in index.ts:443
+Defined in index.ts:444

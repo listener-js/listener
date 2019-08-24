@@ -458,7 +458,7 @@ test("instance listener", (): void => {
 })
 
 test("intercept", (): void => {
-  expect.assertions(5)
+  expect.assertions(6)
 
   class Test {
     public listeners = ["test"]
@@ -477,10 +477,11 @@ test("intercept", (): void => {
 
     public test(
       id: string[], value: boolean, arg: string
-    ): void {
+    ): boolean {
       expect(id).toEqual(["test2.test", "test.test"])
       expect(value).toBe(true)
       expect(arg).toBe("hi")
+      return false
     }
   }
 
@@ -489,5 +490,41 @@ test("intercept", (): void => {
   listener({ test, test2 })
   listen(["test.test"], ["test2.test"], { intercept: true })
 
-  test.test([], "hi")
+  expect(test.test([], "hi")).toBe(false)
+})
+
+test("peek", (): void => {
+  expect.assertions(6)
+
+  class Test {
+    public listeners = ["test"]
+
+    public test(id: string[], arg: string): boolean {
+      expect(id).toEqual(["test.test"])
+      expect(arg).toBe("hi")
+      return true
+    }
+  }
+
+  const test = new Test()
+
+  class Test2 {
+    public listeners = ["test"]
+
+    public test(
+      id: string[], value: boolean, arg: string
+    ): boolean {
+      expect(id).toEqual(["test2.test", "test.test"])
+      expect(value).toBe(true)
+      expect(arg).toBe("hi")
+      return false
+    }
+  }
+
+  const test2 = new Test2()
+
+  listener({ test, test2 })
+  listen(["test.test"], ["test2.test"], { peek: true })
+
+  expect(test.test([], "hi")).toBe(true)
 })

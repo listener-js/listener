@@ -27,7 +27,7 @@
 
 Ƭ **ListenerBindingItem**: *[string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]*
 
-Defined in types.ts:14
+Defined in types.ts:15
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 Ƭ **ListenerBindingOptions**: *`Record<string, ListenerOptions>`*
 
-Defined in types.ts:16
+Defined in types.ts:17
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 Ƭ **ListenerBindings**: *`Record<string, string[]>`*
 
-Defined in types.ts:19
+Defined in types.ts:20
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 Ƭ **ListenerBindingsListSorter**: *function*
 
-Defined in types.ts:21
+Defined in types.ts:22
 
 #### Type declaration:
 
@@ -70,7 +70,7 @@ ___
 
 Ƭ **ListenerFunction**: *function*
 
-Defined in types.ts:9
+Defined in types.ts:10
 
 #### Type declaration:
 
@@ -89,7 +89,7 @@ ___
 
 Ƭ **ListenerInstances**: *`Record<string, any>`*
 
-Defined in types.ts:24
+Defined in types.ts:25
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
 
-Defined in types.ts:12
+Defined in types.ts:13
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:26
+Defined in types.ts:27
 
 #### Type declaration:
 
