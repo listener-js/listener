@@ -39,9 +39,8 @@ export class Listener {
     }
 
     this.log(
-      ["listener.listen"],
-      "internal",
-      matchId, targetIds, options
+      [`listen([${matchId.join(", ")}], [${targetIds.join(", ")}])`],
+      "internal", options
     )
   }
 
@@ -54,37 +53,35 @@ export class Listener {
 
       if (!instance) {
         this.log(
-          ["listener.listener"],
-          "warn",
-          `instance "${instanceId}" not found`
+          [`listener({ ${instanceId} })`],
+          "warn", "instance not found"
         )
         return
       }
 
       if (
         !instance.listeners &&
-        !instance.listenerInstances
+        !instance.instances
       ) {
         this.log(
-          ["listener.listener"],
+          [`listener({ ${instanceId} })`],
           "warn",
-          `neither "listeners" or "listenerInstances" array found on instance "${instanceId}"`
+          "'listeners' or 'instances' property not found"
         )
         return
       }
 
       if (instance._listeners) {
         this.log(
-          ["listener.listener"],
-          "warn",
-          `tried to setup instance "${instanceId}" more than once`
+          [`listener({ ${instanceId} })`],
+          "warn", "tried to setup instance more than once"
         )
         return
       }
     }
 
-    this.wrapListeners(instances, options)
-    this.joinListenerInstances(instances)
+    this.wrapListeners(instances)
+    this.joinInstances(instances)
 
     for (const instanceId in instances) {
       const instance = instances[instanceId]
@@ -95,10 +92,15 @@ export class Listener {
         )
       }
     }
+
+    this.log(
+      [`listener({ ${Object.keys(instances).join(", ")} })`],
+      "internal", options
+    )
   }
 
   public reset(): void {
-    this.log(["listener.reset"], "internal")
+    this.log(["reset"], "internal")
     this.log = (): void => {}
     
     for (let key in this.originals) {
@@ -214,7 +216,7 @@ export class Listener {
     const list = this.buildList(fnId, id)
 
     if (id.indexOf("log.logEvent") < 0) {
-      this.log(["listener.emit", ...id], "internal", list)
+      this.log(["emit", ...id], "internal", list)
     }
 
     for (const [target, options] of list) {
@@ -259,18 +261,18 @@ export class Listener {
     return finalOut
   }
 
-  private joinListenerInstances(
+  private joinInstances(
     instances: Record<string, any>
   ): void {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
       const joinInstanceIds: Set<string> = new Set()
 
-      if (!instance || !instance.listenerInstances) {
+      if (!instance || !instance.instances) {
         continue
       }
 
-      for (const id of instance.listenerInstances) {
+      for (const id of instance.instances) {
         if (instance[id]) {
           continue
         }
@@ -291,9 +293,8 @@ export class Listener {
 
         if (!this.instances[joinInstanceId]) {
           this.log(
-            ["listener.listener"],
-            "warn",
-            `could not find instance "${joinInstanceId}" to join`
+            [`listener({ ${id} })`],
+            "warn", `instance '${joinInstanceId}' not found`
           )
           continue
         }
@@ -309,9 +310,9 @@ export class Listener {
 
         if (!this.instances[joinInstanceId][fnId]) {
           this.log(
-            ["listener.listener"],
+            [`listener({ ${id} })`],
             "warn",
-            `could not find function "${fnId}" on instance "${joinInstanceId}" to join`
+            `function '${joinInstanceId}.${fnId}' not found`
           )
           continue
         }
@@ -372,8 +373,7 @@ export class Listener {
   }
 
   private wrapListeners(
-    instances: Record<string, any>,
-    options?: Record<string, any>
+    instances: Record<string, any>
   ): void {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
@@ -383,12 +383,6 @@ export class Listener {
       }
 
       this.instances[instanceId] = instance
-
-      this.log(
-        ["listener.listener"],
-        "internal",
-        instanceId, options
-      )
 
       instance._listeners = true
 
