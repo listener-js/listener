@@ -142,7 +142,7 @@ ___
 
 ▸ **joinInstances**(`instances`: `Record<string, any>`): *void*
 
-Defined in index.ts:264
+Defined in index.ts:291
 
 **Parameters:**
 
@@ -158,7 +158,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:334
+Defined in index.ts:361
 
 **Parameters:**
 
@@ -210,7 +210,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:366
+Defined in index.ts:393
 
 **Parameters:**
 
@@ -237,7 +237,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:345
+Defined in index.ts:372
 
 **Parameters:**
 
@@ -263,7 +263,7 @@ ___
 
 ▸ **wrapListeners**(`instances`: `Record<string, any>`): *void*
 
-Defined in index.ts:375
+Defined in index.ts:402
 
 **Parameters:**
 

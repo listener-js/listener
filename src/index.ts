@@ -200,9 +200,8 @@ export class Listener {
     instanceId: string,
     ...args: any[]
   ): any {
-    let promise: Promise<any>
     let out: any
-    let finalOut: any
+    let promise: Promise<any>
 
     if (
       this.bindings["**"] &&
@@ -220,13 +219,16 @@ export class Listener {
     }
 
     for (const [target, options] of list) {
-      const isMainFn = options && options.index === 0
+      const isBefore = options && options.index < 0
+      const isMain = options && options.index === 0
+      const isReturn = options && options.return
+      const isIntercept = options && options.intercept
 
-      if (!isMainFn && fnId === target) {
+      if (!isMain && fnId === target) {
         continue
       }
 
-      const fn = isMainFn ?
+      const fn = isMain ?
         this.originals[fnId].bind(
           this.instances[instanceId]
         ) :
@@ -236,29 +238,54 @@ export class Listener {
         continue
       }
 
-      out = promise ?
-        promise.then((): any => fn(id, ...args)) :
-        fn(id, ...args)
+      if (isBefore) {
+        const tmpOut = fn(id, ...args)
 
-      if (out && out.then) {
-        promise = out
-      }
+        if (tmpOut && tmpOut.then) {
+          promise = tmpOut
+        }
 
-      if (options &&
-        (
-          (!finalOut && isMainFn) ||
-          options.useReturn
-        )
-      ) {
-        finalOut = promise || out
+        if (isReturn) {
+          out = tmpOut
+        }
+      } else if (isMain) {
+        if (out) {
+          return out
+        }
+
+        out = fn(id, ...args)
+
+        if (!out || !out.then) {
+          promise = undefined
+        }
+      } else {
+        let tmpOut: any
+
+        if (promise && out && out.then) {
+          tmpOut = promise.then(
+            (): any => isIntercept ?
+              fn(id, out, ...args) :
+              fn(id, ...args)
+          )
+        } else {
+          tmpOut = isIntercept ?
+            fn(id, out, ...args) :
+            fn(id, ...args)
+        }
+
+        if (tmpOut && tmpOut.then) {
+          promise = tmpOut
+        }
+
+        if (isReturn) {
+          out = tmpOut
+        }
       }
     }
 
-    if (promise && finalOut.then) {
-      return promise.then((): any => finalOut)
-    }
-
-    return finalOut
+    return promise && out && out.then ?
+      promise.then((): any => out) :
+      out
   }
 
   private joinInstances(

@@ -1,8 +1,9 @@
 export interface ListenerOptions {
   append?: boolean | number
   index?: number
+  intercept?: boolean
   prepend?: boolean | number
-  useReturn?: boolean
+  return?: boolean
 }
 
 export type ListenerFunction =

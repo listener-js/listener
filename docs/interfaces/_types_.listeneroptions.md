@@ -14,8 +14,9 @@
 
 * [append](_types_.listeneroptions.md#optional-append)
 * [index](_types_.listeneroptions.md#optional-index)
+* [intercept](_types_.listeneroptions.md#optional-intercept)
 * [prepend](_types_.listeneroptions.md#optional-prepend)
-* [useReturn](_types_.listeneroptions.md#optional-usereturn)
+* [return](_types_.listeneroptions.md#optional-return)
 
 ## Properties
 
@@ -35,16 +36,24 @@ Defined in types.ts:3
 
 ___
 
-### `Optional` prepend
+### `Optional` intercept
 
-• **prepend**? : *boolean | number*
+• **intercept**? : *boolean*
 
 Defined in types.ts:4
 
 ___
 
-### `Optional` useReturn
+### `Optional` prepend
 
-• **useReturn**? : *boolean*
+• **prepend**? : *boolean | number*
 
 Defined in types.ts:5
+
+___
+
+### `Optional` return
+
+• **return**? : *boolean*
+
+Defined in types.ts:6

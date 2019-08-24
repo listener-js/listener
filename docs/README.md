@@ -154,42 +154,25 @@ Technically the above example could also be achieved with a single `listen` call
 listen(["hello.hello"], ["bye.bye", "miss.you"])
 ```
 
-## Listen callback
+### Async scenarios
 
-If a `listen` function is present on your listener class, it is called when your class instance is passed to the `listen` function:
-
-```ts
-import { Listener } from "@listener-js/listener"
-
-export class Hello {
-  public listeners = ["hello"]
-
-  public listen(listener: Listener) {
-    // Add listener connections, etc...
-  }
-
-  public hello(): string {
-    return "hi"
-  }
-}
-
-export const hello = new Hello()
-```
-
-If you were to make this class into a library, the `Listener` dependency should only be a soft `devDependency` for its types.
+- `listen(["async.fn"], ["async.fn2"])` — calling `async.fn` returns a promise that waits for `async.fn2` before resolving, but returns the original output of `async.fn`.
+- `listen(["sync.fn"], ["async.fn"])` — calling `sync.fn` returns its original output and runs `async.fn` "untethered".
+- `listen(["async.fn"], ["sync.fn"])`, calling `async.fn` returns a promise that waits for all sync/async listeners.
 
 ## Accessing other listeners
 
-Specify external listener functions in your `listeners` array:
+Use the `instances` property to define listener instance accessors:
 
 ```ts
-import { Listener } from "@listener-js/listener"
 import { bye } from "./bye"
 
 export class Hello {
   private bye: typeof bye.bye = (): void => {}
 
-  public listeners = ["bye.bye", "hello"]
+  public instances = ["bye.bye"]
+
+  public listeners = ["hello"]
 
   public hello(id: string[]): string {
     this.bye(id)
@@ -200,11 +183,11 @@ export class Hello {
 export const hello = new Hello()
 ```
 
-First we import `Listener` and `bye` solely for their types (not a "hard" dependency).
+First we import `bye` solely for its types (not a "hard" dependency) and add `bye.bye` to the `instances` array.
 
-Next, we add `bye.bye` to the `listeners` array.
+Now, when the end-user calls `listen({ hello, bye })`, you can call `bye.bye` via `hello.bye`.
 
-We now have access to the `bye.bye` listener function **without introducing any hard dependencies to it**.
+This pattern allows access to listener instances **without introducing any hard dependencies to it**, and leaves implementation control in the end-user's hands.
 
 ## Wildcard listeners
 
@@ -243,26 +226,12 @@ listen(["**"], ["bye.bye"], { append: 1000 }) // index
 
 The sort index defaults to `1` with a boolean (`true`) sort value. Using an integer value can be a way to ensure your listener absolutely runs first or last.
 
-## Async listeners
-
-Listeners still run in succession, even if their connections are a mix of sync and async. (Connection-specific promise configuration options coming soon.)
-
-In general, the idea is to always wait for listener connections when possible and preserve the output synchronicity of the main listener function regardless of connection output.
-
-### Async example scenarios
-
-The following scenarios assume an "appended" (default) listener connection:
-
-- If you connect `async.fn` ⇦ `async.fn2`, calling `async.fn` will wait for `async.fn2` before resolving, and return the output of `async.fn`.
-- If you connect `sync.fn` ⇦ `async.fn`, calling `sync.fn` returns its original output and the following listener connections run "untethered".
-- If you connect `async.fn` ⇦ `sync.fn`, calling `async.fn` returns a promise that waits for all sync/async listeners.
-
 ## Overwriting the return value
 
-When defining a connection, the `useReturn` option allows the connection to overwrite the return value:
+When defining a connection, the `return` option allows the connection to overwrite the return value:
 
 ```ts
-listen(["**"], ["hello.hello"], { useReturn: true })
+listen(["**"], ["hello.hello"], { return: true })
 ```
 
 The [last listener connection](#listener-execution-order) has precedence for overwriting return values.
