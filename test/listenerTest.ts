@@ -500,6 +500,42 @@ test("intercept", (): void => {
   expect(test.test([], "hi")).toBe(false)
 })
 
+test("intercept cancel", (): void => {
+  expect.assertions(6)
+
+  class Test {
+    public listeners = ["test"]
+
+    public test(id: string[], arg: string): boolean {
+      expect(id).toEqual(["test.test"])
+      expect(arg).toBe("hi")
+      return true
+    }
+  }
+
+  const test = new Test()
+
+  class Test2 {
+    public listeners = ["test"]
+
+    public test(
+      id: string[], value: boolean, arg: string
+    ): boolean {
+      expect(id).toEqual(["test2.test", "test.test"])
+      expect(value).toBe(true)
+      expect(arg).toBe("hi")
+      return
+    }
+  }
+
+  const test2 = new Test2()
+
+  listener({ test, test2 })
+  listen(["test.test"], ["test2.test"], { intercept: true })
+
+  expect(test.test([], "hi")).toBe(true)
+})
+
 test("peek", (): void => {
   expect.assertions(6)
 

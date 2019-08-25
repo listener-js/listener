@@ -200,9 +200,13 @@ export class Listener {
     for (const [target, options] of list) {
       const isBefore = options && options.index < 0
       const isMain = options && options.index === 0
-      const isPeek = options && options.peek
       const isIntercept = options && options.intercept
-      const isReturn = options && options.return
+
+      const isPeek =
+        isIntercept || (options && options.peek)
+      
+      const isReturn =
+        isIntercept || (options && options.return)
 
       if (!isMain && fnId === target) {
         continue
@@ -225,7 +229,7 @@ export class Listener {
           promise = tmpOut
         }
 
-        if (isReturn) {
+        if (isReturn && tmpOut !== undefined) {
           out = tmpOut
         }
       } else if (isMain) {
@@ -243,12 +247,12 @@ export class Listener {
 
         if (promise && out && out.then) {
           tmpOut = promise.then(
-            (): any => isIntercept || isPeek ?
+            (): any => isPeek ?
               fn(id, out, ...args) :
               fn(id, ...args)
           )
         } else {
-          tmpOut = isIntercept || isPeek ?
+          tmpOut = isPeek ?
             fn(id, out, ...args) :
             fn(id, ...args)
         }
@@ -257,7 +261,7 @@ export class Listener {
           promise = tmpOut
         }
 
-        if (isIntercept || isReturn) {
+        if (isReturn && tmpOut !== undefined) {
           out = tmpOut
         }
       }
