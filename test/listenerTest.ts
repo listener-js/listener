@@ -419,7 +419,7 @@ test("instance listener function", (): void => {
 
   const test2 = {
     fn: (id: string[]): void => {
-      expect(id).toEqual(["test2.fn", "hi"])
+      expect(id).toEqual(["test2.fn", "test.fn", "hi"])
     },
     join: (instanceId, instance): void => {
       expect(instanceId).toEqual("test")

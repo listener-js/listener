@@ -325,7 +325,12 @@ export class Listener {
       }
 
       instance[fnId] =
-        this.instances[joinInstanceId][fnId]
+        (id: string[], ...args: any[]): any => {
+          return this.instances[joinInstanceId][fnId](
+            [`${instanceId}.${fnId}`, ...id],
+            ...args
+          )
+        }
     }
 
     joinInstanceIds.forEach((joinInstanceId): void => {
