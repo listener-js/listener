@@ -100,7 +100,7 @@ test("listener bad arg", (): void => {
 })
 
 test("listen return", (): void => {
-  listen(["MyClass.fn"], ["MyClass2.fn2"], { return: true})
+  listen(["MyClass.fn"], ["MyClass2.fn2"], { return: true })
   
   expect(MyClass.fn([], true)).toEqual({
     "fn2": true,
@@ -313,7 +313,9 @@ test("listen id and **", (): void => {
   )
 
   expect(MyClass.fn([], true)).toEqual({
-    "fn": true, "id": ["MyClass.fn"], "someArg": true
+    "fn2": true,
+    "id": ["MyClass2.fn2", "MyClass.fn"],
+    "someArg": true
   })
 
   expect(MyClass.fn(["id"], true)).toEqual({

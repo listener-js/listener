@@ -139,12 +139,16 @@ export class Listener {
 
     list = this.addList(lists, list, "**")
     
-    for (const i of id.slice(1).reverse()) {
+    for (const i of id.slice(0).reverse()) {
       key = key ? i + "." + key : i
       list = this.addList(lists, list, "**." + key)
     }
 
-    for (const i of id.slice(0, -1)) {
+    if (key) {
+      list = this.addList(lists, list, key)
+    }
+
+    for (const i of id) {
       key2 = key2 ? key2 + "." + i : i
       list = this.addList(lists, list, key2 + ".**")
     }
@@ -152,20 +156,12 @@ export class Listener {
     if (id.length <= 1) {
       list = this.addList(lists, list, "*")
     } else {
-      list = this.addList(lists, list, "*." + key)
-      list = this.addList(lists, list, key2 + ".*")
-    }
-
-    if (key && id.length) {
-      key = id[0] + "." + key
-    }
-
-    if (!key && id.length) {
-      key = id[0]
-    }
-
-    if (key) {
-      list = this.addList(lists, list, key)
+      list = this.addList(
+        lists, list, "*." + id.slice(1).join(".")
+      )
+      list = this.addList(
+        lists, list, id.slice(0, -1).join(".") + ".*"
+      )
     }
 
     list = list.sort(this.listSort.bind(this))

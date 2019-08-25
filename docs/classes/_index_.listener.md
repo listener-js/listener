@@ -124,7 +124,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:176
+Defined in index.ts:172
 
 **Parameters:**
 
@@ -143,7 +143,7 @@ ___
 
 ▸ **joinInstance**(`instances`: `Record<string, any>`, `instanceId`: string): *void*
 
-Defined in index.ts:275
+Defined in index.ts:271
 
 **Parameters:**
 
@@ -160,7 +160,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:349
+Defined in index.ts:345
 
 **Parameters:**
 
@@ -212,7 +212,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:381
+Defined in index.ts:377
 
 **Parameters:**
 
@@ -239,7 +239,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:360
+Defined in index.ts:356
 
 **Parameters:**
 
@@ -265,7 +265,7 @@ ___
 
 ▸ **validate**(`instances`: `Record<string, any>`): *string[]*
 
-Defined in index.ts:390
+Defined in index.ts:386
 
 **Parameters:**
 
@@ -281,7 +281,7 @@ ___
 
 ▸ **wrapListener**(`instances`: `Record<string, any>`, `instanceId`: string): *void*
 
-Defined in index.ts:430
+Defined in index.ts:426
 
 **Parameters:**
 
