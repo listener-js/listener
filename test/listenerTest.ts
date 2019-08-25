@@ -1,4 +1,4 @@
-import { listener, listen, reset } from "../"
+import { Listener, instance, listener, listen, reset } from "../"
 import { log } from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
@@ -9,6 +9,8 @@ function delay(t: number, v?: any): Promise<any> {
 
 class MyClass {
   public static listeners = ["fn", "asyncFn"]
+  public static listener: Listener
+  public static instanceId: string
 
   public static fn(
     id: string[], someArg: boolean
@@ -59,6 +61,11 @@ beforeEach((): void => {
 test("defined", (): void => {
   expect(listener).not.toBeUndefined()
   expect(listen).not.toBeUndefined()
+})
+
+test("listener properties", (): void => {
+  expect(MyClass.listener).toBe(instance)
+  expect(MyClass.instanceId).toBe("MyClass")
 })
 
 test("listener", (): void => {

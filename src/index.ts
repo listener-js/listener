@@ -48,48 +48,26 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
-    for (const instanceId in instances) {
+    const instanceIds = this.validate(instances)
+    
+    for (const instanceId of instanceIds) {
       const instance = instances[instanceId]
 
-      if (!instance) {
-        this.log(
-          [`listener({ ${instanceId} })`],
-          "warn", "instance not found"
-        )
-        return
-      }
+      instance.instanceId = instanceId
+      instance.listener = this
 
-      if (
-        !instance.listeners &&
-        !instance.instances
-      ) {
-        this.log(
-          [`listener({ ${instanceId} })`],
-          "warn",
-          "'listeners' or 'instances' property not found"
-        )
-        return
-      }
-
-      if (instance._listeners) {
-        this.log(
-          [`listener({ ${instanceId} })`],
-          "warn", "tried to setup instance more than once"
-        )
-        return
-      }
+      this.wrapListener(instances, instanceId)
     }
 
-    this.wrapListeners(instances)
-    this.joinInstances(instances)
+    for (const instanceId of instanceIds) {
+      this.joinInstance(instances, instanceId)
+    }
 
-    for (const instanceId in instances) {
+    for (const instanceId of instanceIds) {
       const instance = instances[instanceId]
-
+      
       if (instance.listen) {
-        instance.listen(
-          this, { ...(options || {}), instanceId }
-        )
+        instance.listen(options || {})
       }
     }
 
@@ -110,7 +88,8 @@ export class Listener {
       this.instances[instanceId][fnId] =
         this.originals[key]
 
-      delete this.instances[instanceId]._listeners
+      delete this.instances[instanceId].instanceId
+      delete this.instances[instanceId].listener
       delete this.originals[key]
     }
     
@@ -289,74 +268,73 @@ export class Listener {
       out
   }
 
-  private joinInstances(
-    instances: Record<string, any>
+  private joinInstance(
+    instances: Record<string, any>,
+    instanceId: string
   ): void {
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
-      const joinInstanceIds: Set<string> = new Set()
+    const instance = instances[instanceId]
+    const joinInstanceIds: Set<string> = new Set()
 
-      if (!instance || !instance.instances) {
+    if (!instance || !instance.instances) {
+      return
+    }
+
+    for (const id of instance.instances) {
+      if (instance[id]) {
         continue
       }
 
-      for (const id of instance.instances) {
-        if (instance[id]) {
-          continue
-        }
+      const match = id.match(this.idRegex)
 
-        const match = id.match(this.idRegex)
+      let joinInstanceId: string
+      let fnId: string
 
-        let joinInstanceId: string
-        let fnId: string
-
-        if (match) {
-          [joinInstanceId, fnId] = match.slice(2)
-          joinInstanceId = joinInstanceId || match[4]
-        }
-
-        if (!joinInstanceId) {
-          continue
-        }
-
-        if (!this.instances[joinInstanceId]) {
-          this.log(
-            [`listener({ ${id} })`],
-            "warn", `instance '${joinInstanceId}' not found`
-          )
-          continue
-        }
-
-        joinInstanceIds.add(joinInstanceId)
-
-        if (!fnId) {
-          instance[joinInstanceId] =
-            this.instances[joinInstanceId]
-
-          continue
-        }
-
-        if (!this.instances[joinInstanceId][fnId]) {
-          this.log(
-            [`listener({ ${id} })`],
-            "warn",
-            `function '${joinInstanceId}.${fnId}' not found`
-          )
-          continue
-        }
-
-        instance[fnId] =
-          this.instances[joinInstanceId][fnId]
+      if (match) {
+        [joinInstanceId, fnId] = match.slice(2)
+        joinInstanceId = joinInstanceId || match[4]
       }
 
-      joinInstanceIds.forEach((joinInstanceId): void => {
-        if (this.instances[joinInstanceId].join) {
-          this.instances[joinInstanceId].join(
-            instanceId, instances[instanceId]
-          )
-        }
-      })
+      if (!joinInstanceId) {
+        continue
+      }
+
+      if (!this.instances[joinInstanceId]) {
+        this.log(
+          [`listener({ ${id} })`],
+          "warn", `instance '${joinInstanceId}' not found`
+        )
+        continue
+      }
+
+      joinInstanceIds.add(joinInstanceId)
+
+      if (!fnId) {
+        instance[joinInstanceId] =
+          this.instances[joinInstanceId]
+
+        continue
+      }
+
+      if (!this.instances[joinInstanceId][fnId]) {
+        this.log(
+          [`listener({ ${id} })`],
+          "warn",
+          `function '${joinInstanceId}.${fnId}' not found`
+        )
+        continue
+      }
+
+      instance[fnId] =
+        this.instances[joinInstanceId][fnId]
     }
+
+    joinInstanceIds.forEach((joinInstanceId): void => {
+      if (this.instances[joinInstanceId].join) {
+        this.instances[joinInstanceId].join(
+          instanceId, instances[instanceId]
+        )
+      }
+    })
   }
 
   private listSort(
@@ -400,45 +378,81 @@ export class Listener {
     }
   }
 
-  private wrapListeners(
+  private validate(
     instances: Record<string, any>
-  ): void {
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
+  ): string[] {
+    return Object.keys(instances).filter(
+      (instanceId): boolean => {
+        const instance = instances[instanceId]
 
-      if (!instance.listeners) {
+        if (!instance) {
+          this.log(
+            [`listener({ ${instanceId} })`],
+            "warn", "instance not found"
+          )
+          return
+        }
+
+        if (
+          !instance.listeners &&
+          !instance.instances
+        ) {
+          this.log(
+            [`listener({ ${instanceId} })`],
+            "warn",
+            "'listeners' or 'instances' property not found"
+          )
+          return
+        }
+
+        if (instance.instanceId) {
+          this.log(
+            [`listener({ ${instanceId} })`],
+            "warn", "tried to setup instance more than once"
+          )
+          return
+        }
+
+        return true
+      }
+    )
+  }
+
+  private wrapListener(
+    instances: Record<string, any>,
+    instanceId: string
+  ): void {
+    const instance = instances[instanceId]
+
+    if (!instance.listeners) {
+      return
+    }
+
+    this.instances[instanceId] = instance
+
+    for (const fnName of instance.listeners) {
+      if (!instance[fnName]) {
         continue
       }
 
-      this.instances[instanceId] = instance
+      const fnId = `${instanceId}.${fnName}`
 
-      instance._listeners = true
+      this.originals[fnId] = instance[fnName]
 
-      for (const fnName of instance.listeners) {
-        if (!instance[fnName]) {
-          continue
-        }
+      instance[fnName] = this.listenerWrapper(
+        fnId, instanceId
+      )
 
-        const fnId = `${instanceId}.${fnName}`
+      this.listeners[fnId] = instance[fnName]
+    }
 
-        this.originals[fnId] = instance[fnName]
-
-        instance[fnName] = this.listenerWrapper(
-          fnId, instanceId
-        )
-
-        this.listeners[fnId] = instance[fnName]
-      }
-
-      if (instanceId === "log") {
-        this.log = instance.logEvent
-      }
+    if (instanceId === "log") {
+      this.log = instance.logEvent
     }
   }
 }
 
-const instance = new Listener()
-
+export const instance = new Listener()
 export const listen = instance.listen.bind(instance)
 export const listener = instance.listener.bind(instance)
 export const reset = instance.reset.bind(instance)
