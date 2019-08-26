@@ -84,12 +84,19 @@ export class Listener {
     for (let key in this.originals) {
       const [instanceId, fnId] =
         key.match(this.idRegex).slice(2)
+      
+      const instance = this.instances[instanceId]
+      
+      if (instance.instanceId) {
+        if (instance.reset) {
+          instance.reset()
+        }
 
-      this.instances[instanceId][fnId] =
-        this.originals[key]
+        delete instance.instanceId
+        delete instance.listener
+      }
 
-      delete this.instances[instanceId].instanceId
-      delete this.instances[instanceId].listener
+      instance[fnId] = this.originals[key]
       delete this.originals[key]
     }
     
