@@ -99,21 +99,14 @@ export class Listener {
       instance[fnId] = this.originals[key]
       delete this.originals[key]
     }
+
+    const recordKeys =
+      ["bindings", "instances", "listeners", "options"]
     
-    for (let key in this.bindings) {
-      delete this.bindings[key]
-    }
-    
-    for (let key in this.instances) {
-      delete this.instances[key]
-    }
-    
-    for (let key in this.listeners) {
-      delete this.listeners[key]
-    }
-    
-    for (let key in this.options) {
-      delete this.options[key]
+    for (const key of recordKeys) {
+      for (const subKey in this[key]) {
+        delete this[key][subKey]
+      }
     }
   }
 
@@ -226,7 +219,15 @@ export class Listener {
       }
 
       if (isBefore) {
-        const tmpOut = fn(id, ...args)
+        let tmpOut: any
+
+        if (promise) {
+          tmpOut = promise.then(
+            (): any => fn(id, ...args)
+          )
+        } else {
+          tmpOut = fn(id, ...args)
+        }
 
         if (tmpOut && tmpOut.then) {
           promise = tmpOut
