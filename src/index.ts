@@ -49,8 +49,10 @@ export class Listener {
   public listener(
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): void {
+  ): Promise<any> {
     const instanceIds = this.validate(instances)
+    
+    let promises = []
 
     for (const instanceId of instanceIds) {
       const instance = instances[instanceId]
@@ -66,10 +68,14 @@ export class Listener {
         }
 
         this.pending[instanceId] = instance.then(
-          (inst: any): void => {
-            this.processInstance(instanceId, inst, options)
+          (instance: any): void => {
+            this.processInstance(
+              instanceId, instance, options
+            )
           }
         )
+
+        promises = promises.concat(this.pending[instanceId])
       } else {
         instance.instanceId = instanceId
         instance.listener = this
@@ -98,6 +104,8 @@ export class Listener {
       [`listener({ ${Object.keys(instances).join(", ")} })`],
       "internal", options
     )
+
+    return Promise.all(promises)
   }
 
   public reset(): void {
@@ -432,6 +440,10 @@ export class Listener {
     return Object.keys(instances).filter(
       (instanceId): boolean => {
         const instance = instances[instanceId]
+
+        if (instance.then) {
+          return true
+        }
 
         if (!instance) {
           this.log(

@@ -573,3 +573,20 @@ test("peek", (): void => {
 
   expect(test.test([], "hi")).toBe(true)
 })
+
+test("async listener", (): Promise<any> => {
+  expect.assertions(1)
+
+  const test = {
+    fn: (id: string[]): void => {
+      expect(id).toEqual(["hi"])
+    },
+    listeners: ["fn"]
+  }
+  
+  const promise = delay(1, (): any => test)
+
+  return listener({ test: promise }).then((): void => {
+    test.fn(["hi"])
+  })
+})

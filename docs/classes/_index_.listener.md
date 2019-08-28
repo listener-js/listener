@@ -99,7 +99,7 @@ Defined in index.ts:18
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:136
+Defined in index.ts:144
 
 **Parameters:**
 
@@ -117,7 +117,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:152
+Defined in index.ts:160
 
 **Parameters:**
 
@@ -134,7 +134,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:195
+Defined in index.ts:203
 
 **Parameters:**
 
@@ -153,7 +153,7 @@ ___
 
 ▸ **joinInstance**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:302
+Defined in index.ts:310
 
 **Parameters:**
 
@@ -170,7 +170,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:375
+Defined in index.ts:383
 
 **Parameters:**
 
@@ -203,7 +203,7 @@ ___
 
 ###  listener
 
-▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *void*
+▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *`Promise<any>`*
 
 Defined in index.ts:49
 
@@ -214,7 +214,7 @@ Name | Type |
 `instances` | `Record<string, any>` |
 `options?` | `Record<string, any>` |
 
-**Returns:** *void*
+**Returns:** *`Promise<any>`*
 
 ___
 
@@ -222,7 +222,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:420
+Defined in index.ts:428
 
 **Parameters:**
 
@@ -249,7 +249,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:386
+Defined in index.ts:394
 
 **Parameters:**
 
@@ -265,7 +265,7 @@ ___
 
 ▸ **processInstance**(`instanceId`: string, `instance`: any, `options?`: `Record<string, any>`): *void*
 
-Defined in index.ts:407
+Defined in index.ts:415
 
 **Parameters:**
 
@@ -283,7 +283,7 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:103
+Defined in index.ts:111
 
 **Returns:** *void*
 
@@ -293,7 +293,7 @@ ___
 
 ▸ **validate**(`instances`: `Record<string, any>`): *string[]*
 
-Defined in index.ts:429
+Defined in index.ts:437
 
 **Parameters:**
 
@@ -309,7 +309,7 @@ ___
 
 ▸ **wrapListener**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:469
+Defined in index.ts:481
 
 **Parameters:**
 
