@@ -18,6 +18,7 @@
 * [ListenerBindingsListSorter](_types_.md#listenerbindingslistsorter)
 * [ListenerFunction](_types_.md#listenerfunction)
 * [ListenerInstances](_types_.md#listenerinstances)
+* [ListenerPending](_types_.md#listenerpending)
 * [Listeners](_types_.md#listeners)
 * [LogEvent](_types_.md#logevent)
 
@@ -93,6 +94,14 @@ Defined in types.ts:25
 
 ___
 
+###  ListenerPending
+
+Ƭ **ListenerPending**: *`Record<string, Promise<any>>`*
+
+Defined in types.ts:27
+
+___
+
 ###  Listeners
 
 Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
@@ -105,7 +114,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:27
+Defined in types.ts:29
 
 #### Type declaration:
 

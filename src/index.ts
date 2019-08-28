@@ -5,7 +5,8 @@ import {
   ListenerBindingOptions,
   ListenerOptions,
   ListenerBindingItem,
-  LogEvent
+  LogEvent,
+  ListenerPending
 } from "./types"
 
 export class Listener {
@@ -14,6 +15,7 @@ export class Listener {
   public listeners: Listeners = {}
   public options: ListenerBindingOptions = {}
   public originals: Listeners = {}
+  public pending: ListenerPending = {}
 
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
 
@@ -49,24 +51,45 @@ export class Listener {
     options?: Record<string, any>
   ): void {
     const instanceIds = this.validate(instances)
-    
+
     for (const instanceId of instanceIds) {
       const instance = instances[instanceId]
 
-      instance.instanceId = instanceId
-      instance.listener = this
+      if (instance.then) {
+        if (this.pending[instanceId]) {
+          this.log(
+            [`listener({ ${instanceId} })`],
+            "warn",
+            "tried to setup instance more than once"
+          )
+          continue
+        }
 
-      this.wrapListener(instances, instanceId)
+        this.pending[instanceId] = instance.then(
+          (inst: any): void => {
+            this.processInstance(instanceId, inst, options)
+          }
+        )
+      } else {
+        instance.instanceId = instanceId
+        instance.listener = this
+
+        this.wrapListener(instanceId, instance)
+      }
     }
 
     for (const instanceId of instanceIds) {
-      this.joinInstance(instances, instanceId)
+      const instance = instances[instanceId]
+
+      if (!instance.then) {
+        this.joinInstance(instanceId, instance)
+      }
     }
 
     for (const instanceId of instanceIds) {
       const instance = instances[instanceId]
       
-      if (instance.listen) {
+      if (!instance.then && instance.listen) {
         instance.listen(options || {})
       }
     }
@@ -277,10 +300,9 @@ export class Listener {
   }
 
   private joinInstance(
-    instances: Record<string, any>,
-    instanceId: string
+    instanceId: string,
+    instance: any
   ): void {
-    const instance = instances[instanceId]
     const joinInstanceIds: Set<string> = new Set()
 
     if (!instance || !instance.instances) {
@@ -344,7 +366,7 @@ export class Listener {
     joinInstanceIds.forEach((joinInstanceId): void => {
       if (this.instances[joinInstanceId].join) {
         this.instances[joinInstanceId].join(
-          instanceId, instances[instanceId]
+          instanceId, instance
         )
       }
     })
@@ -380,6 +402,19 @@ export class Listener {
       }
     }
     return 1
+  }
+
+  private processInstance(
+    instanceId: string,
+    instance: any,
+    options?: Record<string, any>
+  ): void {
+    this.wrapListener(instanceId, instance)
+    this.joinInstance(instanceId, instance)
+
+    if (instance.listen) {
+      instance.listen(options || {})
+    }
   }
 
   private listenerWrapper(
@@ -432,11 +467,9 @@ export class Listener {
   }
 
   private wrapListener(
-    instances: Record<string, any>,
-    instanceId: string
+    instanceId: string,
+    instance: any
   ): void {
-    const instance = instances[instanceId]
-
     if (!instance.listeners) {
       return
     }

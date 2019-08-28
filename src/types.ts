@@ -24,5 +24,7 @@ export type ListenerBindingsListSorter =
 
 export type ListenerInstances = Record<string, any>
 
+export type ListenerPending = Record<string, Promise<any>>
+
 export type LogEvent =
   (id: string[], level: string, ...value: any[]) => void
