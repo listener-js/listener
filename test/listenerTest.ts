@@ -574,7 +574,7 @@ test("peek", (): void => {
   expect(test.test([], "hi")).toBe(true)
 })
 
-test("async listener", (): Promise<any> => {
+test("async listener instance", (): Promise<any> => {
   expect.assertions(1)
 
   const test = {
@@ -583,7 +583,7 @@ test("async listener", (): Promise<any> => {
     },
     listeners: ["fn"]
   }
-  
+
   const promise = delay(1, (): any => test)
 
   return listener({ test: promise }).then((): void => {
