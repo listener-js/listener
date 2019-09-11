@@ -26,5 +26,8 @@ export type ListenerInstances = Record<string, any>
 
 export type ListenerPending = Record<string, Promise<any>>
 
+export type ListenerPendingResolvers =
+  Record<string, Function>
+
 export type LogEvent =
   (id: string[], level: string, ...value: any[]) => void

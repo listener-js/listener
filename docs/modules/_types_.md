@@ -19,6 +19,7 @@
 * [ListenerFunction](_types_.md#listenerfunction)
 * [ListenerInstances](_types_.md#listenerinstances)
 * [ListenerPending](_types_.md#listenerpending)
+* [ListenerPendingResolvers](_types_.md#listenerpendingresolvers)
 * [Listeners](_types_.md#listeners)
 * [LogEvent](_types_.md#logevent)
 
@@ -102,6 +103,14 @@ Defined in types.ts:27
 
 ___
 
+###  ListenerPendingResolvers
+
+Ƭ **ListenerPendingResolvers**: *`Record<string, Function>`*
+
+Defined in types.ts:29
+
+___
+
 ###  Listeners
 
 Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
@@ -114,7 +123,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:29
+Defined in types.ts:32
 
 #### Type declaration:
 

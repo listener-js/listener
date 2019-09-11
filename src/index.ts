@@ -6,7 +6,8 @@ import {
   ListenerOptions,
   ListenerBindingItem,
   LogEvent,
-  ListenerPending
+  ListenerPending,
+  ListenerPendingResolvers
 } from "./types"
 
 export class Listener {
@@ -16,6 +17,7 @@ export class Listener {
   public options: ListenerBindingOptions = {}
   public originals: Listeners = {}
   public pending: ListenerPending = {}
+  public pendingResolvers: ListenerPendingResolvers = {}
 
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
 
@@ -58,24 +60,17 @@ export class Listener {
       const instance = instances[instanceId]
 
       if (instance.then) {
-        if (this.pending[instanceId]) {
-          this.log(
-            [`listener({ ${instanceId} })`],
-            "warn",
-            "tried to setup instance more than once"
-          )
-          continue
-        }
-
-        this.pending[instanceId] = instance.then(
-          (instance: any): void => {
-            this.processInstance(
-              instanceId, instance, options
+        promises = promises.concat(
+          this.onLoad(
+            instanceId,
+            instance.then(
+              (instance: any): Promise<any> =>
+                this.processInstance(
+                  instanceId, instance, options
+                )
             )
-          }
+          )
         )
-
-        promises = promises.concat(this.pending[instanceId])
       } else {
         instance.instanceId = instanceId
         instance.listener = this
@@ -131,8 +126,14 @@ export class Listener {
       delete this.originals[key]
     }
 
-    const recordKeys =
-      ["bindings", "instances", "listeners", "options"]
+    const recordKeys = [
+      "bindings",
+      "instances",
+      "listeners",
+      "options",
+      "pending",
+      "pendingResolvers"
+    ]
     
     for (const key of recordKeys) {
       for (const subKey in this[key]) {
@@ -310,11 +311,13 @@ export class Listener {
   private joinInstance(
     instanceId: string,
     instance: any
-  ): void {
+  ): Promise<any>[] {
     const joinInstanceIds: Set<string> = new Set()
 
+    let promises = []
+
     if (!instance || !instance.instances) {
-      return
+      return promises
     }
 
     for (const id of instance.instances) {
@@ -346,6 +349,11 @@ export class Listener {
 
       joinInstanceIds.add(joinInstanceId)
 
+      if (!this.instances[joinInstanceId]) {
+        promises =
+          promises.concat(this.onLoad(joinInstanceId))
+      }
+
       if (!fnId) {
         instance[joinInstanceId] =
           this.instances[joinInstanceId]
@@ -353,17 +361,16 @@ export class Listener {
         continue
       }
 
-      if (!this.instances[joinInstanceId][fnId]) {
-        this.log(
-          [`listener({ ${id} })`],
-          "warn",
-          `function '${joinInstanceId}.${fnId}' not found`
-        )
-        continue
-      }
-
       instance[fnId] =
         (id: string[], ...args: any[]): any => {
+          if (!this.instances[joinInstanceId][fnId]) {
+            this.log(
+              [`listener({ ${id} })`],
+              "warn",
+              `function '${joinInstanceId}.${fnId}' not found`
+            )
+            return
+          }
           return this.instances[joinInstanceId][fnId](
             [`${instanceId}.${fnId}`, ...id],
             ...args
@@ -373,11 +380,34 @@ export class Listener {
 
     joinInstanceIds.forEach((joinInstanceId): void => {
       if (this.instances[joinInstanceId].join) {
-        this.instances[joinInstanceId].join(
-          instanceId, instance
+        promises = promises.concat(
+          this.instances[joinInstanceId].join(
+            instanceId, instance
+          )
         )
       }
     })
+
+    return promises
+  }
+
+  private onLoad(
+    instanceId: string, promise?: Promise<any>
+  ): Promise<any> {
+    if (!this.pending[instanceId]) {
+      this.pending[instanceId] = new Promise(
+        (resolve): void => {
+          this.pendingResolvers[instanceId] = resolve
+        }
+      )
+    }
+    if (promise) {
+      this.pending[instanceId] =
+        this.pending[instanceId].then(
+          (): Promise<any> => promise
+        )
+    }
+    return this.pending[instanceId]
   }
 
   private listSort(
@@ -416,13 +446,22 @@ export class Listener {
     instanceId: string,
     instance: any,
     options?: Record<string, any>
-  ): void {
+  ): Promise<any> {
     this.wrapListener(instanceId, instance)
-    this.joinInstance(instanceId, instance)
+    
+    let promises = this.joinInstance(instanceId, instance)
 
     if (instance.listen) {
-      instance.listen(options || {})
+      promises = promises.concat(
+        instance.listen(options || {})
+      )
     }
+
+    if (this.pendingResolvers[instanceId]) {
+      this.pendingResolvers[instanceId]()
+    }
+
+    return Promise.all(promises)
   }
 
   private listenerWrapper(
