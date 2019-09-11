@@ -83,7 +83,9 @@ export class Listener {
       const instance = instances[instanceId]
 
       if (!instance.then) {
-        this.joinInstance(instanceId, instance)
+        promises = promises.concat(
+          this.joinInstance(instanceId, instance)
+        )
       }
     }
 
@@ -91,7 +93,9 @@ export class Listener {
       const instance = instances[instanceId]
       
       if (!instance.then && instance.listen) {
-        instance.listen(options || {})
+        promises = promises.concat(
+          instance.listen(options || {})
+        )
       }
     }
 
