@@ -430,9 +430,11 @@ test("instance listener function", (): void => {
     listeners: ["fn"]
   }
 
-  listener({ test, test2 })
+  const promise = listener({ test, test2 })
 
   test.fn(["hi"])
+
+  return promise
 })
 
 test("instance listener", (): void => {
@@ -613,4 +615,42 @@ test("async listener wait for dependency", (): Promise<any> => {
   listener({ test2 })
 
   return promise
+})
+
+test("async listen callback", (): Promise<any> => {
+  expect.assertions(1)
+
+  const test = {
+    listen: async (): Promise<any> => {
+      return delay(1).then((): void => {
+        expect(1).toBe(1)
+      })
+    }
+  }
+
+  return listener({ test })
+})
+
+test("async join callback", (): void => {
+  expect.assertions(2)
+
+  const test = {
+    fn: undefined,
+    instances: ["test2.fn"]
+  }
+
+  const test2 = {
+    fn: (): void => {},
+    join: async (
+      instanceId: string, instance: any
+    ): Promise<any> => {
+      return delay(1).then((): void => {
+        expect(instanceId).toEqual("test")
+        expect(instance).toEqual(test)
+      })
+    },
+    listeners: ["fn"]
+  }
+
+  return listener({ test, test2 })
 })

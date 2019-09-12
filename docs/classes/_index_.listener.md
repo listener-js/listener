@@ -352,7 +352,7 @@ ___
 
 ▸ **wrapListener**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:514
+Defined in index.ts:516
 
 **Parameters:**
 

@@ -448,8 +448,8 @@ export class Listener {
     if (instance.listen) {
       promises = promises.concat(
         this.pending[instanceId].then(
-          (): void => {
-            instance.listen(options || {})
+          (): Promise<any> => {
+            return instance.listen(options || {})
           }
         )
       )
@@ -487,13 +487,15 @@ export class Listener {
         }
 
         if (
+          !instance.join &&
+          !instance.listen &&
           !instance.listeners &&
           !instance.instances
         ) {
           this.log(
             [`listener({ ${instanceId} })`],
             "warn",
-            "'listeners' or 'instances' property not found"
+            "'join', 'listen', 'listeners', or 'instances' property not found"
           )
           return
         }
