@@ -330,12 +330,18 @@ export class Listener {
           out = tmpOut
         }
       } else if (isMain) {
-        out = out || fn(id, ...args)
-
-        if (!out || !out.then) {
-          promise = undefined
+        if (promise) {
+          promise = promise.then(
+            (): any => out || fn(id, ...args)
+          )
         } else {
-          promise = out
+          out = out || fn(id, ...args)
+
+          if (out && out.then) {
+            promise = out
+          } else {
+            promise = undefined
+          }
         }
       } else {
         let tmpOut: any
@@ -362,9 +368,9 @@ export class Listener {
       }
     }
 
-    return promise && out && out.then ?
+    return promise && out ?
       promise.then((): any => out) :
-      out
+      promise ? promise : out
   }
 
   private listenerWrapper(

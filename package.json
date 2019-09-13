@@ -18,7 +18,7 @@
   "homepage": "https://github.com/listener-js/listener#readme",
   "scripts": {
     "fix": "npm run lint -- --fix",
-    "lint": "eslint --ignore-path .gitignore --ext=js .",
+    "lint": "eslint --ignore-path .gitignore --ext=js src/**",
     "pretty": "prettier --write **/*.css **/*.json **/*.md",
     "test": "jest",
     "build": "tsc",

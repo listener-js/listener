@@ -173,7 +173,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:379
+Defined in index.ts:385
 
 **Parameters:**
 
@@ -225,7 +225,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:370
+Defined in index.ts:376
 
 **Parameters:**
 
@@ -252,7 +252,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:390
+Defined in index.ts:396
 
 **Parameters:**
 
@@ -294,7 +294,7 @@ ___
 
 ▸ **wrapListener**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:411
+Defined in index.ts:417
 
 **Parameters:**
 

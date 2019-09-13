@@ -350,6 +350,115 @@ test("prepend option", (): void => {
   })
 })
 
+test("prepend async to sync", async (): Promise<void> => {
+  expect.assertions(3)
+
+  const order = []
+
+  const Test = {
+    fn: async (id: string[]): Promise<void> => {
+      order.push(1)
+      expect(id).toEqual(["Test.fn", "Test2.fn"])
+      await delay(1)
+      order.push(2)
+    },
+    listeners: ["fn"]
+  }
+
+  const Test2 = {
+    fn: (id: string[]): Promise<void> | void => {
+      expect(id).toEqual(["Test2.fn"])
+      order.push(3)
+    },
+    listeners: ["fn"]
+  }
+
+  listener({ Test, Test2 })
+  
+  listen(
+    ["Test2.fn"],
+    ["Test.fn"],
+    { prepend: true }
+  )
+
+  await Test2.fn([])
+
+  expect(order).toEqual([1, 2, 3])
+})
+
+test("prepend async to async", async (): Promise<void> => {
+  expect.assertions(3)
+
+  const order = []
+
+  const Test = {
+    fn: async (id: string[]): Promise<void> => {
+      order.push(1)
+      expect(id).toEqual(["Test.fn", "Test2.fn"])
+      await delay(1)
+      order.push(2)
+    },
+    listeners: ["fn"]
+  }
+
+  const Test2 = {
+    fn: async (id: string[]): Promise<void> => {
+      expect(id).toEqual(["Test2.fn"])
+      order.push(3)
+    },
+    listeners: ["fn"]
+  }
+
+  listener({ Test, Test2 })
+
+  listen(
+    ["Test2.fn"],
+    ["Test.fn"],
+    { prepend: true }
+  )
+
+  await Test2.fn([])
+
+  expect(order).toEqual([1, 2, 3])
+})
+
+test("prepend async overwrite", async (): Promise<void> => {
+  expect.assertions(3)
+
+  const order = []
+
+  const Test = {
+    fn: async (id: string[]): Promise<boolean> => {
+      order.push(1)
+      expect(id).toEqual(["Test.fn", "Test2.fn"])
+      await delay(1)
+      order.push(2)
+      return true
+    },
+    listeners: ["fn"]
+  }
+
+  const Test2 = {
+    fn: async (id: string[]): Promise<void | boolean> => {
+      expect(id).toEqual(["Test2.fn"])
+      order.push(3)
+    },
+    listeners: ["fn"]
+  }
+
+  listener({ Test, Test2 })
+
+  listen(
+    ["Test2.fn"],
+    ["Test.fn"],
+    { prepend: true, return: true }
+  )
+
+  expect(await Test2.fn([])).toBe(true)
+
+  expect(order).toEqual([1, 2])
+})
+
 test("append option", (): void => {
   listen(
     ["MyClass.fn"],
