@@ -8,7 +8,6 @@ import {
   LogEvent
 } from "./types"
 
-import { loader } from "./loader"
 import { joiner } from "./joiner"
 
 export class Listener {
@@ -67,6 +66,7 @@ export class Listener {
       if (instance.instances) {
         for (const joinId of instance.instances) {
           const [joinListenerId] = this.parseId(joinId)
+
           this.listen(
             ["listenerJoiner.join", instanceId, "**"],
             [`${joinListenerId}.join`],
@@ -77,14 +77,9 @@ export class Listener {
       
       if (instance.listen) {
         this.listen(
-          [
-            "listenerLoader.load",
-            "listenerJoiner.join",
-            instanceId,
-            "**"
-          ],
+          ["listenerJoiner.join", instanceId, "**"],
           [`${instanceId}.listen`],
-          { return: true }
+          { append: 2, return: true }
         )
       }
     }
@@ -173,18 +168,12 @@ export class Listener {
       }
     }
 
-    this.addListener("listenerLoader", loader)
     this.addListener("listenerJoiner", joiner)
 
     this.listen(
       ["listenerJoiner.join", "**"],
-      ["listenerLoader.load"],
-      { return: true }
-    )
-
-    this.listen(
-      ["listenerLoader.load", "**"],
-      ["listenerJoiner.loaded"]
+      ["listenerJoiner.loaded"],
+      { append: 3 }
     )
   }
 
