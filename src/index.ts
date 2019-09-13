@@ -76,7 +76,12 @@ export class Listener {
       
       if (instance.listen) {
         this.listen(
-          ["listenerLoader.load", "listenerJoiner.join", instanceId, "**"],
+          [
+            "listenerLoader.load",
+            "listenerJoiner.join",
+            instanceId,
+            "**"
+          ],
           [`${instanceId}.listen`]
         )
       }

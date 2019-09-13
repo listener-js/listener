@@ -103,7 +103,7 @@ Defined in index.ts:19
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:175
+Defined in index.ts:180
 
 **Parameters:**
 
@@ -121,7 +121,7 @@ ___
 
 ▸ **addListener**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:164
+Defined in index.ts:169
 
 **Parameters:**
 
@@ -138,7 +138,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:191
+Defined in index.ts:196
 
 **Parameters:**
 
@@ -155,7 +155,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:234
+Defined in index.ts:239
 
 **Parameters:**
 
@@ -174,7 +174,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:350
+Defined in index.ts:355
 
 **Parameters:**
 
@@ -226,7 +226,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
 
-Defined in index.ts:341
+Defined in index.ts:346
 
 **Parameters:**
 
@@ -253,7 +253,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:361
+Defined in index.ts:366
 
 **Parameters:**
 
@@ -269,7 +269,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:100
+Defined in index.ts:105
 
 **Parameters:**
 
@@ -285,7 +285,7 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:114
+Defined in index.ts:119
 
 **Returns:** *void*
 
@@ -295,7 +295,7 @@ ___
 
 ▸ **wrapListener**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:382
+Defined in index.ts:387
 
 **Parameters:**
 
