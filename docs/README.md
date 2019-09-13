@@ -1,6 +1,7 @@
-> **[@listener-js/listener](README.md)**
+[@listener-js/listener](README.md) › [Globals](globals.md)
 
-[Globals](globals.md) /
+# @listener-js/listener
+
 
 # listener
 

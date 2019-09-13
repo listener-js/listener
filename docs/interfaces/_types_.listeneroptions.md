@@ -1,8 +1,7 @@
-> **[@listener-js/listener](../README.md)**
-
-[Globals](../globals.md) / ["types"](../modules/_types_.md) / [ListenerOptions](_types_.listeneroptions.md) /
+[@listener-js/listener](../README.md) › [Globals](../globals.md) › ["types"](../modules/_types_.md) › [ListenerOptions](_types_.listeneroptions.md)
 
 # Interface: ListenerOptions
+
 
 ## Hierarchy
 

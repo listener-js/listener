@@ -1,8 +1,7 @@
-> **[@listener-js/listener](../README.md)**
-
-[Globals](../globals.md) / ["index"](../modules/_index_.md) / [Listener](_index_.listener.md) /
+[@listener-js/listener](../README.md) › [Globals](../globals.md) › ["index"](../modules/_index_.md) › [Listener](_index_.listener.md)
 
 # Class: Listener
+
 
 ## Hierarchy
 
@@ -61,7 +60,7 @@ ___
 
 ###  idRegex
 
-• **idRegex**: *`RegExp`* =  /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
+• **idRegex**: *RegExp* =  /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
 
 Defined in index.ts:21
 
@@ -207,7 +206,7 @@ ___
 
 ###  listener
 
-▸ **listener**(`instances`: `Record<string, any>`, `options?`: `Record<string, any>`): *`Promise<any>`*
+▸ **listener**(`instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›*
 
 Defined in index.ts:54
 
@@ -215,16 +214,16 @@ Defined in index.ts:54
 
 Name | Type |
 ------ | ------ |
-`instances` | `Record<string, any>` |
-`options?` | `Record<string, any>` |
+`instances` | Record‹string, any› |
+`options?` | Record‹string, any› |
 
-**Returns:** *`Promise<any>`*
+**Returns:** *Promise‹any›*
 
 ___
 
 ### `Private` listenerWrapper
 
-▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *`Function`*
+▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
 Defined in index.ts:370
 
@@ -235,7 +234,7 @@ Name | Type |
 `fnId` | string |
 `instanceId` | string |
 
-**Returns:** *`Function`*
+**Returns:** *Function*
 
 ___
 

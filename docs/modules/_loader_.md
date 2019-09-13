@@ -1,8 +1,7 @@
-> **[@listener-js/listener](../README.md)**
-
-[Globals](../globals.md) / ["loader"](_loader_.md) /
+[@listener-js/listener](../README.md) › [Globals](../globals.md) › ["loader"](_loader_.md)
 
 # External module: "loader"
+
 
 ## Index
 

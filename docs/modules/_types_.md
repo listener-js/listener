@@ -1,8 +1,7 @@
-> **[@listener-js/listener](../README.md)**
-
-[Globals](../globals.md) / ["types"](_types_.md) /
+[@listener-js/listener](../README.md) › [Globals](../globals.md) › ["types"](_types_.md)
 
 # External module: "types"
+
 
 ## Index
 
@@ -35,7 +34,7 @@ ___
 
 ###  ListenerBindingOptions
 
-Ƭ **ListenerBindingOptions**: *`Record<string, ListenerOptions>`*
+Ƭ **ListenerBindingOptions**: *Record‹string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)›*
 
 Defined in types.ts:17
 
@@ -43,7 +42,7 @@ ___
 
 ###  ListenerBindings
 
-Ƭ **ListenerBindings**: *`Record<string, string[]>`*
+Ƭ **ListenerBindings**: *Record‹string, string[]›*
 
 Defined in types.ts:20
 
@@ -89,7 +88,7 @@ ___
 
 ###  ListenerInstances
 
-Ƭ **ListenerInstances**: *`Record<string, any>`*
+Ƭ **ListenerInstances**: *Record‹string, any›*
 
 Defined in types.ts:25
 
@@ -97,7 +96,7 @@ ___
 
 ###  ListenerPending
 
-Ƭ **ListenerPending**: *`Record<string, Promise<any>>`*
+Ƭ **ListenerPending**: *Record‹string, Promise‹any››*
 
 Defined in types.ts:27
 
@@ -105,7 +104,7 @@ ___
 
 ###  ListenerPendingResolvers
 
-Ƭ **ListenerPendingResolvers**: *`Record<string, Function>`*
+Ƭ **ListenerPendingResolvers**: *Record‹string, Function›*
 
 Defined in types.ts:29
 
@@ -113,7 +112,7 @@ ___
 
 ###  Listeners
 
-Ƭ **Listeners**: *`Record<string, ListenerFunction>`*
+Ƭ **Listeners**: *Record‹string, [ListenerFunction](_types_.md#listenerfunction)›*
 
 Defined in types.ts:13
 

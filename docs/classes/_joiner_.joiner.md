@@ -1,8 +1,7 @@
-> **[@listener-js/listener](../README.md)**
-
-[Globals](../globals.md) / ["joiner"](../modules/_joiner_.md) / [Joiner](_joiner_.joiner.md) /
+[@listener-js/listener](../README.md) › [Globals](../globals.md) › ["joiner"](../modules/_joiner_.md) › [Joiner](_joiner_.joiner.md)
 
 # Class: Joiner
+
 
 ## Hierarchy
 
@@ -34,7 +33,7 @@ ___
 
 ###  loadedIds
 
-• **loadedIds**: *`Set<string>`* =  new Set()
+• **loadedIds**: *Set‹string›* =  new Set()
 
 Defined in joiner.ts:5
 
@@ -42,7 +41,7 @@ ___
 
 ###  loadedResolvers
 
-• **loadedResolvers**: *`Record<string, Function>`*
+• **loadedResolvers**: *Record‹string, Function›*
 
 Defined in joiner.ts:6
 
@@ -50,7 +49,7 @@ Defined in joiner.ts:6
 
 ###  join
 
-▸ **join**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: `Record<string, any>`): *`Promise<any>`*
+▸ **join**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *Promise‹any›*
 
 Defined in joiner.ts:8
 
@@ -62,9 +61,9 @@ Name | Type |
 `instanceId` | string |
 `instance` | any |
 `listener` | [Listener](_index_.listener.md) |
-`options?` | `Record<string, any>` |
+`options?` | Record‹string, any› |
 
-**Returns:** *`Promise<any>`*
+**Returns:** *Promise‹any›*
 
 ___
 
