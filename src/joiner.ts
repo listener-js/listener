@@ -1,11 +1,11 @@
 import { Listener } from "."
 
 export class Joiner {
-  public listeners: string[] = ["join", "loaded"]
+  public listeners: string[] = ["join", "loaded", "preJoin"]
   public loadedIds: Set<string> = new Set()
   public loadedResolvers: Record<string, Function> = {}
 
-  public async join(
+  public join(
     id: string[],
     instanceId: string,
     instance: any,
@@ -14,7 +14,7 @@ export class Joiner {
     options?: Record<string, any>
   ): Promise<any> {
     if (!instance.instances) {
-      return Promise.resolve()
+      return
     }
 
     let promises = []
@@ -54,7 +54,44 @@ export class Joiner {
       }
     }
 
-    return Promise.all(promises)
+    return promises.length ?
+      Promise.all(promises) :
+      undefined
+  }
+
+  public preJoin(
+    id: string[],
+    instanceId: string,
+    instance: any,
+    listener: Listener
+  ): boolean {
+    if (!instance || instance.then) {
+      return
+    }
+    
+    let pass = false
+
+    if (instance.instances) {
+      for (const instanceId of instance.instances) {
+        const [joinInstanceId] =
+          listener.parseId(instanceId)
+        
+        pass = pass || this.preJoin(
+          id,
+          joinInstanceId,
+          listener.instances[joinInstanceId],
+          listener
+        )
+      }
+    } else {
+      pass = true
+    }
+
+    if (pass) {
+      this.loadedIds.add(instanceId)
+    }
+
+    return pass
   }
 
   public loaded(id: string[], instanceId: string): void {

@@ -30,7 +30,7 @@ Defined in loader.ts:4
 
 ###  load
 
-▸ **load**(`id`: string[], `listener`: [Listener](_index_.listener.md), `options?`: `Record<string, any>`): *`Promise<void>`*
+▸ **load**(`id`: string[], `listener`: [Listener](_index_.listener.md), `options?`: `Record<string, any>`): *void*
 
 Defined in loader.ts:6
 
@@ -42,4 +42,4 @@ Name | Type |
 `listener` | [Listener](_index_.listener.md) |
 `options?` | `Record<string, any>` |
 
-**Returns:** *`Promise<void>`*
+**Returns:** *void*

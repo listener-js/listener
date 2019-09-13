@@ -88,15 +88,34 @@ export class Listener {
     }
 
     for (const instanceId in instances) {
-      promises = promises.concat(
-        joiner.join(
-          [instanceId],
-          instanceId,
-          this.instances[instanceId],
-          this,
-          options
-        )
+      const instance = instances[instanceId]
+
+      joiner.preJoin(
+        [instanceId], instanceId, instance, this
       )
+    }
+
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (instance.then) {
+        promises = promises.concat(
+          instance.then(
+            (instance): Promise<any> =>
+              this.listener({ [instanceId]: instance })
+          )
+        )
+      } else {
+        promises = promises.concat(
+          joiner.join(
+            [instanceId],
+            instanceId,
+            instance,
+            this,
+            options
+          )
+        )
+      }
     }
 
     return Promise.all(promises)
@@ -169,6 +188,10 @@ export class Listener {
   private addListener(
     instanceId: string, instance: any
   ): void {
+    if (instance.then) {
+      return
+    }
+
     this.instances[instanceId] = instance
 
     instance.instanceId = instanceId
@@ -316,7 +339,7 @@ export class Listener {
       } else {
         let tmpOut: any
 
-        if (promise && out && out.then) {
+        if (promise) {
           tmpOut = promise.then(
             (): any => isPeek ?
               fn(id, out, ...args) :
@@ -338,7 +361,7 @@ export class Listener {
       }
     }
 
-    return promise && out && out.then ?
+    return promise ?
       promise.then((): any => out) :
       out
   }

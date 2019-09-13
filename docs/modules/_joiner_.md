@@ -20,4 +20,4 @@
 
 • **joiner**: *[Joiner](../classes/_joiner_.joiner.md)* =  new Joiner()
 
-Defined in joiner.ts:70
+Defined in joiner.ts:107

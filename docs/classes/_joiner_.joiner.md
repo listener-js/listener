@@ -20,12 +20,13 @@
 
 * [join](_joiner_.joiner.md#join)
 * [loaded](_joiner_.joiner.md#loaded)
+* [preJoin](_joiner_.joiner.md#prejoin)
 
 ## Properties
 
 ###  listeners
 
-• **listeners**: *string[]* =  ["join", "loaded"]
+• **listeners**: *string[]* =  ["join", "loaded", "preJoin"]
 
 Defined in joiner.ts:4
 
@@ -71,7 +72,7 @@ ___
 
 ▸ **loaded**(`id`: string[], `instanceId`: string): *void*
 
-Defined in joiner.ts:60
+Defined in joiner.ts:97
 
 **Parameters:**
 
@@ -81,3 +82,22 @@ Name | Type |
 `instanceId` | string |
 
 **Returns:** *void*
+
+___
+
+###  preJoin
+
+▸ **preJoin**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md)): *boolean*
+
+Defined in joiner.ts:62
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`id` | string[] |
+`instanceId` | string |
+`instance` | any |
+`listener` | [Listener](_index_.listener.md) |
+
+**Returns:** *boolean*
