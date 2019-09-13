@@ -5,10 +5,11 @@ import {
   ListenerBindingOptions,
   ListenerOptions,
   ListenerBindingItem,
-  LogEvent,
-  ListenerPending,
-  ListenerPendingResolvers
+  LogEvent
 } from "./types"
+
+import { loader } from "./loader"
+import { joiner } from "./joiner"
 
 export class Listener {
   public bindings: ListenerBindings = {}
@@ -16,12 +17,14 @@ export class Listener {
   public listeners: Listeners = {}
   public options: ListenerBindingOptions = {}
   public originals: Listeners = {}
-  public pending: ListenerPending = {}
-  public pendingResolvers: ListenerPendingResolvers = {}
 
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
 
   private log: LogEvent = (): void => {}
+
+  public constructor() {
+    this.reset()
+  }
 
   public listen(
     matchId: string[],
@@ -52,61 +55,66 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Promise<any> {
-    const instanceIds = this.validate(instances)
-    
-    let promises = [], syncInstanceIds = []
+    let promises = []
 
-    for (const instanceId of instanceIds) {
+    for (const instanceId in instances) {
+      this.addListener(instanceId, instances[instanceId])
+    }
+
+    for (const instanceId in instances) {
       const instance = instances[instanceId]
-
-      this.instances[instanceId] = instance
-
-      this.createPending(instanceId)
 
       if (instance.instances) {
-        this.createPending(...instance.instances)
-      }
-    }
-
-    for (const instanceId of instanceIds) {
-      const instance = instances[instanceId]
-
-      if (instance.then) {
-        promises = promises.concat(
-          instance.then((instance): Promise<any> => {
-            return this.processInstance(
-              instanceId, instance, options
-            )
-          }).then((): void => {
-            this.pendingResolvers[instanceId]()
-          })
-        )
-      } else {
-        syncInstanceIds = syncInstanceIds.concat(instanceId)
-        promises = promises.concat(
-          this.processInstance(
-            instanceId, instance, options
+        for (const joinId of instance.instances) {
+          const [joinListenerId] = this.parseId(joinId)
+          this.listen(
+            ["listenerJoiner.join", instanceId, "**"],
+            [`${joinListenerId}.join`]
           )
+        }
+      }
+      
+      if (instance.listen) {
+        this.listen(
+          ["listenerLoader.load", "listenerJoiner.join", instanceId, "**"],
+          [`${instanceId}.listen`]
         )
       }
     }
 
-    for (const instanceId of syncInstanceIds) {
-      this.pendingResolvers[instanceId]()
+    for (const instanceId in instances) {
+      promises = promises.concat(
+        joiner.join(
+          [instanceId],
+          instanceId,
+          this.instances[instanceId],
+          this,
+          options
+        )
+      )
     }
-
-    this.log(
-      [`listener({ ${Object.keys(instances).join(", ")} })`],
-      "internal", options
-    )
 
     return Promise.all(promises)
+  }
+
+  public parseId(id: string): [string, string] {
+    const match = id.match(this.idRegex)
+
+    let joinInstanceId: string
+    let fnId: string
+
+    if (match) {
+      [joinInstanceId, fnId] = match.slice(2)
+      joinInstanceId = joinInstanceId || match[4]
+    }
+
+    return [joinInstanceId, fnId]
   }
 
   public reset(): void {
     this.log(["reset"], "internal")
     this.log = (): void => {}
-    
+
     for (let key in this.originals) {
       const [instanceId, fnId] =
         key.match(this.idRegex).slice(2)
@@ -130,9 +138,7 @@ export class Listener {
       "bindings",
       "instances",
       "listeners",
-      "options",
-      "pending",
-      "pendingResolvers"
+      "options"
     ]
     
     for (const key of recordKeys) {
@@ -140,6 +146,30 @@ export class Listener {
         delete this[key][subKey]
       }
     }
+
+    this.addListener("listenerLoader", loader)
+    this.addListener("listenerJoiner", joiner)
+
+    this.listen(
+      ["listenerJoiner.join", "**"],
+      ["listenerLoader.load"]
+    )
+
+    this.listen(
+      ["listenerLoader.load", "**"],
+      ["listenerJoiner.loaded"]
+    )
+  }
+
+  private addListener(
+    instanceId: string, instance: any
+  ): void {
+    this.instances[instanceId] = instance
+
+    instance.instanceId = instanceId
+    instance.listener = this
+
+    this.wrapListener(instanceId, instance)
   }
 
   private addList(
@@ -199,27 +229,6 @@ export class Listener {
     list = list.sort(this.listSort.bind(this))
 
     return list
-  }
-
-  private createPending(
-    ...instanceIds: string[]
-  ): void {
-    for (const id of instanceIds) {
-      const [instanceId] = this.parseId(id)
-
-      if (instanceId) {
-        this.pending[instanceId] =
-          this.pending[instanceId] ||
-          new Promise(
-            (resolve): void => {
-              this.pendingResolvers[instanceId] =
-                (): void => {
-                  resolve(this.instances[instanceId])
-                }
-            }
-          )
-      }
-    }
   }
 
   private emit(
@@ -329,62 +338,13 @@ export class Listener {
       out
   }
 
-  private joinInstance(
-    instanceId: string,
-    instance: any
-  ): Promise<any>[] {
-    let promises = []
-
-    if (!instance || !instance.instances) {
-      return promises
+  private listenerWrapper(
+    fnId: string, instanceId: string
+  ): Function {
+    return (eid: string[], ...args: any[]): any => {
+      const id = [fnId].concat(eid || [])
+      return this.emit(fnId, id, instanceId, ...args)
     }
-
-    for (const id of instance.instances) {
-      if (instance[id]) {
-        continue
-      }
-
-      const [joinInstanceId, fnId] = this.parseId(id)
-
-      if (!joinInstanceId) {
-        continue
-      }
-      
-      if (fnId) {
-        instance[fnId] =
-          (id: string[], ...args: any[]): any => {
-            if (!this.instances[joinInstanceId][fnId]) {
-              this.log(
-                [`listener({ ${id} })`],
-                "warn",
-                `function '${joinInstanceId}.${fnId}' not found`
-              )
-              return
-            }
-            return this.instances[joinInstanceId][fnId](
-              [`${instanceId}.${fnId}`, ...id],
-              ...args
-            )
-          }
-      } else {
-        instance[joinInstanceId] =
-          this.instances[joinInstanceId]
-      }
-      
-      promises = promises.concat(
-        this.pending[joinInstanceId].then(
-          (): Promise<any> => {
-            if (this.instances[joinInstanceId].join) {
-              return this.instances[joinInstanceId].join(
-                instanceId, instance
-              )
-            }
-          }
-        )
-      )
-    }
-
-    return promises
   }
 
   private listSort(
@@ -417,100 +377,6 @@ export class Listener {
       }
     }
     return 1
-  }
-
-  private parseId(id: string): [string, string] {
-    const match = id.match(this.idRegex)
-
-    let joinInstanceId: string
-    let fnId: string
-
-    if (match) {
-      [joinInstanceId, fnId] = match.slice(2)
-      joinInstanceId = joinInstanceId || match[4]
-    }
-
-    return [joinInstanceId, fnId]
-  }
-
-  private processInstance(
-    instanceId: string,
-    instance: any,
-    options?: Record<string, any>
-  ): Promise<any> {
-    instance.instanceId = instanceId
-    instance.listener = this
-
-    this.wrapListener(instanceId, instance)
-    
-    let promises = this.joinInstance(instanceId, instance)
-
-    if (instance.listen) {
-      promises = promises.concat(
-        this.pending[instanceId].then(
-          (): Promise<any> => {
-            return instance.listen(options || {})
-          }
-        )
-      )
-    }
-
-    return Promise.all(promises)
-  }
-
-  private listenerWrapper(
-    fnId: string, instanceId: string
-  ): Function {
-    return (eid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(eid || [])
-      return this.emit(fnId, id, instanceId, ...args)
-    }
-  }
-
-  private validate(
-    instances: Record<string, any>
-  ): string[] {
-    return Object.keys(instances).filter(
-      (instanceId): boolean => {
-        const instance = instances[instanceId]
-
-        if (instance.then) {
-          return true
-        }
-
-        if (!instance) {
-          this.log(
-            [`listener({ ${instanceId} })`],
-            "warn", "instance not found"
-          )
-          return
-        }
-
-        if (
-          !instance.join &&
-          !instance.listen &&
-          !instance.listeners &&
-          !instance.instances
-        ) {
-          this.log(
-            [`listener({ ${instanceId} })`],
-            "warn",
-            "'join', 'listen', 'listeners', or 'instances' property not found"
-          )
-          return
-        }
-
-        if (instance.instanceId) {
-          this.log(
-            [`listener({ ${instanceId} })`],
-            "warn", "tried to setup instance more than once"
-          )
-          return
-        }
-
-        return true
-      }
-    )
   }
 
   private wrapListener(

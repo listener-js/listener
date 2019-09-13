@@ -412,7 +412,7 @@ test("numeric append option", (): void => {
 })
 
 test("instance listener function", (): void => {
-  expect.assertions(3)
+  expect.assertions(4)
 
   const test = {
     fn: undefined,
@@ -423,18 +423,19 @@ test("instance listener function", (): void => {
     fn: (id: string[]): void => {
       expect(id).toEqual(["test2.fn", "test.fn", "hi"])
     },
-    join: (instanceId, instance): void => {
+    join: (id, instanceId, instance): void => {
+      expect(id).toEqual(
+        ["test2.join", "listenerJoiner.join", "test"]
+      )
       expect(instanceId).toEqual("test")
       expect(instance).toEqual(test)
     },
-    listeners: ["fn"]
+    listeners: ["fn", "join"]
   }
 
-  const promise = listener({ test, test2 })
+  listener({ test, test2 })
 
   test.fn(["hi"])
-
-  return promise
 })
 
 test("instance listener", (): void => {
@@ -448,13 +449,13 @@ test("instance listener", (): void => {
   const test = new Test()
 
   class Test2 {
-    public listeners = ["fn"]
+    public listeners = ["fn", "join"]
     
     public fn(id: string[]): void {
       expect(id).toEqual(["test2.fn", "hi"])
     }
     
-    public join(instanceId, instance): void {
+    public join(id, instanceId, instance): void {
       expect(instanceId).toEqual("test")
       expect(instance).toEqual(test)
     }
@@ -625,7 +626,8 @@ test("async listen callback", (): Promise<any> => {
       return delay(1).then((): void => {
         expect(1).toBe(1)
       })
-    }
+    },
+    listeners: ["listen"]
   }
 
   return listener({ test })
@@ -642,14 +644,14 @@ test("async join callback", (): void => {
   const test2 = {
     fn: (): void => {},
     join: async (
-      instanceId: string, instance: any
+      id: string, instanceId: string, instance: any
     ): Promise<any> => {
       return delay(1).then((): void => {
         expect(instanceId).toEqual("test")
         expect(instance).toEqual(test)
       })
     },
-    listeners: ["fn"]
+    listeners: ["fn", "join"]
   }
 
   return listener({ test, test2 })
