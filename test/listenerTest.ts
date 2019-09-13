@@ -581,12 +581,12 @@ test("async listener instance", (): Promise<any> => {
 
   const test = {
     fn: (id: string[]): void => {
-      expect(id).toEqual(["hi"])
+      expect(id).toEqual(["test.fn", "hi"])
     },
     listeners: ["fn"]
   }
 
-  const promise = delay(1, (): any => test)
+  const promise = delay(1, test)
 
   return listener({ test: promise }).then((): void => {
     test.fn(["hi"])
@@ -608,9 +608,12 @@ test("async listener wait for dependency", (): Promise<any> => {
     listeners: ["fn"]
   }
 
-  const promise = listener({ test }).then((): void => {
-    test.fn(["hi"])
-  })
+  const asyncTest = delay(1, test)
+
+  const promise = listener({ test: asyncTest })
+    .then((): void => {
+      test.fn(["hi"])
+    })
 
   listener({ test2 })
 

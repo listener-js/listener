@@ -141,7 +141,7 @@ export class Listener {
     this.log(["reset"], "internal")
     this.log = (): void => {}
 
-    for (let key in this.originals) {
+    for (const key in this.originals) {
       const [instanceId, fnId] =
         key.match(this.idRegex).slice(2)
       
