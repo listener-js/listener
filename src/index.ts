@@ -69,7 +69,8 @@ export class Listener {
           const [joinListenerId] = this.parseId(joinId)
           this.listen(
             ["listenerJoiner.join", instanceId, "**"],
-            [`${joinListenerId}.join`]
+            [`${joinListenerId}.join`],
+            { return: true }
           )
         }
       }
@@ -82,7 +83,8 @@ export class Listener {
             instanceId,
             "**"
           ],
-          [`${instanceId}.listen`]
+          [`${instanceId}.listen`],
+          { return: true }
         )
       }
     }
@@ -176,7 +178,8 @@ export class Listener {
 
     this.listen(
       ["listenerJoiner.join", "**"],
-      ["listenerLoader.load"]
+      ["listenerLoader.load"],
+      { return: true }
     )
 
     this.listen(
@@ -327,14 +330,12 @@ export class Listener {
           out = tmpOut
         }
       } else if (isMain) {
-        if (out) {
-          return out
-        }
-
-        out = fn(id, ...args)
+        out = out || fn(id, ...args)
 
         if (!out || !out.then) {
           promise = undefined
+        } else {
+          promise = out
         }
       } else {
         let tmpOut: any
@@ -361,7 +362,7 @@ export class Listener {
       }
     }
 
-    return promise ?
+    return promise && out && out.then ?
       promise.then((): any => out) :
       out
   }

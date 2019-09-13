@@ -334,8 +334,7 @@ test("listen id and **", (): void => {
 test("prepend option", (): void => {
   listen(
     ["MyClass.fn"],
-    ["MyClass2.fn2"],
-    { return: true }
+    ["MyClass2.fn2"]
   )
   
   listen(
