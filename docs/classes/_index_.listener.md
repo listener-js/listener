@@ -33,6 +33,7 @@
 * [listener](_index_.listener.md#listener)
 * [listenerInit](_index_.listener.md#private-listenerinit)
 * [listenerLoad](_index_.listener.md#private-listenerload)
+* [listenerReset](_index_.listener.md#private-listenerreset)
 * [listenerWrapper](_index_.listener.md#private-listenerwrapper)
 * [log](_index_.listener.md#private-log)
 * [optsToIndex](_index_.listener.md#private-optstoindex)
@@ -46,7 +47,7 @@
 
 \+ **new Listener**(): *[Listener](_index_.listener.md)*
 
-Defined in index.ts:20
+Defined in index.ts:24
 
 **Returns:** *[Listener](_index_.listener.md)*
 
@@ -56,7 +57,7 @@ Defined in index.ts:20
 
 • **bindings**: *[ListenerBindings](../modules/_types_.md#listenerbindings)*
 
-Defined in index.ts:17
+Defined in index.ts:21
 
 ___
 
@@ -80,13 +81,17 @@ ___
 
 • **listenerFns**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:18
+Defined in index.ts:22
 
 ___
 
 ###  listeners
 
-• **listeners**: *string[]* =  ["listenerInit", "listenerLoad"]
+• **listeners**: *string[]* =  [
+    "listenerInit",
+    "listenerLoad",
+    "reset",
+  ]
 
 Defined in index.ts:14
 
@@ -96,7 +101,7 @@ ___
 
 • **options**: *[ListenerBindingOptions](../modules/_types_.md#listenerbindingoptions)*
 
-Defined in index.ts:15
+Defined in index.ts:19
 
 ___
 
@@ -104,7 +109,7 @@ ___
 
 • **originalFns**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:20
+Defined in index.ts:24
 
 ## Methods
 
@@ -112,7 +117,7 @@ Defined in index.ts:20
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:149
+Defined in index.ts:173
 
 **Parameters:**
 
@@ -130,7 +135,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:165
+Defined in index.ts:190
 
 **Parameters:**
 
@@ -147,7 +152,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:208
+Defined in index.ts:236
 
 **Parameters:**
 
@@ -166,7 +171,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:370
+Defined in index.ts:412
 
 **Parameters:**
 
@@ -183,7 +188,7 @@ ___
 
 ▸ **listen**(`matchId`: string[], `targetIds`: string[], `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
 
-Defined in index.ts:26
+Defined in index.ts:30
 
 **Parameters:**
 
@@ -201,7 +206,7 @@ ___
 
 ▸ **listener**(`instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›*
 
-Defined in index.ts:51
+Defined in index.ts:61
 
 **Parameters:**
 
@@ -218,7 +223,7 @@ ___
 
 ▸ **listenerInit**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:319
+Defined in index.ts:345
 
 **Parameters:**
 
@@ -238,7 +243,7 @@ ___
 
 ▸ **listenerLoad**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:346
+Defined in index.ts:372
 
 **Parameters:**
 
@@ -254,11 +259,31 @@ Name | Type |
 
 ___
 
+### `Private` listenerReset
+
+▸ **listenerReset**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void*
+
+Defined in index.ts:387
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`id` | string[] |
+`instanceId` | string |
+`instance` | any |
+`listener` | [Listener](_index_.listener.md) |
+`options?` | Record‹string, any› |
+
+**Returns:** *void*
+
+___
+
 ### `Private` listenerWrapper
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:361
+Defined in index.ts:402
 
 **Parameters:**
 
@@ -275,7 +300,7 @@ ___
 
 ▸ **log**(): *void*
 
-Defined in index.ts:19
+Defined in index.ts:23
 
 **Returns:** *void*
 
@@ -285,7 +310,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:381
+Defined in index.ts:422
 
 **Parameters:**
 
@@ -301,7 +326,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:100
+Defined in index.ts:116
 
 **Parameters:**
 
@@ -317,7 +342,7 @@ ___
 
 ▸ **reset**(): *void*
 
-Defined in index.ts:114
+Defined in index.ts:130
 
 **Returns:** *void*
 
@@ -327,7 +352,7 @@ ___
 
 ▸ **wrapListener**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:402
+Defined in index.ts:443
 
 **Parameters:**
 

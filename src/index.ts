@@ -5,13 +5,17 @@ import {
   ListenerBindingOptions,
   ListenerOptions,
   ListenerBindingItem,
-  LogEvent
+  LogEvent,
 } from "./types"
 
 export class Listener {
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
-  public listeners = ["listenerInit", "listenerLoad"]
+  public listeners = [
+    "listenerInit",
+    "listenerLoad",
+    "reset",
+  ]
   public options: ListenerBindingOptions = {}
 
   private bindings: ListenerBindings = {}
@@ -31,10 +35,11 @@ export class Listener {
     const match = matchId.join(".")
 
     this.bindings[match] = this.bindings[match] || []
-    
-    this.bindings[match] =
-      this.bindings[match].concat(targetIds)
-    
+
+    this.bindings[match] = this.bindings[match].concat(
+      targetIds
+    )
+
     if (options) {
       this.options[match] = this.options[match] || {}
       for (const target of targetIds) {
@@ -43,8 +48,13 @@ export class Listener {
     }
 
     this.log(
-      [`listen([${matchId.join(", ")}], [${targetIds.join(", ")}])`],
-      "internal", options
+      [
+        `listen([${matchId.join(", ")}], [${targetIds.join(
+          ", "
+        )}])`,
+      ],
+      "internal",
+      options
     )
   }
 
@@ -64,6 +74,12 @@ export class Listener {
       this.listen(
         ["listener.listenerLoad", instanceId, "**"],
         [`${instanceId}.listenerLoad`],
+        { append: 1000, return: true }
+      )
+
+      this.listen(
+        ["listener.listenerReset", instanceId, "**"],
+        [`${instanceId}.listenerReset`],
         { append: 1000, return: true }
       )
 
@@ -104,7 +120,7 @@ export class Listener {
     let fnId: string
 
     if (match) {
-      [joinInstanceId, fnId] = match.slice(2)
+      ;[joinInstanceId, fnId] = match.slice(2)
       joinInstanceId = joinInstanceId || match[4]
     }
 
@@ -112,14 +128,13 @@ export class Listener {
   }
 
   public reset(): void {
-    this.log(["reset"], "internal")
     this.log = (): void => {}
 
     for (const key in this.originalFns) {
       const [instanceId, fnId] = this.parseId(key)
-      
+
       const instance = this.instances[instanceId]
-      
+
       if (instance.instanceId) {
         delete instance.instanceId
         delete instance.listener
@@ -133,11 +148,20 @@ export class Listener {
       "instances",
       "listenerFns",
       "options",
-      "originalFns"
+      "originalFns",
     ]
-    
+
     for (const key of recordKeys) {
       for (const subKey in this[key]) {
+        if (key === "instances") {
+          this.listenerReset(
+            [subKey],
+            subKey,
+            this[key][subKey],
+            this
+          )
+        }
+
         delete this[key][subKey]
       }
     }
@@ -153,28 +177,28 @@ export class Listener {
   ): ListenerBindingItem[] {
     if (lists[key]) {
       for (const item of lists[key]) {
-        const opts = this.options[key] ?
-          this.options[key][item] : {}
-        
-        list = list.concat([[ item, opts ]])
+        const opts = this.options[key]
+          ? this.options[key][item]
+          : {}
+
+        list = list.concat([[item, opts]])
       }
     }
     return list
   }
 
   private buildList(
-    fnId: string, id: string[]
+    fnId: string,
+    id: string[]
   ): ListenerBindingItem[] {
     const lists = this.bindings
 
     let key: string
     let key2: string
-    let list: ListenerBindingItem[] = [
-      [fnId, { index: 0 }]
-    ]
+    let list: ListenerBindingItem[] = [[fnId, { index: 0 }]]
 
     list = this.addList(lists, list, "**")
-    
+
     for (const i of id.slice(0).reverse()) {
       key = key ? i + "." + key : i
       list = this.addList(lists, list, "**." + key)
@@ -193,10 +217,14 @@ export class Listener {
       list = this.addList(lists, list, "*")
     } else {
       list = this.addList(
-        lists, list, "*." + id.slice(1).join(".")
+        lists,
+        list,
+        "*." + id.slice(1).join(".")
       )
       list = this.addList(
-        lists, list, id.slice(0, -1).join(".") + ".*"
+        lists,
+        list,
+        id.slice(0, -1).join(".") + ".*"
       )
     }
 
@@ -214,12 +242,16 @@ export class Listener {
     let out: any
     let promise: Promise<any>
 
+    const instance = this.instances[instanceId]
+
     if (
       this.bindings["**"] &&
       this.bindings["**"].indexOf(fnId) > -1
     ) {
       return this.originalFns[fnId].call(
-        this.instances[instanceId], id, ...args
+        instance,
+        id,
+        ...args
       )
     }
 
@@ -236,7 +268,7 @@ export class Listener {
 
       const isPeek =
         isIntercept || (options && options.peek)
-      
+
       const isReturn =
         isIntercept || (options && options.return)
 
@@ -244,11 +276,9 @@ export class Listener {
         continue
       }
 
-      const fn = isMain ?
-        this.originalFns[fnId].bind(
-          this.instances[instanceId]
-        ) :
-        this.listenerFns[target]
+      const fn = isMain
+        ? this.originalFns[fnId].bind(instance)
+        : this.listenerFns[target]
 
       if (!fn) {
         continue
@@ -258,9 +288,7 @@ export class Listener {
         let tmpOut: any
 
         if (promise) {
-          tmpOut = promise.then(
-            (): any => fn(id, ...args)
-          )
+          tmpOut = promise.then((): any => fn(id, ...args))
         } else {
           tmpOut = fn(id, ...args)
         }
@@ -290,15 +318,13 @@ export class Listener {
         let tmpOut: any
 
         if (promise) {
-          tmpOut = promise.then(
-            (): any => isPeek ?
-              fn(id, out, ...args) :
-              fn(id, ...args)
+          tmpOut = promise.then((): any =>
+            isPeek ? fn(id, out, ...args) : fn(id, ...args)
           )
         } else {
-          tmpOut = isPeek ?
-            fn(id, out, ...args) :
-            fn(id, ...args)
+          tmpOut = isPeek
+            ? fn(id, out, ...args)
+            : fn(id, ...args)
         }
 
         if (tmpOut && tmpOut.then) {
@@ -311,9 +337,9 @@ export class Listener {
       }
     }
 
-    return promise && out ?
-      promise.then((): any => out) :
-      promise ? promise : out
+    return promise && out
+      ? promise.then((): any => out)
+      : promise || out
   }
 
   private listenerInit(
@@ -328,7 +354,7 @@ export class Listener {
     if (instance.then) {
       return
     }
-    
+
     this.instances[instanceId] = instance
     instance.instanceId = instanceId
 
@@ -358,8 +384,24 @@ export class Listener {
     return
   }
 
+  private listenerReset(
+    // eslint-disable-next-line
+    id: string[],
+    // eslint-disable-next-line
+    instanceId: string,
+    // eslint-disable-next-line
+    instance: any,
+    // eslint-disable-next-line
+    listener: Listener,
+    // eslint-disable-next-line
+    options?: Record<string, any>
+  ): void {
+    return
+  }
+
   private listenerWrapper(
-    fnId: string, instanceId: string
+    fnId: string,
+    instanceId: string
   ): Function {
     return (eid: string[], ...args: any[]): any => {
       const id = [fnId].concat(eid || [])
@@ -374,8 +416,7 @@ export class Listener {
     const aIndex = this.optsToIndex(a)
     const bIndex = this.optsToIndex(b)
 
-    return (aIndex > bIndex) ? 1 :
-      (aIndex < bIndex) ? -1 : 0
+    return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
   }
 
   private optsToIndex(opts: ListenerOptions): number {
@@ -417,7 +458,8 @@ export class Listener {
       this.originalFns[fnId] = instance[fnName]
 
       instance[fnName] = this.listenerWrapper(
-        fnId, instanceId
+        fnId,
+        instanceId
       )
 
       this.listenerFns[fnId] = instance[fnName]
