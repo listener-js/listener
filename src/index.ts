@@ -64,6 +64,7 @@ export class Listener {
         [instanceId],
         instanceId,
         instances[instanceId],
+        this,
         options
       )
       if (out && out.then) {
@@ -119,7 +120,7 @@ export class Listener {
       }
     }
 
-    this.listenerLoad(["listener"], "listener", this)
+    this.listenerLoad(["listener"], "listener", this, this)
   }
 
   private addList(
@@ -296,6 +297,8 @@ export class Listener {
     id: string[],
     instanceId: string,
     instance: any,
+    // eslint-disable-next-line
+    listener: Listener,
     // eslint-disable-next-line
     options?: Record<string, any>
   ): void | Promise<any> {
