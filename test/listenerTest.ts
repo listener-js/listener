@@ -5,6 +5,7 @@ import {
   listen,
   reset,
 } from "../"
+
 import { log } from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
