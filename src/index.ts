@@ -14,7 +14,7 @@ export class Listener {
   public listeners = [
     "listenerInit",
     "listenerLoad",
-    "reset",
+    "listenerReset",
   ]
   public options: ListenerBindingOptions = {}
 
@@ -130,6 +130,15 @@ export class Listener {
   public reset(): void {
     this.log = (): void => {}
 
+    for (const instanceId in this.instances) {
+      this.listenerReset(
+        [instanceId],
+        instanceId,
+        this.instances[instanceId],
+        this
+      )
+    }
+
     for (const key in this.originalFns) {
       const [instanceId, fnId] = this.parseId(key)
 
@@ -153,15 +162,6 @@ export class Listener {
 
     for (const key of recordKeys) {
       for (const subKey in this[key]) {
-        if (key === "instances") {
-          this.listenerReset(
-            [subKey],
-            subKey,
-            this[key][subKey],
-            this
-          )
-        }
-
         delete this[key][subKey]
       }
     }

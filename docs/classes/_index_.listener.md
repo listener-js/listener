@@ -90,7 +90,7 @@ ___
 • **listeners**: *string[]* =  [
     "listenerInit",
     "listenerLoad",
-    "reset",
+    "listenerReset",
   ]
 
 Defined in index.ts:14
