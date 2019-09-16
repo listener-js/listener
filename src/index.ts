@@ -11,7 +11,7 @@ import {
 export class Listener {
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
-  public listeners = ["listenerLoad"]
+  public listeners = ["listenerLoad", "listenerInit"]
   public options: ListenerBindingOptions = {}
 
   private bindings: ListenerBindings = {}
@@ -56,10 +56,31 @@ export class Listener {
 
     for (const instanceId in instances) {
       this.listen(
-        ["listener.listenerLoad", instanceId, "**"],
-        [`${instanceId}.listenerLoaded`],
+        ["listener.listenerInit", instanceId, "**"],
+        [`${instanceId}.listenerInit`],
         { append: 1000, return: true }
       )
+
+      this.listen(
+        ["listener.listenerLoad", instanceId, "**"],
+        [`${instanceId}.listenerLoad`],
+        { append: 1000, return: true }
+      )
+
+      const out = this.listenerInit(
+        [instanceId],
+        instanceId,
+        instances[instanceId],
+        this,
+        options
+      )
+
+      if (out && out.then) {
+        promises = promises.concat(out)
+      }
+    }
+
+    for (const instanceId in instances) {
       const out = this.listenerLoad(
         [instanceId],
         instanceId,
@@ -67,6 +88,7 @@ export class Listener {
         this,
         options
       )
+
       if (out && out.then) {
         promises = promises.concat(out)
       }
@@ -291,6 +313,21 @@ export class Listener {
     return promise && out ?
       promise.then((): any => out) :
       promise ? promise : out
+  }
+
+  private listenerInit(
+    // eslint-disable-next-line
+    id: string[],
+    // eslint-disable-next-line
+    instanceId: string,
+    // eslint-disable-next-line
+    instance: any,
+    // eslint-disable-next-line
+    listener: Listener,
+    // eslint-disable-next-line
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    return
   }
 
   private listenerLoad(
