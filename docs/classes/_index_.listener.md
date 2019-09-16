@@ -166,7 +166,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:372
+Defined in index.ts:370
 
 **Parameters:**
 
@@ -238,7 +238,7 @@ ___
 
 ▸ **listenerLoad**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:343
+Defined in index.ts:346
 
 **Parameters:**
 
@@ -258,7 +258,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:363
+Defined in index.ts:361
 
 **Parameters:**
 
@@ -285,7 +285,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:383
+Defined in index.ts:381
 
 **Parameters:**
 
@@ -327,7 +327,7 @@ ___
 
 ▸ **wrapListener**(`instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:404
+Defined in index.ts:402
 
 **Parameters:**
 

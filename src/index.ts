@@ -317,11 +317,8 @@ export class Listener {
   }
 
   private listenerInit(
-    // eslint-disable-next-line
     id: string[],
-    // eslint-disable-next-line
     instanceId: string,
-    // eslint-disable-next-line
     instance: any,
     // eslint-disable-next-line
     listener: Listener,
@@ -338,26 +335,27 @@ export class Listener {
     if (instance !== this) {
       instance.listener = this
     }
-  }
-
-  private listenerLoad(
-    id: string[],
-    instanceId: string,
-    instance: any,
-    // eslint-disable-next-line
-    listener: Listener,
-    // eslint-disable-next-line
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    if (instance.then) {
-      return
-    }
 
     this.wrapListener(instanceId, instance)
 
     if (instanceId === "log") {
       this.log = instance.logEvent
     }
+  }
+
+  private listenerLoad(
+    // eslint-disable-next-line
+    id: string[],
+    // eslint-disable-next-line
+    instanceId: string,
+    // eslint-disable-next-line
+    instance: any,
+    // eslint-disable-next-line
+    listener: Listener,
+    // eslint-disable-next-line
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    return
   }
 
   private listenerWrapper(
