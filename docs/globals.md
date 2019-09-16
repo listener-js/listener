@@ -8,5 +8,4 @@
 ### External modules
 
 * ["index"](modules/_index_.md)
-* ["joiner"](modules/_joiner_.md)
 * ["types"](modules/_types_.md)
