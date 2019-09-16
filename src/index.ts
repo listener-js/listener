@@ -11,7 +11,7 @@ import {
 export class Listener {
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
-  public listeners = ["listenerLoad", "listenerInit"]
+  public listeners = ["listenerInit", "listenerLoad"]
   public options: ListenerBindingOptions = {}
 
   private bindings: ListenerBindings = {}
@@ -142,6 +142,7 @@ export class Listener {
       }
     }
 
+    this.listenerInit(["listener"], "listener", this, this)
     this.listenerLoad(["listener"], "listener", this, this)
   }
 
@@ -327,7 +328,16 @@ export class Listener {
     // eslint-disable-next-line
     options?: Record<string, any>
   ): void | Promise<any> {
-    return
+    if (instance.then) {
+      return
+    }
+    
+    this.instances[instanceId] = instance
+    instance.instanceId = instanceId
+
+    if (instance !== this) {
+      instance.listener = this
+    }
   }
 
   private listenerLoad(
@@ -341,13 +351,6 @@ export class Listener {
   ): void | Promise<any> {
     if (instance.then) {
       return
-    }
-
-    this.instances[instanceId] = instance
-    instance.instanceId = instanceId
-
-    if (instance !== this) {
-      instance.listener = this
     }
 
     this.wrapListener(instanceId, instance)
