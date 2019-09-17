@@ -14,9 +14,11 @@ export class Listener {
     "listenerLoad",
     "listenerReset",
   ]
+
+  public listeners = ["listen", ...this.callbacks]
+
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
-  public listeners = ["listen", ...this.callbacks]
   public options: ListenerBindingOptions = {}
 
   private bindings: ListenerBindings = {}
@@ -52,6 +54,8 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Promise<any> {
+    const callbacks = ["listenerInit", "listenerLoad"]
+
     let promises = []
 
     for (const instanceId in instances) {
@@ -63,31 +67,21 @@ export class Listener {
           { append: 1000, return: true }
         )
       }
-
-      const out = this.listenerInit(
-        [instanceId],
-        instanceId,
-        instances[instanceId],
-        this,
-        options
-      )
-
-      if (out && out.then) {
-        promises = promises.concat(out)
-      }
     }
 
-    for (const instanceId in instances) {
-      const out = this.listenerLoad(
-        [instanceId],
-        instanceId,
-        instances[instanceId],
-        this,
-        options
-      )
+    for (const callback of callbacks) {
+      for (const instanceId in instances) {
+        const out = this[callback](
+          [instanceId],
+          instanceId,
+          instances[instanceId],
+          this,
+          options
+        )
 
-      if (out && out.then) {
-        promises = promises.concat(out)
+        if (out && out.then) {
+          promises = promises.concat(out)
+        }
       }
     }
 
