@@ -12,6 +12,7 @@ export class Listener {
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
   public listeners = [
+    "listen",
     "listenerInit",
     "listenerLoad",
     "listenerReset",
@@ -28,8 +29,9 @@ export class Listener {
   }
 
   public listen(
+    id: string[],
     matchId: string[],
-    targetIds: string[],
+    targetId: string,
     options?: ListenerOptions
   ): void {
     const match = matchId.join(".")
@@ -37,25 +39,13 @@ export class Listener {
     this.bindings[match] = this.bindings[match] || []
 
     this.bindings[match] = this.bindings[match].concat(
-      targetIds
+      targetId
     )
 
     if (options) {
       this.options[match] = this.options[match] || {}
-      for (const target of targetIds) {
-        this.options[match][target] = options
-      }
+      this.options[match][targetId] = options
     }
-
-    this.log(
-      [
-        `listen([${matchId.join(", ")}], [${targetIds.join(
-          ", "
-        )}])`,
-      ],
-      "internal",
-      options
-    )
   }
 
   public listener(
@@ -67,8 +57,9 @@ export class Listener {
     for (const instanceId in instances) {
       for (const listenerId of this.listeners) {
         this.listen(
+          ["listener"],
           [`listener.${listenerId}`, instanceId, "**"],
-          [`${instanceId}.${listenerId}`],
+          `${instanceId}.${listenerId}`,
           { append: 1000, return: true }
         )
       }
