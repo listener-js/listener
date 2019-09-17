@@ -438,11 +438,11 @@ export class Listener {
       return
     }
 
-    const listeners: string[] = instance.listeners.concat(
+    const listeners = instance.listeners.concat(
       this.listeners
     )
 
-    for (const fnName of Array.from(listeners)) {
+    for (const fnName of listeners) {
       const fnId = `${instanceId}.${fnName}`
 
       if (!instance[fnName] || this.originalFns[fnId]) {
