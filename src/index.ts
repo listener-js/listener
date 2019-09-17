@@ -65,23 +65,13 @@ export class Listener {
     let promises = []
 
     for (const instanceId in instances) {
-      this.listen(
-        ["listener.listenerInit", instanceId, "**"],
-        [`${instanceId}.listenerInit`],
-        { append: 1000, return: true }
-      )
-
-      this.listen(
-        ["listener.listenerLoad", instanceId, "**"],
-        [`${instanceId}.listenerLoad`],
-        { append: 1000, return: true }
-      )
-
-      this.listen(
-        ["listener.listenerReset", instanceId, "**"],
-        [`${instanceId}.listenerReset`],
-        { append: 1000, return: true }
-      )
+      for (const listenerId of this.listeners) {
+        this.listen(
+          [`listener.${listenerId}`, instanceId, "**"],
+          [`${instanceId}.${listenerId}`],
+          { append: 1000, return: true }
+        )
+      }
 
       const out = this.listenerInit(
         [instanceId],
@@ -448,12 +438,16 @@ export class Listener {
       return
     }
 
-    for (const fnName of instance.listeners) {
-      if (!instance[fnName]) {
+    const listeners: string[] = instance.listeners.concat(
+      this.listeners
+    )
+
+    for (const fnName of Array.from(listeners)) {
+      const fnId = `${instanceId}.${fnName}`
+
+      if (!instance[fnName] || this.originalFns[fnId]) {
         continue
       }
-
-      const fnId = `${instanceId}.${fnName}`
 
       this.originalFns[fnId] = instance[fnName]
 
