@@ -108,47 +108,16 @@ export class Listener {
     return [joinInstanceId, fnId]
   }
 
-  public reset(): void {
-    this.log = (): void => {}
-
+  public reset(options?: Record<string, any>): void {
     for (const instanceId in this.instances) {
       this.listenerReset(
         [instanceId],
         instanceId,
         this.instances[instanceId],
-        this
+        this,
+        options
       )
     }
-
-    for (const key in this.originalFns) {
-      const [instanceId, fnId] = this.parseId(key)
-
-      const instance = this.instances[instanceId]
-
-      if (instance.instanceId) {
-        delete instance.instanceId
-        delete instance.listener
-      }
-
-      instance[fnId] = this.originalFns[key]
-    }
-
-    const recordKeys = [
-      "bindings",
-      "instances",
-      "listenerFns",
-      "options",
-      "originalFns",
-    ]
-
-    for (const key of recordKeys) {
-      for (const subKey in this[key]) {
-        delete this[key][subKey]
-      }
-    }
-
-    this.listenerInit(["reset"], "listener", this, this)
-    this.listenerLoad(["reset"], "listener", this, this)
   }
 
   private addList(
@@ -377,7 +346,37 @@ export class Listener {
     // eslint-disable-next-line
     options?: Record<string, any>
   ): void {
-    return
+    this.log = (): void => {}
+
+    for (const key in this.originalFns) {
+      const [instanceId, fnId] = this.parseId(key)
+
+      const instance = this.instances[instanceId]
+
+      if (instance.instanceId) {
+        delete instance.instanceId
+        delete instance.listener
+      }
+
+      instance[fnId] = this.originalFns[key]
+    }
+
+    const recordKeys = [
+      "bindings",
+      "instances",
+      "listenerFns",
+      "options",
+      "originalFns",
+    ]
+
+    for (const key of recordKeys) {
+      for (const subKey in this[key]) {
+        delete this[key][subKey]
+      }
+    }
+
+    this.listenerInit(["reset"], "listener", this, this)
+    this.listenerLoad(["reset"], "listener", this, this)
   }
 
   private listenerWrapper(
