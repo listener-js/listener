@@ -434,11 +434,7 @@ export class Listener {
     instanceId: string,
     instance: any
   ): void {
-    if (!instance.listeners) {
-      return
-    }
-
-    const listeners = instance.listeners.concat(
+    const listeners = (instance.listeners || []).concat(
       this.listeners
     )
 
