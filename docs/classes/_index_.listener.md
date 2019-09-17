@@ -16,6 +16,7 @@
 ### Properties
 
 * [bindings](_index_.listener.md#private-bindings)
+* [callbacks](_index_.listener.md#callbacks)
 * [idRegex](_index_.listener.md#idregex)
 * [instances](_index_.listener.md#instances)
 * [listenerFns](_index_.listener.md#private-listenerfns)
@@ -61,11 +62,23 @@ Defined in index.ts:22
 
 ___
 
+###  callbacks
+
+• **callbacks**: *string[]* =  [
+    "listenerInit",
+    "listenerLoad",
+    "listenerReset",
+  ]
+
+Defined in index.ts:12
+
+___
+
 ###  idRegex
 
 • **idRegex**: *RegExp* =  /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
 
-Defined in index.ts:12
+Defined in index.ts:17
 
 ___
 
@@ -73,7 +86,7 @@ ___
 
 • **instances**: *[ListenerInstances](../modules/_types_.md#listenerinstances)*
 
-Defined in index.ts:13
+Defined in index.ts:18
 
 ___
 
@@ -87,14 +100,9 @@ ___
 
 ###  listeners
 
-• **listeners**: *string[]* =  [
-    "listen",
-    "listenerInit",
-    "listenerLoad",
-    "listenerReset",
-  ]
+• **listeners**: *string[]* =  ["listen", ...this.callbacks]
 
-Defined in index.ts:14
+Defined in index.ts:19
 
 ___
 

@@ -9,14 +9,14 @@ import {
 } from "./types"
 
 export class Listener {
-  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
-  public instances: ListenerInstances = {}
-  public listeners = [
-    "listen",
+  public callbacks = [
     "listenerInit",
     "listenerLoad",
     "listenerReset",
   ]
+  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
+  public instances: ListenerInstances = {}
+  public listeners = ["listen", ...this.callbacks]
   public options: ListenerBindingOptions = {}
 
   private bindings: ListenerBindings = {}
@@ -55,7 +55,7 @@ export class Listener {
     let promises = []
 
     for (const instanceId in instances) {
-      for (const listenerId of this.listeners) {
+      for (const listenerId of this.callbacks) {
         this.listen(
           ["listener"],
           [`listener.${listenerId}`, instanceId, "**"],
@@ -147,8 +147,8 @@ export class Listener {
       }
     }
 
-    this.listenerInit(["listener"], "listener", this, this)
-    this.listenerLoad(["listener"], "listener", this, this)
+    this.listenerInit(["reset"], "listener", this, this)
+    this.listenerLoad(["reset"], "listener", this, this)
   }
 
   private addList(
@@ -239,7 +239,7 @@ export class Listener {
     const list = this.buildList(fnId, id)
 
     if (id.indexOf("log.logEvent") < 0) {
-      this.log(["emit", ...id], "internal", list)
+      this.log(["emit", ...id], "internal", ...args)
     }
 
     for (const [target, options] of list) {
@@ -426,7 +426,7 @@ export class Listener {
     instance: any
   ): void {
     const listeners = (instance.listeners || []).concat(
-      this.listeners
+      this.callbacks
     )
 
     for (const fnName of listeners) {
