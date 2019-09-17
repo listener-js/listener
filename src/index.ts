@@ -290,10 +290,10 @@ export class Listener {
     id: string[],
     instanceId: string,
     instance: any,
-    // eslint-disable-next-line
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     listener: Listener,
-    // eslint-disable-next-line
     options?: Record<string, any>
+    /* eslint-enable @typescript-eslint/no-unused-vars */
   ): void | Promise<any> {
     if (instance.then) {
       return
@@ -314,31 +314,25 @@ export class Listener {
   }
 
   private listenerLoad(
-    // eslint-disable-next-line
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     id: string[],
-    // eslint-disable-next-line
     instanceId: string,
-    // eslint-disable-next-line
     instance: any,
-    // eslint-disable-next-line
     listener: Listener,
-    // eslint-disable-next-line
     options?: Record<string, any>
+    /* eslint-enable @typescript-eslint/no-unused-vars */
   ): void | Promise<any> {
     return
   }
 
   private listenerReset(
-    // eslint-disable-next-line
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     id: string[],
-    // eslint-disable-next-line
     instanceId: string,
-    // eslint-disable-next-line
     instance: any,
-    // eslint-disable-next-line
     listener: Listener,
-    // eslint-disable-next-line
     options?: Record<string, any>
+    /* eslint-enable @typescript-eslint/no-unused-vars */
   ): void {
     this.log = (): void => {}
 
