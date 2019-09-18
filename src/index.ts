@@ -10,7 +10,7 @@ import {
 
 export class Listener {
   public callbacks = ["listenerLoad", "listenerReset"]
-  public listeners = ["listen", ...this.callbacks]
+  public listeners = ["listen", "reset", ...this.callbacks]
 
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
@@ -22,7 +22,7 @@ export class Listener {
   private originalFns: Listeners = {}
 
   public constructor() {
-    this.reset()
+    this.reset(["listener.constructor"])
   }
 
   public listen(
@@ -54,7 +54,7 @@ export class Listener {
     for (const instanceId in instances) {
       for (const listenerId of this.callbacks) {
         this.listen(
-          ["listener"],
+          ["listener.listener"],
           [`listener.${listenerId}`, instanceId, "**"],
           `${instanceId}.${listenerId}`,
           this.callbackListenOptions(listenerId, options)
@@ -93,10 +93,10 @@ export class Listener {
     return [joinInstanceId, fnId]
   }
 
-  public reset(): void {
+  public reset(id: string[]): void {
     for (const instanceId in this.instances) {
       this.listenerReset(
-        [instanceId],
+        [instanceId, ...id],
         instanceId,
         this.instances[instanceId],
         this
@@ -132,7 +132,12 @@ export class Listener {
       }
     }
 
-    this.listenerLoad(["reset"], "listener", this, this)
+    this.listenerLoad(
+      ["listener.reset"],
+      "listener",
+      this,
+      this
+    )
   }
 
   private addList(
@@ -207,6 +212,14 @@ export class Listener {
     const prepend =
       options && options[`${listenerId}Prepend`]
 
+    if (listenerId === "listenerReset") {
+      return {
+        append: append,
+        prepend: prepend || 1000,
+        return: true,
+      }
+    }
+
     return { append: append || 1000, prepend, return: true }
   }
 
@@ -235,7 +248,11 @@ export class Listener {
     const list = this.buildList(fnId, id)
 
     if (id.indexOf("log.logEvent") < 0) {
-      this.log(["emit", ...id], "internal", ...args)
+      this.log(
+        ["listener.emit", ...id],
+        "internal",
+        ...args
+      )
     }
 
     for (const [target, options] of list) {
