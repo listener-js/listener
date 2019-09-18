@@ -67,7 +67,8 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset()
-  listener({ MyClass, MyClass2, log })
+  listener({ log })
+  listener({ MyClass, MyClass2 })
 })
 
 test("defined", (): void => {
@@ -636,4 +637,24 @@ test("peek", (): void => {
   listen([], ["test.test"], "test2.test", { peek: true })
 
   expect(test.test([], "hi")).toBe(true)
+})
+
+test("async listenerLoad callback", async (): Promise<
+  any
+> => {
+  expect.assertions(1)
+
+  const test = {
+    listenerLoad: async (id: string[]): Promise<any> => {
+      return delay(1).then((): void => {
+        expect(id).toEqual([
+          "test.listenerLoad",
+          "listener.listenerLoad",
+          "test",
+        ])
+      })
+    },
+  }
+
+  return listener({ test })
 })

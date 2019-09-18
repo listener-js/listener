@@ -9,12 +9,7 @@ import {
 } from "./types"
 
 export class Listener {
-  public callbacks = [
-    "listenerInit",
-    "listenerLoad",
-    "listenerReset",
-  ]
-
+  public callbacks = ["listenerLoad", "listenerReset"]
   public listeners = ["listen", ...this.callbacks]
 
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
@@ -54,8 +49,6 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Promise<any> {
-    const callbacks = ["listenerInit", "listenerLoad"]
-
     let promises = []
 
     for (const instanceId in instances) {
@@ -64,24 +57,22 @@ export class Listener {
           ["listener"],
           [`listener.${listenerId}`, instanceId, "**"],
           `${instanceId}.${listenerId}`,
-          { append: 1000, return: true }
+          this.callbackListenOptions(listenerId, options)
         )
       }
     }
 
-    for (const callback of callbacks) {
-      for (const instanceId in instances) {
-        const out = this[callback](
-          [instanceId],
-          instanceId,
-          instances[instanceId],
-          this,
-          options
-        )
+    for (const instanceId in instances) {
+      const out = this.listenerLoad(
+        [instanceId],
+        instanceId,
+        instances[instanceId],
+        this,
+        options
+      )
 
-        if (out && out.then) {
-          promises = promises.concat(out)
-        }
+      if (out && out.then) {
+        promises = promises.concat(out)
       }
     }
 
@@ -141,7 +132,6 @@ export class Listener {
       }
     }
 
-    this.listenerInit(["reset"], "listener", this, this)
     this.listenerLoad(["reset"], "listener", this, this)
   }
 
@@ -206,6 +196,18 @@ export class Listener {
     list = list.sort(this.listSort.bind(this))
 
     return list
+  }
+
+  private callbackListenOptions(
+    listenerId: string,
+    options?: Record<string, any>
+  ): Record<string, any> {
+    const append = options && options[`${listenerId}Append`]
+
+    const prepend =
+      options && options[`${listenerId}Prepend`]
+
+    return { append: append || 1000, prepend, return: true }
   }
 
   private emit(
@@ -317,7 +319,7 @@ export class Listener {
       : promise || out
   }
 
-  private listenerInit(
+  private listenerLoad(
     id: string[],
     instanceId: string,
     instance: any,
@@ -342,18 +344,6 @@ export class Listener {
     if (instanceId === "log") {
       this.log = instance.logEvent
     }
-  }
-
-  private listenerLoad(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    id: string[],
-    instanceId: string,
-    instance: any,
-    listener: Listener,
-    options?: Record<string, any>
-    /* eslint-enable @typescript-eslint/no-unused-vars */
-  ): void | Promise<any> {
-    return
   }
 
   private listenerReset(
