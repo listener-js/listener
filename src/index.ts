@@ -63,6 +63,21 @@ export class Listener {
     let promises = []
 
     for (const instanceId in instances) {
+      const out = this.listenerInit(
+        [instanceId, ...id],
+        instanceId,
+        instances[instanceId],
+        instances,
+        this,
+        options
+      )
+
+      if (out && out.then) {
+        promises = promises.concat(out)
+      }
+    }
+
+    for (const instanceId in instances) {
       const instance = instances[instanceId]
 
       if (instance.then) {
@@ -82,21 +97,6 @@ export class Listener {
           `${instanceId}.${listenerId}`,
           this.callbackListenOptions(listenerId, options)
         )
-      }
-    }
-
-    for (const instanceId in instances) {
-      const out = this.listenerInit(
-        [instanceId, ...id],
-        instanceId,
-        instances[instanceId],
-        instances,
-        this,
-        options
-      )
-
-      if (out && out.then) {
-        promises = promises.concat(out)
       }
     }
 
