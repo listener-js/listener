@@ -22,28 +22,34 @@
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:446
+Defined in index.ts:482
 
 ___
 
 ### `Const` listen
 
-• **listen**: *any* =  instance.listen.bind(instance)
+• **listen**: *[listen](../classes/_index_.listener.md#listen)* =  instance.listen.bind(
+  instance
+)
 
-Defined in index.ts:447
+Defined in index.ts:485
 
 ___
 
 ### `Const` listener
 
-• **listener**: *any* =  instance.listener.bind(instance)
+• **listener**: *[listener](../classes/_index_.listener.md#listener)* =  instance.listener.bind(
+  instance
+)
 
-Defined in index.ts:448
+Defined in index.ts:490
 
 ___
 
 ### `Const` reset
 
-• **reset**: *any* =  instance.reset.bind(instance)
+• **reset**: *[reset](../classes/_index_.listener.md#reset)* =  instance.reset.bind(
+  instance
+)
 
-Defined in index.ts:449
+Defined in index.ts:494

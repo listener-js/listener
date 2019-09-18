@@ -9,8 +9,18 @@ import {
 } from "./types"
 
 export class Listener {
-  public callbacks = ["listenerLoad", "listenerReset"]
-  public listeners = ["listen", "reset", ...this.callbacks]
+  public callbacks = [
+    "listenerInit",
+    "listenerLoad",
+    "listenerReset",
+  ]
+
+  public listeners = [
+    "listen",
+    "listener",
+    "reset",
+    ...this.callbacks,
+  ]
 
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
@@ -46,15 +56,28 @@ export class Listener {
   }
 
   public listener(
+    id: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Promise<any> {
     let promises = []
 
     for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (instance.then) {
+        continue
+      }
+
+      this.wrapListener(instanceId, instance)
+
+      if (instanceId === "log") {
+        this.log = instance.logEvent
+      }
+
       for (const listenerId of this.callbacks) {
         this.listen(
-          ["listener.listener"],
+          id,
           [`listener.${listenerId}`, instanceId, "**"],
           `${instanceId}.${listenerId}`,
           this.callbackListenOptions(listenerId, options)
@@ -63,8 +86,22 @@ export class Listener {
     }
 
     for (const instanceId in instances) {
+      const out = this.listenerInit(
+        [instanceId, ...id],
+        instanceId,
+        instances[instanceId],
+        this,
+        options
+      )
+
+      if (out && out.then) {
+        promises = promises.concat(out)
+      }
+    }
+
+    for (const instanceId in instances) {
       const out = this.listenerLoad(
-        [instanceId],
+        [instanceId, ...id],
         instanceId,
         instances[instanceId],
         this,
@@ -132,12 +169,7 @@ export class Listener {
       }
     }
 
-    this.listenerLoad(
-      ["listener.reset"],
-      "listener",
-      this,
-      this
-    )
+    this.wrapListener("listener", this)
   }
 
   private addList(
@@ -336,31 +368,28 @@ export class Listener {
       : promise || out
   }
 
-  private listenerLoad(
+  private listenerInit(
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     id: string[],
     instanceId: string,
     instance: any,
-    /* eslint-disable @typescript-eslint/no-unused-vars */
     listener: Listener,
     options?: Record<string, any>
     /* eslint-enable @typescript-eslint/no-unused-vars */
   ): void | Promise<any> {
-    if (instance.then) {
-      return
-    }
+    return
+  }
 
-    this.instances[instanceId] = instance
-    instance.instanceId = instanceId
-
-    if (instance !== this) {
-      instance.listener = this
-    }
-
-    this.wrapListener(instanceId, instance)
-
-    if (instanceId === "log") {
-      this.log = instance.logEvent
-    }
+  private listenerLoad(
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    id: string[],
+    instanceId: string,
+    instance: any,
+    listener: Listener,
+    options?: Record<string, any>
+    /* eslint-enable @typescript-eslint/no-unused-vars */
+  ): void | Promise<any> {
+    return
   }
 
   private listenerReset(
@@ -424,6 +453,13 @@ export class Listener {
       this.callbacks
     )
 
+    this.instances[instanceId] = instance
+
+    if (instance !== this) {
+      instance.instanceId = instanceId
+      instance.listener = this
+    }
+
     for (const fnName of listeners) {
       const fnId = `${instanceId}.${fnName}`
 
@@ -444,6 +480,17 @@ export class Listener {
 }
 
 export const instance = new Listener()
-export const listen = instance.listen.bind(instance)
-export const listener = instance.listener.bind(instance)
-export const reset = instance.reset.bind(instance)
+
+// eslint-disable-next-line max-len
+export const listen: typeof instance.listen = instance.listen.bind(
+  instance
+)
+
+// eslint-disable-next-line max-len
+export const listener: typeof instance.listener = instance.listener.bind(
+  instance
+)
+// eslint-disable-next-line max-len
+export const reset: typeof instance.reset = instance.reset.bind(
+  instance
+)

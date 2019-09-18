@@ -66,9 +66,9 @@ class MyClass2 {
 }
 
 beforeEach((): void => {
-  reset()
-  listener({ log })
-  listener({ MyClass, MyClass2 })
+  reset([])
+  listener([], { log })
+  listener([], { MyClass, MyClass2 })
 })
 
 test("defined", (): void => {
@@ -106,16 +106,16 @@ test("listener no arg", (): void => {
     listeners: ["fn"],
   }
 
-  listener({ test })
+  listener([], { test })
   expect(test.fn()).toBe(1)
 })
 
 test("listener bad arg", (): void => {
-  listener({ hi: {} })
+  listener([], { hi: {} })
 })
 
 test("listen return", (): void => {
-  listen([], ["MyClass.fn"], ["MyClass2.fn2"], {
+  listen([], ["MyClass.fn"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -142,7 +142,7 @@ test("listen", (): void => {
     listeners: ["fn"],
   }
 
-  listener({ Test })
+  listener([], { Test })
   listen([], ["MyClass.fn"], "Test.fn")
 
   MyClass.fn([], true)
@@ -191,7 +191,7 @@ test("async listen", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener({ Test })
+  listener([], { Test })
   listen([], ["MyClass.asyncFn"], "Test.fn")
 
   await MyClass.asyncFn([], true)
@@ -391,7 +391,7 @@ test("prepend async to sync", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener({ Test, Test2 })
+  listener([], { Test, Test2 })
 
   listen([], ["Test2.fn"], "Test.fn", { prepend: true })
 
@@ -423,7 +423,7 @@ test("prepend async to async", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener({ Test, Test2 })
+  listener([], { Test, Test2 })
 
   listen([], ["Test2.fn"], "Test.fn", { prepend: true })
 
@@ -456,7 +456,7 @@ test("prepend async overwrite", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener({ Test, Test2 })
+  listener([], { Test, Test2 })
 
   listen([], ["Test2.fn"], "Test.fn", {
     prepend: true,
@@ -553,7 +553,7 @@ test("intercept", (): void => {
 
   const test2 = new Test2()
 
-  listener({ test, test2 })
+  listener([], { test, test2 })
   listen([], ["test.test"], "test2.test", {
     intercept: true,
   })
@@ -593,7 +593,7 @@ test("intercept cancel", (): void => {
 
   const test2 = new Test2()
 
-  listener({ test, test2 })
+  listener([], { test, test2 })
   listen([], ["test.test"], "test2.test", {
     intercept: true,
   })
@@ -633,7 +633,7 @@ test("peek", (): void => {
 
   const test2 = new Test2()
 
-  listener({ test, test2 })
+  listener([], { test, test2 })
   listen([], ["test.test"], "test2.test", { peek: true })
 
   expect(test.test([], "hi")).toBe(true)
@@ -651,10 +651,11 @@ test("async listenerLoad callback", async (): Promise<
           "test.listenerLoad",
           "listener.listenerLoad",
           "test",
+          "listener.listener",
         ])
       })
     },
   }
 
-  return listener({ test })
+  return listener([], { test })
 })
