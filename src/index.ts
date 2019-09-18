@@ -9,11 +9,7 @@ import {
 } from "./types"
 
 export class Listener {
-  public callbacks = [
-    "listenerInit",
-    "listenerLoad",
-    "listenerReset",
-  ]
+  public callbacks = ["listenerLoad", "listenerReset"]
 
   public listeners = [
     "listen",
@@ -86,24 +82,11 @@ export class Listener {
     }
 
     for (const instanceId in instances) {
-      const out = this.listenerInit(
-        [instanceId, ...id],
-        instanceId,
-        instances[instanceId],
-        this,
-        options
-      )
-
-      if (out && out.then) {
-        promises = promises.concat(out)
-      }
-    }
-
-    for (const instanceId in instances) {
       const out = this.listenerLoad(
         [instanceId, ...id],
         instanceId,
         instances[instanceId],
+        instances,
         this,
         options
       )
@@ -368,23 +351,12 @@ export class Listener {
       : promise || out
   }
 
-  private listenerInit(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    id: string[],
-    instanceId: string,
-    instance: any,
-    listener: Listener,
-    options?: Record<string, any>
-    /* eslint-enable @typescript-eslint/no-unused-vars */
-  ): void | Promise<any> {
-    return
-  }
-
   private listenerLoad(
     /* eslint-disable @typescript-eslint/no-unused-vars */
     id: string[],
     instanceId: string,
     instance: any,
+    instances: Record<string, any>,
     listener: Listener,
     options?: Record<string, any>
     /* eslint-enable @typescript-eslint/no-unused-vars */

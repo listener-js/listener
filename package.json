@@ -19,6 +19,7 @@
   "scripts": {
     "fix": "npm run lint -- --fix",
     "lint": "eslint --ignore-path .gitignore --ext=js src/**",
+    "prepublish": "rm -rf dist; npm run build",
     "pretty": "prettier --write **/*.css **/*.json **/*.md",
     "test": "jest",
     "build": "tsc",
