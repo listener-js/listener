@@ -1,6 +1,6 @@
 {
   "name": "@listener-js/listener",
-  "version": "2.1.5",
+  "version": "2.2.0",
   "description": "Type-friendly awesome event emitter",
   "keywords": [
     "typed",
