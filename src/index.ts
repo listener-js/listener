@@ -10,7 +10,6 @@ import {
 
 export class Listener {
   public callbacks = [
-    "listenerInit",
     "listenerPreload",
     "listenerLoad",
     "listenerReset",
@@ -64,17 +63,21 @@ export class Listener {
     let promises = []
 
     for (const instanceId in instances) {
-      const out = this.listenerInit(
-        [instanceId, ...id],
-        instanceId,
-        instances[instanceId],
-        instances,
-        this,
-        options
-      )
+      const instance = instances[instanceId]
 
-      if (out && out.then) {
-        promises = promises.concat(out)
+      if (instance.listenerInit) {
+        const out = instance.listenerInit(
+          [instanceId, ...id],
+          instanceId,
+          instances[instanceId],
+          instances,
+          this,
+          options
+        )
+
+        if (out && out.then) {
+          promises = promises.concat(out)
+        }
       }
     }
 
@@ -384,19 +387,6 @@ export class Listener {
     return promise && out
       ? promise.then((): any => out)
       : promise || out
-  }
-
-  private listenerInit(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    id: string[],
-    instanceId: string,
-    instance: any,
-    instances: Record<string, any>,
-    listener: Listener,
-    options?: Record<string, any>
-    /* eslint-enable @typescript-eslint/no-unused-vars */
-  ): void | Promise<any> {
-    return
   }
 
   private listenerPreload(
