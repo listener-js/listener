@@ -76,11 +76,6 @@ test("defined", (): void => {
   expect(listen).not.toBeUndefined()
 })
 
-test("listener properties", (): void => {
-  expect(MyClass.listener).toBe(instance)
-  expect(MyClass.instanceId).toBe("MyClass")
-})
-
 test("listener", (): void => {
   expect(MyClass.fn(["id"], true)).toEqual({
     fn: true,
@@ -650,7 +645,6 @@ test("async listenerLoad callback", async (): Promise<
         expect(id).toEqual([
           "test.listenerLoad",
           "listener.listenerLoad",
-          "test",
           "listener.listener",
         ])
       })

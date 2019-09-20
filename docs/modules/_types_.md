@@ -2,7 +2,6 @@
 
 # External module: "types"
 
-
 ## Index
 
 ### Interfaces
@@ -28,7 +27,7 @@
 
 Ƭ **ListenerBindingItem**: *[string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]*
 
-Defined in types.ts:15
+Defined in types.ts:17
 
 ___
 
@@ -36,7 +35,7 @@ ___
 
 Ƭ **ListenerBindingOptions**: *Record‹string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)›*
 
-Defined in types.ts:17
+Defined in types.ts:19
 
 ___
 
@@ -44,7 +43,7 @@ ___
 
 Ƭ **ListenerBindings**: *Record‹string, string[]›*
 
-Defined in types.ts:20
+Defined in types.ts:24
 
 ___
 
@@ -52,7 +51,7 @@ ___
 
 Ƭ **ListenerBindingsListSorter**: *function*
 
-Defined in types.ts:22
+Defined in types.ts:26
 
 #### Type declaration:
 
@@ -90,7 +89,7 @@ ___
 
 Ƭ **ListenerInstances**: *Record‹string, any›*
 
-Defined in types.ts:25
+Defined in types.ts:31
 
 ___
 
@@ -98,7 +97,7 @@ ___
 
 Ƭ **ListenerPending**: *Record‹string, Promise‹any››*
 
-Defined in types.ts:27
+Defined in types.ts:33
 
 ___
 
@@ -106,7 +105,7 @@ ___
 
 Ƭ **ListenerPendingResolvers**: *Record‹string, Function›*
 
-Defined in types.ts:29
+Defined in types.ts:35
 
 ___
 
@@ -114,7 +113,7 @@ ___
 
 Ƭ **Listeners**: *Record‹string, [ListenerFunction](_types_.md#listenerfunction)›*
 
-Defined in types.ts:13
+Defined in types.ts:15
 
 ___
 
@@ -122,7 +121,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:32
+Defined in types.ts:40
 
 #### Type declaration:
 

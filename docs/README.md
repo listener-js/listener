@@ -2,7 +2,6 @@
 
 # @listener-js/listener
 
-
 # listener
 
 Type-friendly awesome event emitter

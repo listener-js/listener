@@ -2,7 +2,6 @@
 
 # Interface: ListenerOptions
 
-
 ## Hierarchy
 
 * **ListenerOptions**

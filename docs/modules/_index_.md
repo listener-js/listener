@@ -2,7 +2,6 @@
 
 # External module: "index"
 
-
 ## Index
 
 ### Classes
@@ -22,7 +21,7 @@
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
 
-Defined in index.ts:473
+Defined in index.ts:468
 
 ___
 
@@ -32,7 +31,7 @@ ___
   instance
 )
 
-Defined in index.ts:476
+Defined in index.ts:471
 
 ___
 
@@ -42,7 +41,7 @@ ___
   instance
 )
 
-Defined in index.ts:481
+Defined in index.ts:476
 
 ___
 
@@ -52,4 +51,4 @@ ___
   instance
 )
 
-Defined in index.ts:485
+Defined in index.ts:480

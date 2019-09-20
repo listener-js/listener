@@ -63,7 +63,7 @@ export class Listener {
 
       if (instance.listenerInit) {
         const out = instance.listenerInit(
-          [instanceId, ...id],
+          id,
           instanceId,
           instances[instanceId],
           instances,
@@ -93,7 +93,7 @@ export class Listener {
       for (const listenerId of this.callbacks) {
         this.listen(
           id,
-          [`listener.${listenerId}`, instanceId, "**"],
+          [`listener.${listenerId}`, "**"],
           `${instanceId}.${listenerId}`,
           this.callbackListenOptions(listenerId, options)
         )
@@ -102,7 +102,7 @@ export class Listener {
 
     for (const instanceId in instances) {
       const out = this.listenerLoad(
-        [instanceId, ...id],
+        id,
         instanceId,
         instances[instanceId],
         instances,
@@ -135,7 +135,7 @@ export class Listener {
   public reset(id: string[]): void {
     for (const instanceId in this.instances) {
       this.listenerReset(
-        [instanceId, ...id],
+        id,
         instanceId,
         this.instances[instanceId],
         this
@@ -283,9 +283,9 @@ export class Listener {
 
     if (id.indexOf("log.logEvent") < 0) {
       this.log(
-        ["listener.emit", ...id],
+        ["buildList", "listener.emit", ...id],
         "internal",
-        ...args
+        list
       )
     }
 
@@ -445,11 +445,6 @@ export class Listener {
     )
 
     this.instances[instanceId] = instance
-
-    if (instance !== this) {
-      instance.instanceId = instanceId
-      instance.listener = this
-    }
 
     for (const fnName of listeners) {
       const fnId = `${instanceId}.${fnName}`

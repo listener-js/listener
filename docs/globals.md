@@ -2,7 +2,6 @@
 
 # @listener-js/listener
 
-
 ## Index
 
 ### External modules
