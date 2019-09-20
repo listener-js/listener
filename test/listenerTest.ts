@@ -1,6 +1,6 @@
 import {
-  Listener,
   instance,
+  Listener,
   listener,
   listen,
   reset,
@@ -632,6 +632,16 @@ test("peek", (): void => {
   listen([], ["test.test"], "test2.test", { peek: true })
 
   expect(test.test([], "hi")).toBe(true)
+})
+
+test("async return value", async (): Promise<any> => {
+  expect.assertions(1)
+
+  const test = {}
+
+  return listener([], { test }).then(instances =>
+    expect(instances).toBe(instance.instances)
+  )
 })
 
 test("async listenerLoad callback", async (): Promise<

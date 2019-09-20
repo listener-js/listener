@@ -115,7 +115,9 @@ export class Listener {
       }
     }
 
-    return Promise.all(promises)
+    return Promise.all(promises).then(
+      (): Record<string, any> => this.instances
+    )
   }
 
   public parseId(id: string): [string, string] {
