@@ -110,7 +110,7 @@ Defined in index.ts:20
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:123
+Defined in index.ts:158
 
 **Parameters:**
 
@@ -147,7 +147,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:140
+Defined in index.ts:175
 
 **Parameters:**
 
@@ -164,7 +164,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:186
+Defined in index.ts:221
 
 **Parameters:**
 
@@ -183,7 +183,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *string[]*
 
-Defined in index.ts:299
+Defined in index.ts:334
 
 **Parameters:**
 
@@ -199,7 +199,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:352
+Defined in index.ts:388
 
 **Parameters:**
 
@@ -216,7 +216,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:342
+Defined in index.ts:378
 
 **Parameters:**
 
@@ -249,14 +249,15 @@ ___
 
 ### `Private` loadInstance
 
-▸ **loadInstance**(`instanceId`: string, `instance`: any): *void | Promise‹any›*
+▸ **loadInstance**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:316
+Defined in index.ts:351
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
+`lid` | string[] |
 `instanceId` | string |
 `instance` | any |
 
@@ -278,7 +279,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:362
+Defined in index.ts:398
 
 **Parameters:**
 
@@ -294,7 +295,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:76
+Defined in index.ts:107
 
 **Parameters:**
 
@@ -310,7 +311,7 @@ ___
 
 ▸ **reset**(`lid`: string[]): *void*
 
-Defined in index.ts:90
+Defined in index.ts:121
 
 **Parameters:**
 

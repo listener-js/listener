@@ -50,6 +50,33 @@ export class Listener {
   ): Promise<any> {
     let promises = []
 
+    if (!options || options.bind !== false) {
+      let rerun
+
+      for (const instanceId in instances) {
+        const instance = instances[instanceId]
+
+        if (instance.listenerBindings) {
+          for (const [
+            matchId,
+            targetId,
+          ] of instance.listenerBindings) {
+            this.bind(lid, matchId, targetId, options)
+
+            rerun =
+              rerun || matchId.indexOf("listener.load") > -1
+          }
+        }
+      }
+
+      if (rerun) {
+        return this.load(lid, instances, {
+          ...options,
+          bind: false,
+        })
+      }
+    }
+
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
@@ -57,7 +84,11 @@ export class Listener {
         continue
       }
 
-      const out = this.loadInstance(instanceId, instance)
+      const out = this.loadInstance(
+        [instanceId, ...lid],
+        instanceId,
+        instance
+      )
 
       if (out && out.then) {
         promises = promises.concat(out)
@@ -117,7 +148,11 @@ export class Listener {
       }
     }
 
-    this.loadInstance("listener", this)
+    this.loadInstance(
+      ["listener", ...lid],
+      "listener",
+      this
+    )
   }
 
   private addList(
@@ -314,6 +349,7 @@ export class Listener {
   }
 
   private loadInstance(
+    lid: string[],
     instanceId: string,
     instance: any
   ): void | Promise<any> {

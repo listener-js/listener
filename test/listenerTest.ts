@@ -129,6 +129,40 @@ test("listen", (): void => {
   MyClass.fn([], true)
 })
 
+test("listenerBindings", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn", "MyClass.fn"])
+    },
+    listenerBindings: [[["MyClass.fn"], "Test.fn"]],
+  }
+
+  load([], { Test })
+
+  MyClass.fn([], true)
+})
+
+test("listenerBindings with listener.load", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual([
+        "Test.fn",
+        "listener.load",
+        "listener.load",
+      ])
+    },
+    listenerBindings: [
+      [["listener.load", "**"], "Test.fn"],
+    ],
+  }
+
+  load([], { Test })
+})
+
 test("async listener", async (): Promise<void> => {
   expect(await MyClass.asyncFn(["id"], true)).toEqual({
     asyncFn: true,
