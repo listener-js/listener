@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowUnusedLabels": true,
     "module": "commonjs",
     "lib": ["es2015"],
     "types": ["jest", "node"]

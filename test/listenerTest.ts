@@ -1,4 +1,4 @@
-import { bind, instance, Listener, load, reset } from "../"
+import { bind, instance, load, reset } from "../"
 
 // import { log } from "@listener-js/log"
 
@@ -9,52 +9,46 @@ function delay(t: number, v?: any): Promise<any> {
 }
 
 class MyClass {
-  public static listeners = ["fn", "asyncFn"]
-  public static listener: Listener
-  public static instanceId: string
-
-  public static fn(id: string[], someArg: boolean): object {
-    return { fn: true, id, someArg }
+  public static fn(
+    lid: string[],
+    someArg: boolean
+  ): object {
+    return { fn: true, lid, someArg }
   }
 
   public static async asyncFn(
-    id: string[],
+    lid: string[],
     someArg: boolean
   ): Promise<object> {
-    return delay(2, { asyncFn: true, id, someArg })
+    return delay(2, { asyncFn: true, lid, someArg })
   }
 }
 
 class MyClass2 {
-  public static listeners = [
-    "fn2",
-    "fn3",
-    "asyncFn2",
-    "asyncFn3",
-  ]
-
   public static fn2(
-    id: string[],
+    lid: string[],
     someArg: boolean
   ): object {
-    return { fn2: true, id, someArg }
+    return { fn2: true, lid, someArg }
   }
 
   public static fn3(
-    id: string[],
+    lid: string[],
     someArg: boolean
   ): object {
-    return { fn3: true, id, someArg }
+    return { fn3: true, lid, someArg }
   }
 
   public static async asyncFn2(
-    id: string[],
+    lid: string[],
     someArg: boolean
   ): Promise<object> {
-    return delay(1, { asyncFn2: true, id, someArg })
+    return delay(1, { asyncFn2: true, lid, someArg })
   }
 
-  public static async asyncFn3(): Promise<null> {
+  public static async asyncFn3(
+    lid: string[]
+  ): Promise<null> {
     return null
   }
 }
@@ -73,13 +67,13 @@ test("defined", (): void => {
 test("listener", (): void => {
   expect(MyClass.fn(["id"], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn", "id"],
+    lid: ["MyClass.fn", "id"],
     someArg: true,
   })
 
   expect(MyClass2.fn2(["id"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "id"],
+    lid: ["MyClass2.fn2", "id"],
     someArg: true,
   })
 })
@@ -88,15 +82,14 @@ test("listener no arg", (): void => {
   expect.assertions(2)
 
   const test = {
-    fn: (): number => {
-      expect(1).toBe(1)
+    fn: (lid: string[]): number => {
+      expect(lid).toEqual(["test.fn"])
       return 1
     },
-    listeners: ["fn"],
   }
 
   load([], { test })
-  expect(test.fn()).toBe(1)
+  expect(test.fn([])).toBe(1)
 })
 
 test("listener bad arg", (): void => {
@@ -110,13 +103,13 @@ test("listen return", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn"],
+    lid: ["MyClass2.fn2", "MyClass.fn"],
     someArg: true,
   })
 
   expect(MyClass2.fn2(["id"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "id"],
+    lid: ["MyClass2.fn2", "id"],
     someArg: true,
   })
 })
@@ -125,10 +118,9 @@ test("listen", (): void => {
   expect.assertions(1)
 
   const Test = {
-    fn: (): void => {
-      expect(1).toBe(1)
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn", "MyClass.fn"])
     },
-    listeners: ["fn"],
   }
 
   load([], { Test })
@@ -140,13 +132,13 @@ test("listen", (): void => {
 test("async listener", async (): Promise<void> => {
   expect(await MyClass.asyncFn(["id"], true)).toEqual({
     asyncFn: true,
-    id: ["MyClass.asyncFn", "id"],
+    lid: ["MyClass.asyncFn", "id"],
     someArg: true,
   })
 
   expect(await MyClass2.asyncFn2(["id"], true)).toEqual({
     asyncFn2: true,
-    id: ["MyClass2.asyncFn2", "id"],
+    lid: ["MyClass2.asyncFn2", "id"],
     someArg: true,
   })
 })
@@ -158,13 +150,13 @@ test("async listen return", async (): Promise<void> => {
 
   expect(await MyClass.asyncFn([], true)).toEqual({
     asyncFn2: true,
-    id: ["MyClass2.asyncFn2", "MyClass.asyncFn"],
+    lid: ["MyClass2.asyncFn2", "MyClass.asyncFn"],
     someArg: true,
   })
 
   expect(await MyClass2.asyncFn2(["id"], true)).toEqual({
     asyncFn2: true,
-    id: ["MyClass2.asyncFn2", "id"],
+    lid: ["MyClass2.asyncFn2", "id"],
     someArg: true,
   })
 })
@@ -173,11 +165,10 @@ test("async listen", async (): Promise<void> => {
   expect.assertions(1)
 
   const Test = {
-    fn: async (): Promise<void> => {
+    fn: async (lid: string[]): Promise<void> => {
       await delay(1)
-      expect(1).toBe(1)
+      expect(lid).toEqual(["Test.fn", "MyClass.asyncFn"])
     },
-    listeners: ["fn"],
   }
 
   load([], { Test })
@@ -203,19 +194,19 @@ test("listen id", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn"],
+    lid: ["MyClass.fn"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn", "id"],
+    lid: ["MyClass2.fn2", "MyClass.fn", "id"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id", "id2"], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn", "id", "id2"],
+    lid: ["MyClass.fn", "id", "id2"],
     someArg: true,
   })
 })
@@ -225,13 +216,13 @@ test("listen *", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn"],
+    lid: ["MyClass2.fn2", "MyClass.fn"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn", "id"],
+    lid: ["MyClass.fn", "id"],
     someArg: true,
   })
 })
@@ -241,7 +232,7 @@ test("listen **", (): void => {
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn", "id"],
+    lid: ["MyClass2.fn2", "MyClass.fn", "id"],
     someArg: true,
   })
 })
@@ -253,19 +244,19 @@ test("listen * and id", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn"],
+    lid: ["MyClass.fn"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn", "id"],
+    lid: ["MyClass2.fn2", "MyClass.fn", "id"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id", "id2"], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn", "id", "id2"],
+    lid: ["MyClass.fn", "id", "id2"],
     someArg: true,
   })
 })
@@ -277,19 +268,19 @@ test("listen id and *", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn"],
+    lid: ["MyClass.fn"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn", "id"],
+    lid: ["MyClass2.fn2", "MyClass.fn", "id"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id", "id2"], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn", "id", "id2"],
+    lid: ["MyClass.fn", "id", "id2"],
     someArg: true,
   })
 })
@@ -301,19 +292,19 @@ test("listen ** and id", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn"],
+    lid: ["MyClass.fn"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id", "id2"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn", "id", "id2"],
+    lid: ["MyClass2.fn2", "MyClass.fn", "id", "id2"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id", "id2", "id3"], true)).toEqual({
     fn: true,
-    id: ["MyClass.fn", "id", "id2", "id3"],
+    lid: ["MyClass.fn", "id", "id2", "id3"],
     someArg: true,
   })
 })
@@ -325,19 +316,19 @@ test("listen id and **", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn"],
+    lid: ["MyClass2.fn2", "MyClass.fn"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn", "id"],
+    lid: ["MyClass2.fn2", "MyClass.fn", "id"],
     someArg: true,
   })
 
   expect(MyClass.fn(["id", "id2"], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn", "id", "id2"],
+    lid: ["MyClass2.fn2", "MyClass.fn", "id", "id2"],
     someArg: true,
   })
 })
@@ -352,7 +343,7 @@ test("prepend option", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn3: true,
-    id: ["MyClass2.fn3", "MyClass.fn"],
+    lid: ["MyClass2.fn3", "MyClass.fn"],
     someArg: true,
   })
 })
@@ -363,21 +354,19 @@ test("prepend async to sync", async (): Promise<void> => {
   const order = []
 
   const Test = {
-    fn: async (id: string[]): Promise<void> => {
+    fn: async (lid: string[]): Promise<void> => {
       order.push(1)
-      expect(id).toEqual(["Test.fn", "Test2.fn"])
+      expect(lid).toEqual(["Test.fn", "Test2.fn"])
       await delay(1)
       order.push(2)
     },
-    listeners: ["fn"],
   }
 
   const Test2 = {
-    fn: (id: string[]): Promise<void> | void => {
-      expect(id).toEqual(["Test2.fn"])
+    fn: (lid: string[]): Promise<void> | void => {
+      expect(lid).toEqual(["Test2.fn"])
       order.push(3)
     },
-    listeners: ["fn"],
   }
 
   load([], { Test, Test2 })
@@ -395,21 +384,19 @@ test("prepend async to async", async (): Promise<void> => {
   const order = []
 
   const Test = {
-    fn: async (id: string[]): Promise<void> => {
+    fn: async (lid: string[]): Promise<void> => {
       order.push(1)
-      expect(id).toEqual(["Test.fn", "Test2.fn"])
+      expect(lid).toEqual(["Test.fn", "Test2.fn"])
       await delay(1)
       order.push(2)
     },
-    listeners: ["fn"],
   }
 
   const Test2 = {
-    fn: async (id: string[]): Promise<void> => {
-      expect(id).toEqual(["Test2.fn"])
+    fn: async (lid: string[]): Promise<void> => {
+      expect(lid).toEqual(["Test2.fn"])
       order.push(3)
     },
-    listeners: ["fn"],
   }
 
   load([], { Test, Test2 })
@@ -427,22 +414,20 @@ test("prepend async overwrite", async (): Promise<void> => {
   const order = []
 
   const Test = {
-    fn: async (id: string[]): Promise<boolean> => {
+    fn: async (lid: string[]): Promise<boolean> => {
       order.push(1)
-      expect(id).toEqual(["Test.fn", "Test2.fn"])
+      expect(lid).toEqual(["Test.fn", "Test2.fn"])
       await delay(1)
       order.push(2)
       return true
     },
-    listeners: ["fn"],
   }
 
   const Test2 = {
-    fn: async (id: string[]): Promise<void | boolean> => {
-      expect(id).toEqual(["Test2.fn"])
+    fn: async (lid: string[]): Promise<void | boolean> => {
+      expect(lid).toEqual(["Test2.fn"])
       order.push(3)
     },
-    listeners: ["fn"],
   }
 
   load([], { Test, Test2 })
@@ -469,7 +454,7 @@ test("append option", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn3: true,
-    id: ["MyClass2.fn3", "MyClass.fn"],
+    lid: ["MyClass2.fn3", "MyClass.fn"],
     someArg: true,
   })
 })
@@ -487,7 +472,7 @@ test("numeric prepend option", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
-    id: ["MyClass2.fn2", "MyClass.fn"],
+    lid: ["MyClass2.fn2", "MyClass.fn"],
     someArg: true,
   })
 })
@@ -505,7 +490,7 @@ test("numeric append option", (): void => {
 
   expect(MyClass.fn([], true)).toEqual({
     fn3: true,
-    id: ["MyClass2.fn3", "MyClass.fn"],
+    lid: ["MyClass2.fn3", "MyClass.fn"],
     someArg: true,
   })
 })
@@ -516,8 +501,8 @@ test("intercept", (): void => {
   class Test {
     public listeners = ["test"]
 
-    public test(id: string[], arg: string): boolean {
-      expect(id).toEqual(["test.test"])
+    public test(lid: string[], arg: string): boolean {
+      expect(lid).toEqual(["test.test"])
       expect(arg).toBe("hi")
       return true
     }
@@ -529,11 +514,11 @@ test("intercept", (): void => {
     public listeners = ["test"]
 
     public test(
-      id: string[],
+      lid: string[],
       value: boolean,
       arg: string
     ): boolean {
-      expect(id).toEqual(["test2.test", "test.test"])
+      expect(lid).toEqual(["test2.test", "test.test"])
       expect(value).toBe(true)
       expect(arg).toBe("hi")
       return false
@@ -556,8 +541,8 @@ test("intercept cancel", (): void => {
   class Test {
     public listeners = ["test"]
 
-    public test(id: string[], arg: string): boolean {
-      expect(id).toEqual(["test.test"])
+    public test(lid: string[], arg: string): boolean {
+      expect(lid).toEqual(["test.test"])
       expect(arg).toBe("hi")
       return true
     }
@@ -569,11 +554,11 @@ test("intercept cancel", (): void => {
     public listeners = ["test"]
 
     public test(
-      id: string[],
+      lid: string[],
       value: boolean,
       arg: string
     ): boolean {
-      expect(id).toEqual(["test2.test", "test.test"])
+      expect(lid).toEqual(["test2.test", "test.test"])
       expect(value).toBe(true)
       expect(arg).toBe("hi")
       return
@@ -596,8 +581,8 @@ test("peek", (): void => {
   class Test {
     public listeners = ["test"]
 
-    public test(id: string[], arg: string): boolean {
-      expect(id).toEqual(["test.test"])
+    public test(lid: string[], arg: string): boolean {
+      expect(lid).toEqual(["test.test"])
       expect(arg).toBe("hi")
       return true
     }
@@ -609,11 +594,11 @@ test("peek", (): void => {
     public listeners = ["test"]
 
     public test(
-      id: string[],
+      lid: string[],
       value: boolean,
       arg: string
     ): boolean {
-      expect(id).toEqual(["test2.test", "test.test"])
+      expect(lid).toEqual(["test2.test", "test.test"])
       expect(value).toBe(true)
       expect(arg).toBe("hi")
       return false
@@ -636,24 +621,4 @@ test("async return value", async (): Promise<any> => {
   return load([], { test }).then(instances =>
     expect(instances).toBe(instance.instances)
   )
-})
-
-test("async listenerLoad callback", async (): Promise<
-  any
-> => {
-  expect.assertions(1)
-
-  const test = {
-    listenerLoad: async (id: string[]): Promise<any> => {
-      return delay(1).then((): void => {
-        expect(id).toEqual([
-          "test.listenerLoad",
-          "listener.listenerLoad",
-          "listener.load",
-        ])
-      })
-    },
-  }
-
-  return load([], { test })
 })

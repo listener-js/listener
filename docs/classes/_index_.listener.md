@@ -15,11 +15,9 @@
 ### Properties
 
 * [bindings](_index_.listener.md#private-bindings)
-* [callbacks](_index_.listener.md#callbacks)
 * [idRegex](_index_.listener.md#idregex)
 * [instances](_index_.listener.md#instances)
 * [listenerFns](_index_.listener.md#private-listenerfns)
-* [listeners](_index_.listener.md#listeners)
 * [options](_index_.listener.md#options)
 * [originalFns](_index_.listener.md#private-originalfns)
 
@@ -28,18 +26,16 @@
 * [addList](_index_.listener.md#private-addlist)
 * [bind](_index_.listener.md#bind)
 * [buildList](_index_.listener.md#private-buildlist)
-* [callbackListenOptions](_index_.listener.md#private-callbacklistenoptions)
 * [emit](_index_.listener.md#private-emit)
+* [extractListeners](_index_.listener.md#private-extractlisteners)
 * [listSort](_index_.listener.md#private-listsort)
-* [listenerLoad](_index_.listener.md#private-listenerload)
-* [listenerReset](_index_.listener.md#private-listenerreset)
 * [listenerWrapper](_index_.listener.md#private-listenerwrapper)
 * [load](_index_.listener.md#load)
+* [loadInstance](_index_.listener.md#private-loadinstance)
 * [log](_index_.listener.md#private-log)
 * [optsToIndex](_index_.listener.md#private-optstoindex)
 * [parseId](_index_.listener.md#parseid)
 * [reset](_index_.listener.md#reset)
-* [wrapListener](_index_.listener.md#private-wraplistener)
 
 ## Constructors
 
@@ -47,7 +43,7 @@
 
 \+ **new Listener**(): *[Listener](_index_.listener.md)*
 
-Defined in index.ts:28
+Defined in index.ts:19
 
 **Returns:** *[Listener](_index_.listener.md)*
 
@@ -57,15 +53,7 @@ Defined in index.ts:28
 
 • **bindings**: *[ListenerBindings](../modules/_types_.md#listenerbindings)*
 
-Defined in index.ts:25
-
-___
-
-###  callbacks
-
-• **callbacks**: *string[]* =  ["listenerLoad", "listenerReset"]
-
-Defined in index.ts:12
+Defined in index.ts:16
 
 ___
 
@@ -73,7 +61,7 @@ ___
 
 • **idRegex**: *RegExp* =  /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
 
-Defined in index.ts:21
+Defined in index.ts:12
 
 ___
 
@@ -81,7 +69,7 @@ ___
 
 • **instances**: *[ListenerInstances](../modules/_types_.md#listenerinstances)*
 
-Defined in index.ts:22
+Defined in index.ts:13
 
 ___
 
@@ -89,20 +77,7 @@ ___
 
 • **listenerFns**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:26
-
-___
-
-###  listeners
-
-• **listeners**: *string[]* =  [
-    "bind",
-    "load",
-    "reset",
-    ...this.callbacks,
-  ]
-
-Defined in index.ts:14
+Defined in index.ts:17
 
 ___
 
@@ -110,7 +85,7 @@ ___
 
 • **options**: *[ListenerBindingOptions](../modules/_types_.md#listenerbindingoptions)*
 
-Defined in index.ts:23
+Defined in index.ts:14
 
 ___
 
@@ -118,7 +93,7 @@ ___
 
 • **originalFns**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:28
+Defined in index.ts:19
 
 ## Methods
 
@@ -126,7 +101,7 @@ Defined in index.ts:28
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:179
+Defined in index.ts:122
 
 **Parameters:**
 
@@ -142,15 +117,15 @@ ___
 
 ###  bind
 
-▸ **bind**(`id`: string[], `matchId`: string[], `targetId`: string, `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
+▸ **bind**(`lid`: string[], `matchId`: string[], `targetId`: string, `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
 
-Defined in index.ts:34
+Defined in index.ts:25
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`id` | string[] |
+`lid` | string[] |
 `matchId` | string[] |
 `targetId` | string |
 `options?` | [ListenerOptions](../interfaces/_types_.listeneroptions.md) |
@@ -163,7 +138,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:196
+Defined in index.ts:139
 
 **Parameters:**
 
@@ -176,28 +151,11 @@ Name | Type |
 
 ___
 
-### `Private` callbackListenOptions
-
-▸ **callbackListenOptions**(`listenerId`: string, `options?`: Record‹string, any›): *Record‹string, any›*
-
-Defined in index.ts:242
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`listenerId` | string |
-`options?` | Record‹string, any› |
-
-**Returns:** *Record‹string, any›*
-
-___
-
 ### `Private` emit
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:262
+Defined in index.ts:185
 
 **Parameters:**
 
@@ -212,11 +170,27 @@ Name | Type |
 
 ___
 
+### `Private` extractListeners
+
+▸ **extractListeners**(`instance`: any): *string[]*
+
+Defined in index.ts:298
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`instance` | any |
+
+**Returns:** *string[]*
+
+___
+
 ### `Private` listSort
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:410
+Defined in index.ts:351
 
 **Parameters:**
 
@@ -229,52 +203,11 @@ Name | Type |
 
 ___
 
-### `Private` listenerLoad
-
-▸ **listenerLoad**(`id`: string[], `instanceId`: string, `instance`: any, `instances`: Record‹string, any›, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
-
-Defined in index.ts:375
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`id` | string[] |
-`instanceId` | string |
-`instance` | any |
-`instances` | Record‹string, any› |
-`listener` | [Listener](_index_.listener.md) |
-`options?` | Record‹string, any› |
-
-**Returns:** *void | Promise‹any›*
-
-___
-
-### `Private` listenerReset
-
-▸ **listenerReset**(`id`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void*
-
-Defined in index.ts:388
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`id` | string[] |
-`instanceId` | string |
-`instance` | any |
-`listener` | [Listener](_index_.listener.md) |
-`options?` | Record‹string, any› |
-
-**Returns:** *void*
-
-___
-
 ### `Private` listenerWrapper
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:400
+Defined in index.ts:341
 
 **Parameters:**
 
@@ -289,15 +222,15 @@ ___
 
 ###  load
 
-▸ **load**(`id`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›*
+▸ **load**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›*
 
-Defined in index.ts:54
+Defined in index.ts:45
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`id` | string[] |
+`lid` | string[] |
 `instances` | Record‹string, any› |
 `options?` | Record‹string, any› |
 
@@ -305,11 +238,28 @@ Name | Type |
 
 ___
 
+### `Private` loadInstance
+
+▸ **loadInstance**(`instanceId`: string, `instance`: any): *void | Promise‹any›*
+
+Defined in index.ts:315
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`instanceId` | string |
+`instance` | any |
+
+**Returns:** *void | Promise‹any›*
+
+___
+
 ### `Private` log
 
 ▸ **log**(): *void*
 
-Defined in index.ts:27
+Defined in index.ts:18
 
 **Returns:** *void*
 
@@ -319,7 +269,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:420
+Defined in index.ts:361
 
 **Parameters:**
 
@@ -335,7 +285,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:123
+Defined in index.ts:75
 
 **Parameters:**
 
@@ -349,31 +299,14 @@ ___
 
 ###  reset
 
-▸ **reset**(`id`: string[]): *void*
+▸ **reset**(`lid`: string[]): *void*
 
-Defined in index.ts:137
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`id` | string[] |
-
-**Returns:** *void*
-
-___
-
-### `Private` wrapListener
-
-▸ **wrapListener**(`instanceId`: string, `instance`: any): *void*
-
-Defined in index.ts:441
+Defined in index.ts:89
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`instanceId` | string |
-`instance` | any |
+`lid` | string[] |
 
 **Returns:** *void*

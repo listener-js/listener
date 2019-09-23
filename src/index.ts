@@ -9,15 +9,6 @@ import {
 } from "./types"
 
 export class Listener {
-  public callbacks = ["listenerLoad", "listenerReset"]
-
-  public listeners = [
-    "bind",
-    "load",
-    "reset",
-    ...this.callbacks,
-  ]
-
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
   public options: ListenerBindingOptions = {}
@@ -32,7 +23,7 @@ export class Listener {
   }
 
   public bind(
-    id: string[],
+    lid: string[],
     matchId: string[],
     targetId: string,
     options?: ListenerOptions
@@ -52,7 +43,7 @@ export class Listener {
   }
 
   public load(
-    id: string[],
+    lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Promise<any> {
@@ -61,57 +52,18 @@ export class Listener {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
-      if (instance.listenerInit) {
-        const out = instance.listenerInit(
-          [`${instanceId}.listenerInit`, ...id],
-          instanceId,
-          instances[instanceId],
-          instances,
-          this,
-          options
-        )
-
-        if (out && out.then) {
-          promises = promises.concat(out)
-        }
-      }
-    }
-
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
-
       if (instance.then) {
         continue
       }
 
-      this.wrapListener(instanceId, instance)
-
-      if (instanceId === "log") {
-        this.log = instance.logEvent
-      }
-
-      for (const listenerId of this.callbacks) {
-        this.bind(
-          id,
-          [`listener.${listenerId}`, "**"],
-          `${instanceId}.${listenerId}`,
-          this.callbackListenOptions(listenerId, options)
-        )
-      }
-    }
-
-    for (const instanceId in instances) {
-      const out = this.listenerLoad(
-        id,
-        instanceId,
-        instances[instanceId],
-        instances,
-        this,
-        options
-      )
+      const out = this.loadInstance(instanceId, instance)
 
       if (out && out.then) {
         promises = promises.concat(out)
+      }
+
+      if (instanceId === "log") {
+        this.log = instance.logEvent
       }
     }
 
@@ -134,16 +86,7 @@ export class Listener {
     return [joinInstanceId, fnId]
   }
 
-  public reset(id: string[]): void {
-    for (const instanceId in this.instances) {
-      this.listenerReset(
-        id,
-        instanceId,
-        this.instances[instanceId],
-        this
-      )
-    }
-
+  public reset(lid: string[]): void {
     this.log = (): void => {}
 
     for (const key in this.originalFns) {
@@ -173,7 +116,7 @@ export class Listener {
       }
     }
 
-    this.wrapListener("listener", this)
+    this.loadInstance("listener", this)
   }
 
   private addList(
@@ -237,26 +180,6 @@ export class Listener {
     list = list.sort(this.listSort.bind(this))
 
     return list
-  }
-
-  private callbackListenOptions(
-    listenerId: string,
-    options?: Record<string, any>
-  ): Record<string, any> {
-    const append = options && options[`${listenerId}Append`]
-
-    const prepend =
-      options && options[`${listenerId}Prepend`]
-
-    if (listenerId === "listenerReset") {
-      return {
-        append: append,
-        prepend: prepend || 1000,
-        return: true,
-      }
-    }
-
-    return { append: append || 1000, prepend, return: true }
   }
 
   private emit(
@@ -372,29 +295,47 @@ export class Listener {
       : promise || out
   }
 
-  private listenerLoad(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    id: string[],
-    instanceId: string,
-    instance: any,
-    instances: Record<string, any>,
-    listener: Listener,
-    options?: Record<string, any>
-    /* eslint-enable @typescript-eslint/no-unused-vars */
-  ): void | Promise<any> {
-    return
+  private extractListeners(instance: any): string[] {
+    let listeners = []
+
+    for (const name in instance) {
+      const fn = instance[name]
+
+      if (
+        typeof fn === "function" &&
+        fn.toString().match(/(\(|^)lid[\),\s]/)
+      ) {
+        listeners = listeners.concat(name)
+      }
+    }
+
+    return listeners
   }
 
-  private listenerReset(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    id: string[],
+  private loadInstance(
     instanceId: string,
-    instance: any,
-    listener: Listener,
-    options?: Record<string, any>
-    /* eslint-enable @typescript-eslint/no-unused-vars */
-  ): void {
-    return
+    instance: any
+  ): void | Promise<any> {
+    const listeners = this.extractListeners(instance)
+
+    this.instances[instanceId] = instance
+
+    for (const fnName of listeners) {
+      const fnId = `${instanceId}.${fnName}`
+
+      if (!instance[fnName] || this.originalFns[fnId]) {
+        continue
+      }
+
+      this.originalFns[fnId] = instance[fnName]
+
+      instance[fnName] = this.listenerWrapper(
+        fnId,
+        instanceId
+      )
+
+      this.listenerFns[fnId] = instance[fnName]
+    }
   }
 
   private listenerWrapper(
@@ -436,34 +377,6 @@ export class Listener {
       }
     }
     return 1
-  }
-
-  private wrapListener(
-    instanceId: string,
-    instance: any
-  ): void {
-    const listeners = (instance.listeners || []).concat(
-      this.callbacks
-    )
-
-    this.instances[instanceId] = instance
-
-    for (const fnName of listeners) {
-      const fnId = `${instanceId}.${fnName}`
-
-      if (!instance[fnName] || this.originalFns[fnId]) {
-        continue
-      }
-
-      this.originalFns[fnId] = instance[fnName]
-
-      instance[fnName] = this.listenerWrapper(
-        fnId,
-        instanceId
-      )
-
-      this.listenerFns[fnId] = instance[fnName]
-    }
   }
 }
 
