@@ -12,8 +12,8 @@ export class Listener {
   public callbacks = ["listenerLoad", "listenerReset"]
 
   public listeners = [
-    "listen",
-    "listener",
+    "bind",
+    "load",
     "reset",
     ...this.callbacks,
   ]
@@ -31,7 +31,7 @@ export class Listener {
     this.reset(["listener.constructor"])
   }
 
-  public listen(
+  public bind(
     id: string[],
     matchId: string[],
     targetId: string,
@@ -51,7 +51,7 @@ export class Listener {
     }
   }
 
-  public listener(
+  public load(
     id: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
@@ -63,7 +63,7 @@ export class Listener {
 
       if (instance.listenerInit) {
         const out = instance.listenerInit(
-          id,
+          [`${instanceId}.listenerInit`, ...id],
           instanceId,
           instances[instanceId],
           instances,
@@ -91,7 +91,7 @@ export class Listener {
       }
 
       for (const listenerId of this.callbacks) {
-        this.listen(
+        this.bind(
           id,
           [`listener.${listenerId}`, "**"],
           `${instanceId}.${listenerId}`,
@@ -468,14 +468,15 @@ export class Listener {
 }
 
 export const instance = new Listener()
+export default instance
 
 // eslint-disable-next-line max-len
-export const listen: typeof instance.listen = instance.listen.bind(
+export const bind: typeof instance.bind = instance.bind.bind(
   instance
 )
 
 // eslint-disable-next-line max-len
-export const listener: typeof instance.listener = instance.listener.bind(
+export const load: typeof instance.load = instance.load.bind(
   instance
 )
 // eslint-disable-next-line max-len

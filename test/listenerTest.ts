@@ -1,12 +1,6 @@
-import {
-  instance,
-  Listener,
-  listener,
-  listen,
-  reset,
-} from "../"
+import { bind, instance, Listener, load, reset } from "../"
 
-import { log } from "@listener-js/log"
+// import { log } from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
   return new Promise((resolve): void => {
@@ -67,13 +61,13 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset([])
-  listener([], { log })
-  listener([], { MyClass, MyClass2 })
+  // load([], { log })
+  load([], { MyClass, MyClass2 })
 })
 
 test("defined", (): void => {
-  expect(listener).not.toBeUndefined()
-  expect(listen).not.toBeUndefined()
+  expect(bind).not.toBeUndefined()
+  expect(load).not.toBeUndefined()
 })
 
 test("listener", (): void => {
@@ -101,16 +95,16 @@ test("listener no arg", (): void => {
     listeners: ["fn"],
   }
 
-  listener([], { test })
+  load([], { test })
   expect(test.fn()).toBe(1)
 })
 
 test("listener bad arg", (): void => {
-  listener([], { hi: {} })
+  load([], { hi: {} })
 })
 
 test("listen return", (): void => {
-  listen([], ["MyClass.fn"], "MyClass2.fn2", {
+  bind([], ["MyClass.fn"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -137,8 +131,8 @@ test("listen", (): void => {
     listeners: ["fn"],
   }
 
-  listener([], { Test })
-  listen([], ["MyClass.fn"], "Test.fn")
+  load([], { Test })
+  bind([], ["MyClass.fn"], "Test.fn")
 
   MyClass.fn([], true)
 })
@@ -158,7 +152,7 @@ test("async listener", async (): Promise<void> => {
 })
 
 test("async listen return", async (): Promise<void> => {
-  listen([], ["MyClass.asyncFn"], "MyClass2.asyncFn2", {
+  bind([], ["MyClass.asyncFn"], "MyClass2.asyncFn2", {
     return: true,
   })
 
@@ -186,8 +180,8 @@ test("async listen", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener([], { Test })
-  listen([], ["MyClass.asyncFn"], "Test.fn")
+  load([], { Test })
+  bind([], ["MyClass.asyncFn"], "Test.fn")
 
   await MyClass.asyncFn([], true)
 })
@@ -195,7 +189,7 @@ test("async listen", async (): Promise<void> => {
 test("async listen null return", async (): Promise<
   void
 > => {
-  listen([], ["MyClass.asyncFn"], "MyClass2.asyncFn3", {
+  bind([], ["MyClass.asyncFn"], "MyClass2.asyncFn3", {
     return: true,
   })
 
@@ -203,7 +197,7 @@ test("async listen null return", async (): Promise<
 })
 
 test("listen id", (): void => {
-  listen([], ["MyClass.fn", "id"], "MyClass2.fn2", {
+  bind([], ["MyClass.fn", "id"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -227,7 +221,7 @@ test("listen id", (): void => {
 })
 
 test("listen *", (): void => {
-  listen([], ["*"], "MyClass2.fn2", { return: true })
+  bind([], ["*"], "MyClass2.fn2", { return: true })
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
@@ -243,7 +237,7 @@ test("listen *", (): void => {
 })
 
 test("listen **", (): void => {
-  listen([], ["**"], "MyClass2.fn2", { return: true })
+  bind([], ["**"], "MyClass2.fn2", { return: true })
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn2: true,
@@ -253,7 +247,7 @@ test("listen **", (): void => {
 })
 
 test("listen * and id", (): void => {
-  listen([], ["*", "id"], "MyClass2.fn2", {
+  bind([], ["*", "id"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -277,7 +271,7 @@ test("listen * and id", (): void => {
 })
 
 test("listen id and *", (): void => {
-  listen([], ["MyClass.fn", "*"], "MyClass2.fn2", {
+  bind([], ["MyClass.fn", "*"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -301,7 +295,7 @@ test("listen id and *", (): void => {
 })
 
 test("listen ** and id", (): void => {
-  listen([], ["**", "id2"], "MyClass2.fn2", {
+  bind([], ["**", "id2"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -325,7 +319,7 @@ test("listen ** and id", (): void => {
 })
 
 test("listen id and **", (): void => {
-  listen([], ["MyClass.fn", "**"], "MyClass2.fn2", {
+  bind([], ["MyClass.fn", "**"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -349,9 +343,9 @@ test("listen id and **", (): void => {
 })
 
 test("prepend option", (): void => {
-  listen([], ["MyClass.fn"], "MyClass2.fn2")
+  bind([], ["MyClass.fn"], "MyClass2.fn2")
 
-  listen([], ["MyClass.fn"], "MyClass2.fn3", {
+  bind([], ["MyClass.fn"], "MyClass2.fn3", {
     prepend: true,
     return: true,
   })
@@ -386,9 +380,9 @@ test("prepend async to sync", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener([], { Test, Test2 })
+  load([], { Test, Test2 })
 
-  listen([], ["Test2.fn"], "Test.fn", { prepend: true })
+  bind([], ["Test2.fn"], "Test.fn", { prepend: true })
 
   await Test2.fn([])
 
@@ -418,9 +412,9 @@ test("prepend async to async", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener([], { Test, Test2 })
+  load([], { Test, Test2 })
 
-  listen([], ["Test2.fn"], "Test.fn", { prepend: true })
+  bind([], ["Test2.fn"], "Test.fn", { prepend: true })
 
   await Test2.fn([])
 
@@ -451,9 +445,9 @@ test("prepend async overwrite", async (): Promise<void> => {
     listeners: ["fn"],
   }
 
-  listener([], { Test, Test2 })
+  load([], { Test, Test2 })
 
-  listen([], ["Test2.fn"], "Test.fn", {
+  bind([], ["Test2.fn"], "Test.fn", {
     prepend: true,
     return: true,
   })
@@ -464,12 +458,12 @@ test("prepend async overwrite", async (): Promise<void> => {
 })
 
 test("append option", (): void => {
-  listen([], ["MyClass.fn"], "MyClass2.fn3", {
+  bind([], ["MyClass.fn"], "MyClass2.fn3", {
     append: 2,
     return: true,
   })
 
-  listen([], ["MyClass.fn"], "MyClass2.fn2", {
+  bind([], ["MyClass.fn"], "MyClass2.fn2", {
     return: true,
   })
 
@@ -481,12 +475,12 @@ test("append option", (): void => {
 })
 
 test("numeric prepend option", (): void => {
-  listen([], ["MyClass.fn"], "MyClass2.fn2", {
+  bind([], ["MyClass.fn"], "MyClass2.fn2", {
     prepend: 1,
     return: true,
   })
 
-  listen([], ["MyClass.fn"], "MyClass2.fn3", {
+  bind([], ["MyClass.fn"], "MyClass2.fn3", {
     prepend: 2,
     return: true,
   })
@@ -499,12 +493,12 @@ test("numeric prepend option", (): void => {
 })
 
 test("numeric append option", (): void => {
-  listen([], ["MyClass.fn"], "MyClass2.fn3", {
+  bind([], ["MyClass.fn"], "MyClass2.fn3", {
     append: 2,
     return: true,
   })
 
-  listen([], ["MyClass.fn"], "MyClass2.fn2", {
+  bind([], ["MyClass.fn"], "MyClass2.fn2", {
     append: 1,
     return: true,
   })
@@ -548,8 +542,8 @@ test("intercept", (): void => {
 
   const test2 = new Test2()
 
-  listener([], { test, test2 })
-  listen([], ["test.test"], "test2.test", {
+  load([], { test, test2 })
+  bind([], ["test.test"], "test2.test", {
     intercept: true,
   })
 
@@ -588,8 +582,8 @@ test("intercept cancel", (): void => {
 
   const test2 = new Test2()
 
-  listener([], { test, test2 })
-  listen([], ["test.test"], "test2.test", {
+  load([], { test, test2 })
+  bind([], ["test.test"], "test2.test", {
     intercept: true,
   })
 
@@ -628,8 +622,8 @@ test("peek", (): void => {
 
   const test2 = new Test2()
 
-  listener([], { test, test2 })
-  listen([], ["test.test"], "test2.test", { peek: true })
+  load([], { test, test2 })
+  bind([], ["test.test"], "test2.test", { peek: true })
 
   expect(test.test([], "hi")).toBe(true)
 })
@@ -639,7 +633,7 @@ test("async return value", async (): Promise<any> => {
 
   const test = {}
 
-  return listener([], { test }).then(instances =>
+  return load([], { test }).then(instances =>
     expect(instances).toBe(instance.instances)
   )
 })
@@ -655,11 +649,11 @@ test("async listenerLoad callback", async (): Promise<
         expect(id).toEqual([
           "test.listenerLoad",
           "listener.listenerLoad",
-          "listener.listener",
+          "listener.load",
         ])
       })
     },
   }
 
-  return listener([], { test })
+  return load([], { test })
 })

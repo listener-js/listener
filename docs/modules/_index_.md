@@ -10,12 +10,22 @@
 
 ### Variables
 
+* [bind](_index_.md#const-bind)
 * [instance](_index_.md#const-instance)
-* [listen](_index_.md#const-listen)
-* [listener](_index_.md#const-listener)
+* [load](_index_.md#const-load)
 * [reset](_index_.md#const-reset)
 
 ## Variables
+
+### `Const` bind
+
+• **bind**: *[bind](../classes/_index_.listener.md#bind)* =  instance.bind.bind(
+  instance
+)
+
+Defined in index.ts:474
+
+___
 
 ### `Const` instance
 
@@ -25,23 +35,13 @@ Defined in index.ts:470
 
 ___
 
-### `Const` listen
+### `Const` load
 
-• **listen**: *[listen](../classes/_index_.listener.md#listen)* =  instance.listen.bind(
+• **load**: *[load](../classes/_index_.listener.md#load)* =  instance.load.bind(
   instance
 )
 
-Defined in index.ts:473
-
-___
-
-### `Const` listener
-
-• **listener**: *[listener](../classes/_index_.listener.md#listener)* =  instance.listener.bind(
-  instance
-)
-
-Defined in index.ts:478
+Defined in index.ts:479
 
 ___
 
@@ -51,4 +51,4 @@ ___
   instance
 )
 
-Defined in index.ts:482
+Defined in index.ts:483

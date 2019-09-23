@@ -26,15 +26,15 @@
 ### Methods
 
 * [addList](_index_.listener.md#private-addlist)
+* [bind](_index_.listener.md#bind)
 * [buildList](_index_.listener.md#private-buildlist)
 * [callbackListenOptions](_index_.listener.md#private-callbacklistenoptions)
 * [emit](_index_.listener.md#private-emit)
 * [listSort](_index_.listener.md#private-listsort)
-* [listen](_index_.listener.md#listen)
-* [listener](_index_.listener.md#listener)
 * [listenerLoad](_index_.listener.md#private-listenerload)
 * [listenerReset](_index_.listener.md#private-listenerreset)
 * [listenerWrapper](_index_.listener.md#private-listenerwrapper)
+* [load](_index_.listener.md#load)
 * [log](_index_.listener.md#private-log)
 * [optsToIndex](_index_.listener.md#private-optstoindex)
 * [parseId](_index_.listener.md#parseid)
@@ -96,8 +96,8 @@ ___
 ###  listeners
 
 • **listeners**: *string[]* =  [
-    "listen",
-    "listener",
+    "bind",
+    "load",
     "reset",
     ...this.callbacks,
   ]
@@ -137,6 +137,25 @@ Name | Type |
 `key` | string |
 
 **Returns:** *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
+
+___
+
+###  bind
+
+▸ **bind**(`id`: string[], `matchId`: string[], `targetId`: string, `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
+
+Defined in index.ts:34
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`id` | string[] |
+`matchId` | string[] |
+`targetId` | string |
+`options?` | [ListenerOptions](../interfaces/_types_.listeneroptions.md) |
+
+**Returns:** *void*
 
 ___
 
@@ -210,43 +229,6 @@ Name | Type |
 
 ___
 
-###  listen
-
-▸ **listen**(`id`: string[], `matchId`: string[], `targetId`: string, `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
-
-Defined in index.ts:34
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`id` | string[] |
-`matchId` | string[] |
-`targetId` | string |
-`options?` | [ListenerOptions](../interfaces/_types_.listeneroptions.md) |
-
-**Returns:** *void*
-
-___
-
-###  listener
-
-▸ **listener**(`id`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›*
-
-Defined in index.ts:54
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`id` | string[] |
-`instances` | Record‹string, any› |
-`options?` | Record‹string, any› |
-
-**Returns:** *Promise‹any›*
-
-___
-
 ### `Private` listenerLoad
 
 ▸ **listenerLoad**(`id`: string[], `instanceId`: string, `instance`: any, `instances`: Record‹string, any›, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
@@ -302,6 +284,24 @@ Name | Type |
 `instanceId` | string |
 
 **Returns:** *Function*
+
+___
+
+###  load
+
+▸ **load**(`id`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›*
+
+Defined in index.ts:54
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`id` | string[] |
+`instances` | Record‹string, any› |
+`options?` | Record‹string, any› |
+
+**Returns:** *Promise‹any›*
 
 ___
 
