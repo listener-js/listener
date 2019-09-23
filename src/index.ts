@@ -9,6 +9,7 @@ import {
 } from "./types"
 
 export class Listener {
+  public fnRegex = /^(\(|function \w*\()?lid[\),\s]/
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
   public instances: ListenerInstances = {}
   public options: ListenerBindingOptions = {}
@@ -303,7 +304,7 @@ export class Listener {
 
       if (
         typeof fn === "function" &&
-        fn.toString().match(/(\(|^)lid[\),\s]/)
+        fn.toString().match(this.fnRegex)
       ) {
         listeners = listeners.concat(name)
       }
