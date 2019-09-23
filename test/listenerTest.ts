@@ -136,7 +136,7 @@ test("listenerBindings", (): void => {
     fn: (lid: string[]): void => {
       expect(lid).toEqual(["Test.fn", "MyClass.fn"])
     },
-    listenerBindings: [[["MyClass.fn"], "Test.fn"]],
+    listenerBindings: [[["MyClass.fn"], "fn"]],
   }
 
   load([], { Test })
@@ -155,9 +155,7 @@ test("listenerBindings with listener.load", (): void => {
         "listener.load",
       ])
     },
-    listenerBindings: [
-      [["listener.load", "**"], "Test.fn"],
-    ],
+    listenerBindings: [[["listener.load", "**"], "fn"]],
   }
 
   load([], { Test })

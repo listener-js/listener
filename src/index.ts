@@ -62,7 +62,12 @@ export class Listener {
             targetId,
             options,
           ] of instance.listenerBindings) {
-            this.bind(lid, matchId, targetId, options)
+            this.bind(
+              lid,
+              matchId,
+              `${instanceId}.${targetId}`,
+              options
+            )
 
             rerun =
               rerun || matchId.indexOf("listener.load") > -1
