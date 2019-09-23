@@ -60,6 +60,7 @@ export class Listener {
           for (const [
             matchId,
             targetId,
+            options,
           ] of instance.listenerBindings) {
             this.bind(lid, matchId, targetId, options)
 

@@ -110,7 +110,7 @@ Defined in index.ts:20
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:158
+Defined in index.ts:159
 
 **Parameters:**
 
@@ -147,7 +147,7 @@ ___
 
 ▸ **buildList**(`fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:175
+Defined in index.ts:176
 
 **Parameters:**
 
@@ -164,7 +164,7 @@ ___
 
 ▸ **emit**(`fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:221
+Defined in index.ts:222
 
 **Parameters:**
 
@@ -183,7 +183,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *string[]*
 
-Defined in index.ts:334
+Defined in index.ts:335
 
 **Parameters:**
 
@@ -199,7 +199,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:388
+Defined in index.ts:389
 
 **Parameters:**
 
@@ -216,7 +216,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:378
+Defined in index.ts:379
 
 **Parameters:**
 
@@ -251,7 +251,7 @@ ___
 
 ▸ **loadInstance**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:351
+Defined in index.ts:352
 
 **Parameters:**
 
@@ -279,7 +279,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:398
+Defined in index.ts:399
 
 **Parameters:**
 
@@ -295,7 +295,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:107
+Defined in index.ts:108
 
 **Parameters:**
 
@@ -311,7 +311,7 @@ ___
 
 ▸ **reset**(`lid`: string[]): *void*
 
-Defined in index.ts:121
+Defined in index.ts:122
 
 **Parameters:**
 
