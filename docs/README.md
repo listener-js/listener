@@ -4,6 +4,6 @@
 
 # listener
 
-User-centric dynamic library loader 🔨✨
+Library loader and event framework 🔨✨
 
 ### <https://listener.events>

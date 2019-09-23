@@ -1,12 +1,12 @@
 {
   "name": "@listener-js/listener",
   "version": "2.5.2",
-  "description": "Type-friendly awesome event emitter",
+  "description": "Library loader and event framework",
   "keywords": [
-    "typed",
-    "typescript",
+    "library",
+    "loader",
     "event",
-    "emitter"
+    "framework"
   ],
   "author": "Listener <emit@listener.events>",
   "main": "dist/index.js",
