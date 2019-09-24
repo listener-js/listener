@@ -10,7 +10,7 @@ import {
 
 export class Listener {
   public fnRegex = /^(\(|function \w*\()?lid[\),\s]/
-  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)|([^\.]+)/i
+  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
   public instances: ListenerInstances = {}
   public options: ListenerBindingOptions = {}
 
@@ -47,67 +47,41 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): Promise<any> {
-    let promises = []
+  ): Record<string, any> | Promise<Record<string, any>> {
+    const rerun = this.loadBindings(lid, instances, options)
 
-    if (!options || options.bind !== false) {
-      let rerun
-
-      for (const instanceId in instances) {
-        const instance = instances[instanceId]
-
-        if (instance.listenerBindings) {
-          for (const [
-            matchId,
-            targetId,
-            options,
-          ] of instance.listenerBindings) {
-            this.bind(
-              lid,
-              matchId,
-              `${instanceId}.${targetId}`,
-              options
-            )
-
-            rerun =
-              rerun || matchId.indexOf("listener.load") > -1
-          }
-        }
-      }
-
-      if (rerun) {
-        return this.load(lid, instances, {
-          ...options,
-          bind: false,
-        })
-      }
+    if (rerun) {
+      return this.load(lid, instances, {
+        ...options,
+        bind: false,
+      })
     }
 
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
+    const promises = this.loadInstances(lid, instances)
 
-      if (instance.then) {
-        continue
-      }
-
-      const out = this.loadInstance(
-        [instanceId, ...lid],
-        instanceId,
-        instance
+    if (promises.length) {
+      return Promise.all(promises)
+        .then(() =>
+          Promise.all(
+            this.instancesLoaded(lid, instances, options)
+          )
+        )
+        .then((): Record<string, any> => this.instances)
+    } else {
+      const promises2 = this.instancesLoaded(
+        lid,
+        instances,
+        options
       )
 
-      if (out && out.then) {
-        promises = promises.concat(out)
-      }
-
-      if (instanceId === "log") {
-        this.log = instance.logEvent
+      if (promises2.length) {
+        return Promise.all(promises2).then(
+          (): Record<string, any> => this.instances
+        )
+      } else {
+        return this.instances
       }
     }
-
-    return Promise.all(promises).then(
-      (): Record<string, any> => this.instances
-    )
   }
 
   public parseId(id: string): [string, string] {
@@ -352,6 +326,122 @@ export class Listener {
     }
 
     return listeners
+  }
+
+  private instanceLoaded(
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    lid: string[],
+    instanceId: string,
+    instance: any,
+    instances: Record<string, any>,
+    listener: Listener,
+    options?: Record<string, any>
+    /* eslint-enable @typescript-eslint/no-unused-vars */
+  ): void | Promise<any> {
+    return
+  }
+
+  private instancesLoaded(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): Promise<Record<string, any>>[] {
+    let promises = []
+
+    for (const instanceId in instances) {
+      const out = this.instanceLoaded(
+        lid,
+        instanceId,
+        instances[instanceId],
+        instances,
+        this,
+        options
+      )
+
+      if (out && out.then) {
+        promises = promises.concat(out)
+      }
+    }
+
+    return promises
+  }
+
+  private loadBindings(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | boolean {
+    if (options && options.bind === false) {
+      return
+    }
+
+    let rerun
+
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (instance.listenerBindings) {
+        for (const [
+          matchId,
+          targetId,
+          options,
+        ] of instance.listenerBindings) {
+          const match =
+            typeof matchId === "string"
+              ? [matchId, "**"]
+              : matchId
+
+          this.bind(
+            lid,
+            match.map((id: string): string =>
+              id.match(this.idRegex)
+                ? id
+                : `${instanceId}.${id}`
+            ),
+            targetId.match(this.idRegex)
+              ? targetId
+              : `${instanceId}.${targetId}`,
+            options
+          )
+
+          rerun =
+            rerun || matchId.indexOf("listener.load") > -1
+        }
+      }
+    }
+
+    return rerun
+  }
+
+  private loadInstances(
+    lid: string[],
+    instances: Record<string, any>
+  ): Promise<Record<string, any>>[] {
+    let promises = []
+
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      if (instance.then) {
+        continue
+      }
+
+      const out = this.loadInstance(
+        [instanceId, ...lid],
+        instanceId,
+        instance
+      )
+
+      if (out && out.then) {
+        promises = promises.concat(out)
+      }
+
+      if (instanceId === "log") {
+        this.log = instance.logEvent
+      }
+    }
+
+    return promises
   }
 
   private loadInstance(

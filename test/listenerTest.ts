@@ -64,7 +64,7 @@ test("defined", (): void => {
   expect(load).not.toBeUndefined()
 })
 
-test("listener", (): void => {
+test("load", (): void => {
   expect(MyClass.fn(["id"], true)).toEqual({
     fn: true,
     lid: ["MyClass.fn", "id"],
@@ -78,7 +78,7 @@ test("listener", (): void => {
   })
 })
 
-test("listener no arg", (): void => {
+test("load no arg", (): void => {
   expect.assertions(2)
 
   const test = {
@@ -92,11 +92,11 @@ test("listener no arg", (): void => {
   expect(test.fn([])).toBe(1)
 })
 
-test("listener bad arg", (): void => {
+test("load bad arg", (): void => {
   load([], { hi: {} })
 })
 
-test("listen return", (): void => {
+test("bind return", (): void => {
   bind([], ["MyClass.fn"], "MyClass2.fn2", {
     return: true,
   })
@@ -114,7 +114,7 @@ test("listen return", (): void => {
   })
 })
 
-test("listen", (): void => {
+test("bind", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -142,6 +142,24 @@ test("listenerBindings", (): void => {
   load([], { Test })
 
   MyClass.fn([], true)
+})
+
+test("listenerBindings simple self", (): void => {
+  expect.assertions(2)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn"])
+    },
+    fn2: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn2", "Test.fn"])
+    },
+    listenerBindings: [["fn", "fn2"]],
+  }
+
+  load([], { Test })
+
+  Test.fn([])
 })
 
 test("listenerBindings with listener.load", (): void => {
@@ -175,7 +193,7 @@ test("async listener", async (): Promise<void> => {
   })
 })
 
-test("async listen return", async (): Promise<void> => {
+test("async bind return", async (): Promise<void> => {
   bind([], ["MyClass.asyncFn"], "MyClass2.asyncFn2", {
     return: true,
   })
@@ -193,7 +211,7 @@ test("async listen return", async (): Promise<void> => {
   })
 })
 
-test("async listen", async (): Promise<void> => {
+test("async bind", async (): Promise<void> => {
   expect.assertions(1)
 
   const Test = {
@@ -209,9 +227,7 @@ test("async listen", async (): Promise<void> => {
   await MyClass.asyncFn([], true)
 })
 
-test("async listen null return", async (): Promise<
-  void
-> => {
+test("async bind null return", async (): Promise<void> => {
   bind([], ["MyClass.asyncFn"], "MyClass2.asyncFn3", {
     return: true,
   })
@@ -219,7 +235,7 @@ test("async listen null return", async (): Promise<
   expect(await MyClass.asyncFn([], true)).toBe(null)
 })
 
-test("listen id", (): void => {
+test("bind id", (): void => {
   bind([], ["MyClass.fn", "id"], "MyClass2.fn2", {
     return: true,
   })
@@ -243,7 +259,7 @@ test("listen id", (): void => {
   })
 })
 
-test("listen *", (): void => {
+test("bind *", (): void => {
   bind([], ["*"], "MyClass2.fn2", { return: true })
 
   expect(MyClass.fn([], true)).toEqual({
@@ -259,7 +275,7 @@ test("listen *", (): void => {
   })
 })
 
-test("listen **", (): void => {
+test("bind **", (): void => {
   bind([], ["**"], "MyClass2.fn2", { return: true })
 
   expect(MyClass.fn(["id"], true)).toEqual({
@@ -269,7 +285,7 @@ test("listen **", (): void => {
   })
 })
 
-test("listen * and id", (): void => {
+test("bind * and id", (): void => {
   bind([], ["*", "id"], "MyClass2.fn2", {
     return: true,
   })
@@ -293,7 +309,7 @@ test("listen * and id", (): void => {
   })
 })
 
-test("listen id and *", (): void => {
+test("bind id and *", (): void => {
   bind([], ["MyClass.fn", "*"], "MyClass2.fn2", {
     return: true,
   })
@@ -317,7 +333,7 @@ test("listen id and *", (): void => {
   })
 })
 
-test("listen ** and id", (): void => {
+test("bind ** and id", (): void => {
   bind([], ["**", "id2"], "MyClass2.fn2", {
     return: true,
   })
@@ -341,7 +357,7 @@ test("listen ** and id", (): void => {
   })
 })
 
-test("listen id and **", (): void => {
+test("bind id and **", (): void => {
   bind([], ["MyClass.fn", "**"], "MyClass2.fn2", {
     return: true,
   })
@@ -645,12 +661,10 @@ test("peek", (): void => {
   expect(test.test([], "hi")).toBe(true)
 })
 
-test("async return value", async (): Promise<any> => {
+test("load return value", () => {
   expect.assertions(1)
 
   const test = {}
 
-  return load([], { test }).then(instances =>
-    expect(instances).toBe(instance.instances)
-  )
+  expect(load([], { test })).toBe(instance.instances)
 })
