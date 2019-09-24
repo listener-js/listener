@@ -370,7 +370,7 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): void | boolean {
+  ): boolean {
     if (options && options.bind === false) {
       return
     }
@@ -380,33 +380,46 @@ export class Listener {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
-      if (instance.listenerBindings) {
-        for (const [
-          matchId,
-          targetId,
-          options,
-        ] of instance.listenerBindings) {
-          const match =
-            typeof matchId === "string"
-              ? [matchId, "**"]
-              : matchId
+      rerun =
+        rerun || this.loadBinding(lid, instanceId, instance)
+    }
 
-          this.bind(
-            lid,
-            match.map((id: string): string =>
-              id.match(this.idRegex)
-                ? id
-                : `${instanceId}.${id}`
-            ),
-            targetId.match(this.idRegex)
-              ? targetId
-              : `${instanceId}.${targetId}`,
-            options
-          )
+    return rerun
+  }
 
-          rerun =
-            rerun || matchId.indexOf("listener.load") > -1
-        }
+  private loadBinding(
+    lid: string[],
+    instanceId: string,
+    instance: any
+  ): boolean {
+    let rerun
+
+    if (instance.listenerBindings) {
+      for (const [
+        matchId,
+        targetId,
+        options,
+      ] of instance.listenerBindings) {
+        const match =
+          typeof matchId === "string"
+            ? [matchId, "**"]
+            : matchId
+
+        this.bind(
+          lid,
+          match.map((id: string): string =>
+            id.match(this.idRegex)
+              ? id
+              : `${instanceId}.${id}`
+          ),
+          targetId.match(this.idRegex)
+            ? targetId
+            : `${instanceId}.${targetId}`,
+          options
+        )
+
+        rerun =
+          rerun || matchId.indexOf("listener.load") > -1
       }
     }
 

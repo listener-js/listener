@@ -34,6 +34,7 @@
 * [listSort](_index_.listener.md#private-listsort)
 * [listenerWrapper](_index_.listener.md#private-listenerwrapper)
 * [load](_index_.listener.md#load)
+* [loadBinding](_index_.listener.md#private-loadbinding)
 * [loadBindings](_index_.listener.md#private-loadbindings)
 * [loadInstance](_index_.listener.md#private-loadinstance)
 * [loadInstances](_index_.listener.md#private-loadinstances)
@@ -242,7 +243,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:484
+Defined in index.ts:497
 
 **Parameters:**
 
@@ -259,7 +260,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:474
+Defined in index.ts:487
 
 **Parameters:**
 
@@ -290,9 +291,27 @@ Name | Type |
 
 ___
 
+### `Private` loadBinding
+
+▸ **loadBinding**(`lid`: string[], `instanceId`: string, `instance`: any): *boolean*
+
+Defined in index.ts:390
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`lid` | string[] |
+`instanceId` | string |
+`instance` | any |
+
+**Returns:** *boolean*
+
+___
+
 ### `Private` loadBindings
 
-▸ **loadBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | boolean*
+▸ **loadBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *boolean*
 
 Defined in index.ts:369
 
@@ -304,7 +323,7 @@ Name | Type |
 `instances` | Record‹string, any› |
 `options?` | Record‹string, any› |
 
-**Returns:** *void | boolean*
+**Returns:** *boolean*
 
 ___
 
@@ -312,7 +331,7 @@ ___
 
 ▸ **loadInstance**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:447
+Defined in index.ts:460
 
 **Parameters:**
 
@@ -330,7 +349,7 @@ ___
 
 ▸ **loadInstances**(`lid`: string[], `instances`: Record‹string, any›): *Promise‹Record‹string, any››[]*
 
-Defined in index.ts:416
+Defined in index.ts:429
 
 **Parameters:**
 
@@ -357,7 +376,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:494
+Defined in index.ts:507
 
 **Parameters:**
 
