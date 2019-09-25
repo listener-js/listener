@@ -399,8 +399,8 @@ export class Listener {
   ): boolean {
     let rerun
 
-    if (typeof instance.listenerBinds === "function") {
-      const output = instance.listenerBinds(
+    if (typeof instance.listenerBind === "function") {
+      const output = instance.listenerBind(
         lid,
         instanceId,
         instance,
