@@ -48,6 +48,8 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Record<string, any> | Promise<Record<string, any>> {
+    const promises = this.loadInstances(lid, instances)
+
     const rerun = this.loadBindings(lid, instances, options)
 
     if (rerun) {
@@ -56,8 +58,6 @@ export class Listener {
         bind: false,
       })
     }
-
-    const promises = this.loadInstances(lid, instances)
 
     if (promises.length) {
       return Promise.all(promises)
@@ -328,19 +328,6 @@ export class Listener {
     return listeners
   }
 
-  private instanceLoaded(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
-    lid: string[],
-    instanceId: string,
-    instance: any,
-    instances: Record<string, any>,
-    listener: Listener,
-    options?: Record<string, any>
-    /* eslint-enable @typescript-eslint/no-unused-vars */
-  ): void | Promise<any> {
-    return
-  }
-
   private instancesLoaded(
     lid: string[],
     instances: Record<string, any>,
@@ -350,10 +337,9 @@ export class Listener {
 
     for (const instanceId in instances) {
       const out = this.instanceLoaded(
-        lid,
+        [instanceId, ...lid],
         instanceId,
         instances[instanceId],
-        instances,
         this,
         options
       )
@@ -364,6 +350,18 @@ export class Listener {
     }
 
     return promises
+  }
+
+  private instanceLoaded(
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    lid: string[],
+    instanceId: string,
+    instance: any,
+    listener: Listener,
+    options?: Record<string, any>
+    /* eslint-enable @typescript-eslint/no-unused-vars */
+  ): void | Promise<any> {
+    return
   }
 
   private loadBindings(
@@ -381,7 +379,13 @@ export class Listener {
       const instance = instances[instanceId]
 
       rerun =
-        rerun || this.loadBinding(lid, instanceId, instance)
+        rerun ||
+        this.loadBinding(
+          [instanceId, ...lid],
+          instanceId,
+          instance,
+          options
+        )
     }
 
     return rerun
@@ -390,16 +394,21 @@ export class Listener {
   private loadBinding(
     lid: string[],
     instanceId: string,
-    instance: any
+    instance: any,
+    options?: Record<string, any>
   ): boolean {
     let rerun
 
-    if (instance.listenerBindings) {
-      for (const [
-        matchId,
-        targetId,
-        options,
-      ] of instance.listenerBindings) {
+    if (typeof instance.listenerBinds === "function") {
+      const output = instance.listenerBinds(
+        lid,
+        instanceId,
+        instance,
+        this,
+        options
+      )
+
+      for (const [matchId, targetId, options] of output) {
         const match =
           typeof matchId === "string"
             ? [matchId, "**"]
