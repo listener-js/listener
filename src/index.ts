@@ -305,7 +305,7 @@ export class Listener {
 
     if (_lid.indexOf("log.logEvent") < 0 && this.log) {
       this.log(
-        ["listener.buildList", "listener.emit", ...id],
+        ["listener.buildList", "listener.emit", ..._lid],
         "internal",
         list
       )
