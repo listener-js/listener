@@ -502,7 +502,7 @@ export class Listener {
   ): Function {
     return (_lid: string[], ...args: any[]): any => {
       const id = [fnId].concat(_lid || [])
-      return this.emit(_lid, fnId, id, instanceId, ...args)
+      return this.emit(id, fnId, id, instanceId, ...args)
     }
   }
 
