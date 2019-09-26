@@ -153,53 +153,8 @@ export class Listener {
     return list
   }
 
-  private buildList(
-    fnId: string,
-    id: string[]
-  ): ListenerBindingItem[] {
-    const lists = this.bindings
-
-    let key: string
-    let key2: string
-    let list: ListenerBindingItem[] = [[fnId, { index: 0 }]]
-
-    list = this.addList(lists, list, "**")
-
-    for (const i of id.slice(0).reverse()) {
-      key = key ? i + "." + key : i
-      list = this.addList(lists, list, "**." + key)
-    }
-
-    if (key) {
-      list = this.addList(lists, list, key)
-    }
-
-    for (const i of id) {
-      key2 = key2 ? key2 + "." + i : i
-      list = this.addList(lists, list, key2 + ".**")
-    }
-
-    if (id.length <= 1) {
-      list = this.addList(lists, list, "*")
-    } else {
-      list = this.addList(
-        lists,
-        list,
-        "*." + id.slice(1).join(".")
-      )
-      list = this.addList(
-        lists,
-        list,
-        id.slice(0, -1).join(".") + ".*"
-      )
-    }
-
-    list = list.sort(this.listSort.bind(this))
-
-    return list
-  }
-
   private emit(
+    _lid: string[],
     fnId: string,
     id: string[],
     instanceId: string,
@@ -221,15 +176,7 @@ export class Listener {
       )
     }
 
-    const list = this.buildList(fnId, id)
-
-    if (id.indexOf("log.logEvent") < 0) {
-      this.log(
-        ["buildList", "listener.emit", ...id],
-        "internal",
-        list
-      )
-    }
+    const list = this.emitList(_lid, fnId, id)
 
     for (const [target, options] of list) {
       const isBefore = options && options.index < 0
@@ -310,6 +257,61 @@ export class Listener {
     return promise && out
       ? promise.then((): any => out)
       : promise || out
+  }
+
+  private emitList(
+    _lid: string[],
+    fnId: string,
+    id: string[]
+  ): ListenerBindingItem[] {
+    const lists = this.bindings
+
+    let key: string
+    let key2: string
+    let list: ListenerBindingItem[] = [[fnId, { index: 0 }]]
+
+    list = this.addList(lists, list, "**")
+
+    for (const i of id.slice(0).reverse()) {
+      key = key ? i + "." + key : i
+      list = this.addList(lists, list, "**." + key)
+    }
+
+    if (key) {
+      list = this.addList(lists, list, key)
+    }
+
+    for (const i of id) {
+      key2 = key2 ? key2 + "." + i : i
+      list = this.addList(lists, list, key2 + ".**")
+    }
+
+    if (id.length <= 1) {
+      list = this.addList(lists, list, "*")
+    } else {
+      list = this.addList(
+        lists,
+        list,
+        "*." + id.slice(1).join(".")
+      )
+      list = this.addList(
+        lists,
+        list,
+        id.slice(0, -1).join(".") + ".*"
+      )
+    }
+
+    list = list.sort(this.listSort.bind(this))
+
+    if (_lid.indexOf("log.logEvent") < 0 && this.log) {
+      this.log(
+        ["listener.buildList", "listener.emit", ...id],
+        "internal",
+        list
+      )
+    }
+
+    return list
   }
 
   private extractListeners(instance: any): string[] {
@@ -498,9 +500,9 @@ export class Listener {
     fnId: string,
     instanceId: string
   ): Function {
-    return (eid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(eid || [])
-      return this.emit(fnId, id, instanceId, ...args)
+    return (_lid: string[], ...args: any[]): any => {
+      const id = [fnId].concat(_lid || [])
+      return this.emit(_lid, fnId, id, instanceId, ...args)
     }
   }
 
