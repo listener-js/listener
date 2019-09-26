@@ -6,6 +6,7 @@ import {
   ListenerOptions,
   ListenerBindingItem,
   LogEvent,
+  ListenerBind,
 } from "./types"
 
 export class Listener {
@@ -397,10 +398,10 @@ export class Listener {
     instance: any,
     options?: Record<string, any>
   ): boolean {
-    let rerun
+    let rerun: boolean
 
     if (typeof instance.listenerBind === "function") {
-      const output = instance.listenerBind(
+      const output: ListenerBind = instance.listenerBind(
         lid,
         instanceId,
         instance,

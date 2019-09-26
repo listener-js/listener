@@ -14,6 +14,14 @@ export type ListenerFunction = (
 
 export type Listeners = Record<string, ListenerFunction>
 
+export type ListenerBind = ListenerBindItem[]
+
+export type ListenerBindItem = [
+  string[],
+  string,
+  ListenerOptions
+]
+
 export type ListenerBindingItem = [string, ListenerOptions]
 
 export type ListenerBindingOptions = Record<

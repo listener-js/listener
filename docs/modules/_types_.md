@@ -10,6 +10,8 @@
 
 ### Type aliases
 
+* [ListenerBind](_types_.md#listenerbind)
+* [ListenerBindItem](_types_.md#listenerbinditem)
 * [ListenerBindingItem](_types_.md#listenerbindingitem)
 * [ListenerBindingOptions](_types_.md#listenerbindingoptions)
 * [ListenerBindings](_types_.md#listenerbindings)
@@ -23,11 +25,27 @@
 
 ## Type aliases
 
+###  ListenerBind
+
+Ƭ **ListenerBind**: *[ListenerBindItem](_types_.md#listenerbinditem)[]*
+
+Defined in types.ts:17
+
+___
+
+###  ListenerBindItem
+
+Ƭ **ListenerBindItem**: *[string[], string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]*
+
+Defined in types.ts:19
+
+___
+
 ###  ListenerBindingItem
 
 Ƭ **ListenerBindingItem**: *[string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]*
 
-Defined in types.ts:17
+Defined in types.ts:25
 
 ___
 
@@ -35,7 +53,7 @@ ___
 
 Ƭ **ListenerBindingOptions**: *Record‹string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)›*
 
-Defined in types.ts:19
+Defined in types.ts:27
 
 ___
 
@@ -43,7 +61,7 @@ ___
 
 Ƭ **ListenerBindings**: *Record‹string, string[]›*
 
-Defined in types.ts:24
+Defined in types.ts:32
 
 ___
 
@@ -51,7 +69,7 @@ ___
 
 Ƭ **ListenerBindingsListSorter**: *function*
 
-Defined in types.ts:26
+Defined in types.ts:34
 
 #### Type declaration:
 
@@ -89,7 +107,7 @@ ___
 
 Ƭ **ListenerInstances**: *Record‹string, any›*
 
-Defined in types.ts:31
+Defined in types.ts:39
 
 ___
 
@@ -97,7 +115,7 @@ ___
 
 Ƭ **ListenerPending**: *Record‹string, Promise‹any››*
 
-Defined in types.ts:33
+Defined in types.ts:41
 
 ___
 
@@ -105,7 +123,7 @@ ___
 
 Ƭ **ListenerPendingResolvers**: *Record‹string, Function›*
 
-Defined in types.ts:35
+Defined in types.ts:43
 
 ___
 
@@ -121,7 +139,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:40
+Defined in types.ts:48
 
 #### Type declaration:
 
