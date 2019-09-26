@@ -19,7 +19,7 @@ export type ListenerBind = ListenerBindItem[]
 export type ListenerBindItem = [
   string[],
   string,
-  ListenerOptions
+  ListenerOptions?
 ]
 
 export type ListenerBindingItem = [string, ListenerOptions]
