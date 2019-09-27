@@ -136,9 +136,10 @@ test("listenerBind", (): void => {
     fn: (lid: string[]): void => {
       expect(lid).toEqual(["Test.fn", "MyClass.fn"])
     },
-    listenerBind: (lid: string[]): any[] => [
-      [["MyClass.fn"], "fn"],
-    ],
+    listenerBind: (
+      lid: string[],
+      instanceId: string
+    ): any[] => [[["MyClass.fn"], `${instanceId}.fn`]],
   }
 
   load([], { Test })
@@ -146,7 +147,7 @@ test("listenerBind", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerBind simple self", (): void => {
+test("listenerBind self", (): void => {
   expect.assertions(2)
 
   const Test = {
@@ -156,7 +157,12 @@ test("listenerBind simple self", (): void => {
     fn2: (lid: string[]): void => {
       expect(lid).toEqual(["Test.fn2", "Test.fn"])
     },
-    listenerBind: (lid: string[]): any[] => [["fn", "fn2"]],
+    listenerBind: (
+      lid: string[],
+      instanceId: string
+    ): any[] => [
+      [[`${instanceId}.fn`], `${instanceId}.fn2`],
+    ],
   }
 
   load([], { Test })
@@ -175,8 +181,11 @@ test("listenerBind with listener.load", (): void => {
         "listener.load",
       ])
     },
-    listenerBind: (lid: string[]): any[] => [
-      [["listener.load", "**"], "fn"],
+    listenerBind: (
+      lid: string[],
+      instanceId: string
+    ): any[] => [
+      [["listener.load", "**"], `${instanceId}.fn`],
     ],
   }
 

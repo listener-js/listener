@@ -49,39 +49,66 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Record<string, any> | Promise<Record<string, any>> {
-    const promises = this.loadInstances(lid, instances)
+    const loadPromises = this.loadInstances(lid, instances)
 
-    const rerun = this.loadBindings(lid, instances, options)
+    const [bindings, bindingPromises] = this.readBindings(
+      lid,
+      instances,
+      options
+    )
 
-    if (rerun) {
-      return this.load(lid, instances, {
-        ...options,
-        bind: false,
-      })
+    if (!options || options.reload !== false) {
+      const loadBindings = this.findLoadBindings(bindings)
+
+      if (Object.keys(loadBindings).length) {
+        this.loadBindings(
+          lid,
+          loadBindings,
+          instances,
+          options
+        )
+
+        return this.load(lid, instances, {
+          ...options,
+          reload: false,
+        })
+      }
     }
 
-    if (promises.length) {
-      return Promise.all(promises)
-        .then(() =>
-          Promise.all(
-            this.instancesLoaded(lid, instances, options)
+    if (loadPromises.length || bindingPromises.length) {
+      return Promise.all(loadPromises)
+        .then(() => Promise.all(bindingPromises))
+        .then(() => {
+          this.loadBindings(
+            lid,
+            bindings,
+            instances,
+            options
           )
+        })
+        .then(
+          (): Promise<any> =>
+            Promise.all(
+              this.instancesLoaded(lid, instances, options)
+            )
         )
         .then((): Record<string, any> => this.instances)
     } else {
-      const promises2 = this.instancesLoaded(
+      this.loadBindings(lid, bindings, instances, options)
+
+      const loadedPromises = this.instancesLoaded(
         lid,
         instances,
         options
       )
 
-      if (promises2.length) {
-        return Promise.all(promises2).then(
+      if (loadedPromises.length) {
+        return Promise.all(loadedPromises).then(
           (): Record<string, any> => this.instances
         )
-      } else {
-        return this.instances
       }
+
+      return this.instances
     }
   }
 
@@ -133,6 +160,12 @@ export class Listener {
       ["listener", ...lid],
       "listener",
       this
+    )
+
+    this.bind(
+      lid,
+      ["listener.instanceLoaded", "log", "**"],
+      "listener.logLoaded"
     )
   }
 
@@ -331,6 +364,30 @@ export class Listener {
     return listeners
   }
 
+  private findLoadBindings(
+    bindings: Record<string, ListenerBind>
+  ): Record<string, ListenerBind> {
+    const loadBindings = {}
+
+    for (const instanceId in bindings) {
+      const binding = bindings[instanceId]
+
+      let found
+
+      for (const bind of binding) {
+        if (bind[0].indexOf("listener.load") > -1) {
+          found = true
+        }
+      }
+
+      if (found) {
+        loadBindings[instanceId] = binding
+      }
+    }
+
+    return loadBindings
+  }
+
   private instancesLoaded(
     lid: string[],
     instances: Record<string, any>,
@@ -367,43 +424,34 @@ export class Listener {
     return
   }
 
-  private loadBindings(
+  private logLoaded(
+    lid: string[],
+    instanceId: string,
+    instance: any
+  ): void {
+    this.log = instance.logEvent
+  }
+
+  private readBindings(
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): boolean {
-    if (options && options.bind === false) {
-      return
-    }
+  ): [Record<string, ListenerBind>, Promise<any>[]] {
+    const bindings = {}
+    let promises = []
 
-    let rerun
+    if (options && options.bind === false) {
+      return [bindings, promises]
+    }
 
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
-      rerun =
-        rerun ||
-        this.loadBinding(
-          [instanceId, ...lid],
-          instanceId,
-          instance,
-          options
-        )
-    }
+      if (!instance.listenerBind) {
+        continue
+      }
 
-    return rerun
-  }
-
-  private loadBinding(
-    lid: string[],
-    instanceId: string,
-    instance: any,
-    options?: Record<string, any>
-  ): boolean {
-    let rerun: boolean
-
-    if (typeof instance.listenerBind === "function") {
-      const output: ListenerBind = instance.listenerBind(
+      const out = instance.listenerBind(
         lid,
         instanceId,
         instance,
@@ -411,31 +459,58 @@ export class Listener {
         options
       )
 
-      for (const [matchId, targetId, options] of output) {
-        const match =
-          typeof matchId === "string"
-            ? [matchId, "**"]
-            : matchId
-
-        this.bind(
-          lid,
-          match.map((id: string): string =>
-            id.match(this.idRegex)
-              ? id
-              : `${instanceId}.${id}`
-          ),
-          targetId.match(this.idRegex)
-            ? targetId
-            : `${instanceId}.${targetId}`,
-          options
+      if (out && out.then) {
+        promises = promises.concat(
+          out.then((binding: ListenerBind): void => {
+            bindings[instanceId] = binding
+          })
         )
-
-        rerun =
-          rerun || matchId.indexOf("listener.load") > -1
+      } else {
+        bindings[instanceId] = out
       }
     }
 
-    return rerun
+    return [bindings, promises]
+  }
+
+  private loadBindings(
+    lid: string[],
+    bindings: Record<string, ListenerBind>,
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void {
+    if (options && options.bind === false) {
+      return
+    }
+
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+      const binding = bindings[instanceId]
+
+      if (!binding) {
+        continue
+      }
+
+      this.loadBinding(
+        [instanceId, ...lid],
+        binding,
+        instanceId,
+        instance,
+        options
+      )
+    }
+  }
+
+  private loadBinding(
+    lid: string[],
+    binding: ListenerBind,
+    instanceId: string,
+    instance: any,
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    for (const [match, targetId, options] of binding) {
+      this.bind(lid, match, targetId, options)
+    }
   }
 
   private loadInstances(
@@ -459,10 +534,6 @@ export class Listener {
 
       if (out && out.then) {
         promises = promises.concat(out)
-      }
-
-      if (instanceId === "log") {
-        this.log = instance.logEvent
       }
     }
 
