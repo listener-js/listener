@@ -272,7 +272,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:584
+Defined in index.ts:582
 
 **Parameters:**
 
@@ -289,7 +289,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:574
+Defined in index.ts:572
 
 **Parameters:**
 
@@ -324,7 +324,7 @@ ___
 
 ▸ **loadBinding**(`lid`: string[], `binding`: [ListenerBind](../modules/_types_.md#listenerbind), `instanceId`: string, `instance`: any, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:508
+Defined in index.ts:506
 
 **Parameters:**
 
@@ -344,7 +344,7 @@ ___
 
 ▸ **loadBindings**(`lid`: string[], `bindings`: Record‹string, [ListenerBind](../modules/_types_.md#listenerbind)›, `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void*
 
-Defined in index.ts:480
+Defined in index.ts:478
 
 **Parameters:**
 
@@ -363,7 +363,7 @@ ___
 
 ▸ **loadInstance**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:547
+Defined in index.ts:545
 
 **Parameters:**
 
@@ -381,7 +381,7 @@ ___
 
 ▸ **loadInstances**(`lid`: string[], `instances`: Record‹string, any›): *Promise‹Record‹string, any››[]*
 
-Defined in index.ts:520
+Defined in index.ts:518
 
 **Parameters:**
 
@@ -408,7 +408,7 @@ ___
 
 ▸ **logLoaded**(`lid`: string[], `instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:431
+Defined in index.ts:429
 
 **Parameters:**
 
@@ -426,7 +426,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:594
+Defined in index.ts:592
 
 **Parameters:**
 
@@ -458,7 +458,7 @@ ___
 
 ▸ **readBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *[Record‹string, [ListenerBind](../modules/_types_.md#listenerbind)›, Promise‹any›[]]*
 
-Defined in index.ts:439
+Defined in index.ts:437
 
 **Parameters:**
 

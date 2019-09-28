@@ -417,13 +417,11 @@ export class Listener {
   }
 
   private instanceLoaded(
-    /* eslint-disable @typescript-eslint/no-unused-vars */
     lid: string[],
     instanceId: string,
     instance: any,
     listener: Listener,
     options?: Record<string, any>
-    /* eslint-enable @typescript-eslint/no-unused-vars */
   ): void | Promise<any> {
     return
   }
