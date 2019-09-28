@@ -192,7 +192,7 @@ test("listenerBind with listener.load", (): void => {
   load([], { Test })
 })
 
-test.only("listenerBind with listener.instanceLoaded", (): void => {
+test("listenerBind with listener.instanceLoaded", (): void => {
   expect.assertions(1)
 
   const Test = {
