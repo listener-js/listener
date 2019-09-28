@@ -15,6 +15,7 @@
 ### Properties
 
 * [bindings](_index_.listener.md#private-bindings)
+* [commentRegex](_index_.listener.md#commentregex)
 * [fnRegex](_index_.listener.md#fnregex)
 * [idRegex](_index_.listener.md#idregex)
 * [instances](_index_.listener.md#instances)
@@ -52,7 +53,7 @@
 
 \+ **new Listener**(): *[Listener](_index_.listener.md)*
 
-Defined in index.ts:21
+Defined in index.ts:22
 
 **Returns:** *[Listener](_index_.listener.md)*
 
@@ -62,15 +63,23 @@ Defined in index.ts:21
 
 • **bindings**: *[ListenerBindings](../modules/_types_.md#listenerbindings)*
 
-Defined in index.ts:18
+Defined in index.ts:19
+
+___
+
+###  commentRegex
+
+• **commentRegex**: *RegExp* =  /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm
+
+Defined in index.ts:13
 
 ___
 
 ###  fnRegex
 
-• **fnRegex**: *RegExp* =  /^(\(|function \w*\()?lid[\),\s]/
+• **fnRegex**: *RegExp* =  /^(\(|function \w*\()?\s*lid[\),\s]/
 
-Defined in index.ts:13
+Defined in index.ts:14
 
 ___
 
@@ -78,7 +87,7 @@ ___
 
 • **idRegex**: *RegExp* =  /(\*{1,2})|([^\.]+)\.(.+)/i
 
-Defined in index.ts:14
+Defined in index.ts:15
 
 ___
 
@@ -86,7 +95,7 @@ ___
 
 • **instances**: *[ListenerInstances](../modules/_types_.md#listenerinstances)*
 
-Defined in index.ts:15
+Defined in index.ts:16
 
 ___
 
@@ -94,7 +103,7 @@ ___
 
 • **listenerFns**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:19
+Defined in index.ts:20
 
 ___
 
@@ -102,7 +111,7 @@ ___
 
 • **options**: *[ListenerBindingOptions](../modules/_types_.md#listenerbindingoptions)*
 
-Defined in index.ts:16
+Defined in index.ts:17
 
 ___
 
@@ -110,7 +119,7 @@ ___
 
 • **originalFns**: *[Listeners](../modules/_types_.md#listeners)*
 
-Defined in index.ts:21
+Defined in index.ts:22
 
 ## Methods
 
@@ -118,7 +127,7 @@ Defined in index.ts:21
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:172
+Defined in index.ts:173
 
 **Parameters:**
 
@@ -136,7 +145,7 @@ ___
 
 ▸ **bind**(`lid`: string[], `matchId`: string[], `targetId`: string, `options?`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *void*
 
-Defined in index.ts:27
+Defined in index.ts:28
 
 **Parameters:**
 
@@ -155,7 +164,7 @@ ___
 
 ▸ **emit**(`_lid`: string[], `fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:189
+Defined in index.ts:190
 
 **Parameters:**
 
@@ -175,7 +184,7 @@ ___
 
 ▸ **emitList**(`_lid`: string[], `fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:295
+Defined in index.ts:296
 
 **Parameters:**
 
@@ -193,7 +202,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *string[]*
 
-Defined in index.ts:350
+Defined in index.ts:351
 
 **Parameters:**
 
@@ -209,7 +218,7 @@ ___
 
 ▸ **findLoadBindings**(`bindings`: Record‹string, [ListenerBind](../modules/_types_.md#listenerbind)›): *Record‹string, [ListenerBind](../modules/_types_.md#listenerbind)›*
 
-Defined in index.ts:367
+Defined in index.ts:371
 
 **Parameters:**
 
@@ -225,7 +234,7 @@ ___
 
 ▸ **instanceLoaded**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:415
+Defined in index.ts:419
 
 **Parameters:**
 
@@ -245,7 +254,7 @@ ___
 
 ▸ **instancesLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹Record‹string, any››[]*
 
-Defined in index.ts:391
+Defined in index.ts:395
 
 **Parameters:**
 
@@ -263,7 +272,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:580
+Defined in index.ts:584
 
 **Parameters:**
 
@@ -280,7 +289,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:570
+Defined in index.ts:574
 
 **Parameters:**
 
@@ -297,7 +306,7 @@ ___
 
 ▸ **load**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Record‹string, any› | Promise‹Record‹string, any››*
 
-Defined in index.ts:47
+Defined in index.ts:48
 
 **Parameters:**
 
@@ -315,7 +324,7 @@ ___
 
 ▸ **loadBinding**(`lid`: string[], `binding`: [ListenerBind](../modules/_types_.md#listenerbind), `instanceId`: string, `instance`: any, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:504
+Defined in index.ts:508
 
 **Parameters:**
 
@@ -335,7 +344,7 @@ ___
 
 ▸ **loadBindings**(`lid`: string[], `bindings`: Record‹string, [ListenerBind](../modules/_types_.md#listenerbind)›, `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void*
 
-Defined in index.ts:476
+Defined in index.ts:480
 
 **Parameters:**
 
@@ -354,7 +363,7 @@ ___
 
 ▸ **loadInstance**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:543
+Defined in index.ts:547
 
 **Parameters:**
 
@@ -372,7 +381,7 @@ ___
 
 ▸ **loadInstances**(`lid`: string[], `instances`: Record‹string, any›): *Promise‹Record‹string, any››[]*
 
-Defined in index.ts:516
+Defined in index.ts:520
 
 **Parameters:**
 
@@ -389,7 +398,7 @@ ___
 
 ▸ **log**(): *void*
 
-Defined in index.ts:20
+Defined in index.ts:21
 
 **Returns:** *void*
 
@@ -399,7 +408,7 @@ ___
 
 ▸ **logLoaded**(`lid`: string[], `instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:427
+Defined in index.ts:431
 
 **Parameters:**
 
@@ -417,7 +426,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:590
+Defined in index.ts:594
 
 **Parameters:**
 
@@ -433,7 +442,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:115
+Defined in index.ts:116
 
 **Parameters:**
 
@@ -449,7 +458,7 @@ ___
 
 ▸ **readBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *[Record‹string, [ListenerBind](../modules/_types_.md#listenerbind)›, Promise‹any›[]]*
 
-Defined in index.ts:435
+Defined in index.ts:439
 
 **Parameters:**
 
@@ -467,7 +476,7 @@ ___
 
 ▸ **reset**(`lid`: string[]): *void*
 
-Defined in index.ts:129
+Defined in index.ts:130
 
 **Parameters:**
 

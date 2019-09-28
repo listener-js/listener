@@ -192,6 +192,33 @@ test("listenerBind with listener.load", (): void => {
   load([], { Test })
 })
 
+test.only("listenerBind with listener.instanceLoaded", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual([
+        "Test.fn",
+        "listener.instanceLoaded",
+        "Test",
+        "listener.instancesLoaded",
+        "listener.load",
+      ])
+    },
+    listenerBind: (
+      lid: string[],
+      instanceId: string
+    ): any[] => [
+      [
+        ["listener.instanceLoaded", instanceId, "**"],
+        `${instanceId}.fn`,
+      ],
+    ],
+  }
+
+  load([], { Test })
+})
+
 test("async listener", async (): Promise<void> => {
   expect(await MyClass.asyncFn(["id"], true)).toEqual({
     asyncFn: true,
