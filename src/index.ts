@@ -13,10 +13,12 @@ export class Listener {
   public commentRegex = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm
   public fnRegex = /^(\(|function \w*\()?\s*lid[\),\s]/
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
+
+  public bindings: ListenerBindings = {}
   public instances: ListenerInstances = {}
   public options: ListenerBindingOptions = {}
 
-  private bindings: ListenerBindings = {}
+  private bindOutputs: Record<string, ListenerBind> = {}
   private listenerFns: Listeners = {}
   private log: LogEvent = (): void => {}
   private originalFns: Listeners = {}
@@ -50,71 +52,17 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Record<string, any> | Promise<Record<string, any>> {
-    const loadPromises = this.loadInstances(lid, instances)
-
-    const [bindings, bindingPromises] = this.readBindings(
-      lid,
-      instances,
-      options
-    )
-
-    if (!options || options.reload !== false) {
-      const loadBindings = this.findLoadBindings(bindings)
-
-      if (Object.keys(loadBindings).length) {
-        this.loadBindings(
-          lid,
-          loadBindings,
-          instances,
-          options
-        )
-
-        return this.load(lid, instances, {
-          ...options,
-          reload: false,
-        })
-      }
+    if (
+      (!options || options.reload !== true) &&
+      this.findLoadBindings(instances)
+    ) {
+      return this.load(lid, instances, {
+        ...options,
+        reload: true,
+      })
     }
 
-    if (loadPromises || bindingPromises.length) {
-      return Promise.all(loadPromises || [])
-        .then(() => Promise.all(bindingPromises))
-        .then(() => {
-          this.loadBindings(
-            lid,
-            bindings,
-            instances,
-            options
-          )
-        })
-        .then(
-          (): Promise<any> =>
-            Promise.all(
-              this.instancesLoaded(
-                lid,
-                instances,
-                options
-              ) || []
-            )
-        )
-        .then((): Record<string, any> => this.instances)
-    } else {
-      this.loadBindings(lid, bindings, instances, options)
-
-      const loadedPromises = this.instancesLoaded(
-        lid,
-        instances,
-        options
-      )
-
-      if (loadedPromises) {
-        return Promise.all(loadedPromises).then(
-          (): Record<string, any> => this.instances
-        )
-      }
-
-      return this.instances
-    }
+    return this.instances
   }
 
   public parseId(id: string): [string, string] {
@@ -202,6 +150,7 @@ export class Listener {
     }
 
     const recordKeys = [
+      "bindOutputs",
       "bindings",
       "instances",
       "listenerFns",
@@ -225,6 +174,34 @@ export class Listener {
       lid,
       ["listener.instanceLoaded", "log", "**"],
       "listener.logLoaded"
+    )
+
+    this.bind(
+      lid,
+      ["listener.load", "**"],
+      "listener.loadInstances",
+      { prepend: 0.3 }
+    )
+
+    this.bind(
+      lid,
+      ["listener.load", "**"],
+      "listener.readBindings",
+      { prepend: 0.2 }
+    )
+
+    this.bind(
+      lid,
+      ["listener.load", "**"],
+      "listener.loadBindings",
+      { prepend: 0.1 }
+    )
+
+    this.bind(
+      lid,
+      ["listener.load", "**"],
+      "listener.instancesLoaded",
+      { append: 0.1 }
     )
   }
 
@@ -427,27 +404,25 @@ export class Listener {
   }
 
   private findLoadBindings(
-    bindings: Record<string, ListenerBind>
-  ): Record<string, ListenerBind> {
-    const loadBindings = {}
+    instances: Record<string, any>
+  ): boolean {
+    let found: boolean
 
-    for (const instanceId in bindings) {
-      const binding = bindings[instanceId]
+    for (const instanceId in instances) {
+      const binding = this.bindOutputs[instanceId]
 
-      let found
+      if (!binding) {
+        continue
+      }
 
       for (const bind of binding) {
         if (bind[0].indexOf("listener.load") > -1) {
           found = true
         }
       }
-
-      if (found) {
-        loadBindings[instanceId] = binding
-      }
     }
 
-    return loadBindings
+    return found
   }
 
   private instancesLoaded(
@@ -455,6 +430,10 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any>[] {
+    if (options && options.reload === true) {
+      return
+    }
+
     const [promises] = this.separatePromises(
       lid,
       [this, options],
@@ -489,7 +468,11 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): [Record<string, ListenerBind>, Promise<any>[]] {
+  ): Promise<any>[] | void {
+    if (options && options.reload === true) {
+      return
+    }
+
     let promises = []
 
     const [
@@ -504,32 +487,41 @@ export class Listener {
       "listenerBind"
     )
 
+    this.bindOutputs = {
+      ...this.bindOutputs,
+      ...valuesById,
+    }
+
     for (const id in promisesById) {
       const promise = promisesById[id]
 
       promises = promises.concat(
         promise.then((binding: ListenerBind): void => {
-          valuesById[id] = binding
+          this.bindOutputs = {
+            ...this.bindOutputs,
+            [id]: binding,
+          }
         })
       )
     }
 
-    return [valuesById, promises]
+    if (promises.length) {
+      return promises
+    }
   }
 
   private loadBindings(
     lid: string[],
-    bindings: Record<string, ListenerBind>,
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
-    if (options && options.bind === false) {
+    if (options && options.reload === true) {
       return
     }
 
     for (const instanceId in instances) {
       const instance = instances[instanceId]
-      const binding = bindings[instanceId]
+      const binding = this.bindOutputs[instanceId]
 
       if (!binding) {
         continue
@@ -559,8 +551,13 @@ export class Listener {
 
   private loadInstances(
     lid: string[],
-    instances: Record<string, any>
+    instances: Record<string, any>,
+    options?: Record<string, any>
   ): void | Promise<any>[] {
+    if (options && options.reload === true) {
+      return
+    }
+
     const [promises] = this.separatePromises(
       lid,
       [],
