@@ -70,20 +70,6 @@ export class Listener {
     return this.instances
   }
 
-  public parseId(id: string): [string, string] {
-    const match = id.match(this.idRegex)
-
-    let joinInstanceId: string
-    let fnId: string
-
-    if (match) {
-      ;[joinInstanceId, fnId] = match.slice(2)
-      joinInstanceId = joinInstanceId || match[4]
-    }
-
-    return [joinInstanceId, fnId]
-  }
-
   public captureOutputs(
     _lid: string[],
     args: any[],
@@ -124,6 +110,20 @@ export class Listener {
     }
 
     return { promises, promisesById, values, valuesById }
+  }
+
+  public parseId(id: string): [string, string] {
+    const match = id.match(this.idRegex)
+
+    let joinInstanceId: string
+    let fnId: string
+
+    if (match) {
+      ;[joinInstanceId, fnId] = match.slice(2)
+      joinInstanceId = joinInstanceId || match[4]
+    }
+
+    return [joinInstanceId, fnId]
   }
 
   public reset(lid: string[]): void {
@@ -448,55 +448,23 @@ export class Listener {
     return
   }
 
-  private logLoaded(
-    lid: string[],
-    instanceId: string,
-    instance: any
-  ): void {
-    this.log = instance.logEvent
+  private listSort(
+    [, a = {}]: ListenerBindingItem,
+    [, b = {}]: ListenerBindingItem
+  ): number {
+    const aIndex = this.optsToIndex(a)
+    const bIndex = this.optsToIndex(b)
+
+    return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
   }
 
-  private readBindings(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): Promise<any>[] | void {
-    if (options && options.reload === true) {
-      return
-    }
-
-    const promises = []
-
-    const {
-      promisesById,
-      valuesById,
-    } = this.captureOutputs(
-      lid,
-      [this, options],
-      instances,
-      "listenerBind"
-    )
-
-    this.bindOutputs = {
-      ...this.bindOutputs,
-      ...valuesById,
-    }
-
-    for (const id in promisesById) {
-      const promise = promisesById[id]
-
-      promises.push(
-        promise.then((binding: ListenerBind): void => {
-          this.bindOutputs = {
-            ...this.bindOutputs,
-            [id]: binding,
-          }
-        })
-      )
-    }
-
-    if (promises.length) {
-      return promises
+  private listenerWrapper(
+    fnId: string,
+    instanceId: string
+  ): Function {
+    return (_lid: string[], ...args: any[]): any => {
+      const id = [fnId].concat(_lid || [])
+      return this.emit(id, fnId, id, instanceId, ...args)
     }
   }
 
@@ -591,24 +559,12 @@ export class Listener {
     }
   }
 
-  private listSort(
-    [, a = {}]: ListenerBindingItem,
-    [, b = {}]: ListenerBindingItem
-  ): number {
-    const aIndex = this.optsToIndex(a)
-    const bIndex = this.optsToIndex(b)
-
-    return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
-  }
-
-  private listenerWrapper(
-    fnId: string,
-    instanceId: string
-  ): Function {
-    return (_lid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(_lid || [])
-      return this.emit(id, fnId, id, instanceId, ...args)
-    }
+  private logLoaded(
+    lid: string[],
+    instanceId: string,
+    instance: any
+  ): void {
+    this.log = instance.logEvent
   }
 
   private optsToIndex(opts: ListenerOptions): number {
@@ -630,6 +586,50 @@ export class Listener {
       }
     }
     return 1
+  }
+
+  private readBindings(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): Promise<any>[] | void {
+    if (options && options.reload === true) {
+      return
+    }
+
+    const promises = []
+
+    const {
+      promisesById,
+      valuesById,
+    } = this.captureOutputs(
+      lid,
+      [this, options],
+      instances,
+      "listenerBind"
+    )
+
+    this.bindOutputs = {
+      ...this.bindOutputs,
+      ...valuesById,
+    }
+
+    for (const id in promisesById) {
+      const promise = promisesById[id]
+
+      promises.push(
+        promise.then((binding: ListenerBind): void => {
+          this.bindOutputs = {
+            ...this.bindOutputs,
+            [id]: binding,
+          }
+        })
+      )
+    }
+
+    if (promises.length) {
+      return promises
+    }
   }
 }
 
