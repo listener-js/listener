@@ -45,30 +45,6 @@ export class Listener {
     }
   }
 
-  public reducePromises(
-    items: any[] | Record<string, any>,
-    fn: (string) => void | Promise<any>
-  ): void | Promise<any>[] {
-    let promises = []
-    let array = []
-
-    array = Array.isArray(items)
-      ? items
-      : Object.keys(items)
-
-    for (const id of array) {
-      const out = fn(id)
-
-      if (out && out.then) {
-        promises = promises.concat(out)
-      }
-    }
-
-    if (promises.length) {
-      return promises
-    }
-  }
-
   public load(
     lid: string[],
     instances: Record<string, any>,
@@ -100,9 +76,9 @@ export class Listener {
       }
     }
 
-    if (loadPromises || bindingPromises.length) {
+    if (loadPromises || bindingPromises) {
       return Promise.all(loadPromises || [])
-        .then(() => Promise.all(bindingPromises))
+        .then(() => Promise.all(bindingPromises || []))
         .then(() => {
           this.loadBindings(
             lid,
@@ -153,6 +129,30 @@ export class Listener {
     }
 
     return [joinInstanceId, fnId]
+  }
+
+  public reducePromises(
+    items: any[] | Record<string, any>,
+    fn: (string) => void | Promise<any>
+  ): void | Promise<any>[] {
+    let promises = []
+    let array = []
+
+    array = Array.isArray(items)
+      ? items
+      : Object.keys(items)
+
+    for (const id of array) {
+      const out = fn(id)
+
+      if (out && out.then) {
+        promises = promises.concat(out)
+      }
+    }
+
+    if (promises.length) {
+      return promises
+    }
   }
 
   public reset(lid: string[]): void {
@@ -458,39 +458,35 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): [Record<string, ListenerBind>, Promise<any>[]] {
+  ): [Record<string, ListenerBind>, Promise<any>[] | void] {
     const bindings = {}
-    let promises = []
 
-    if (options && options.bind === false) {
-      return [bindings, promises]
-    }
+    const promises = this.reducePromises(
+      instances,
+      (id: string) => {
+        const instance = instances[id]
 
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
+        if (!instance.listenerBind) {
+          return
+        }
 
-      if (!instance.listenerBind) {
-        continue
-      }
-
-      const out = instance.listenerBind(
-        lid,
-        instanceId,
-        instance,
-        this,
-        options
-      )
-
-      if (out && out.then) {
-        promises = promises.concat(
-          out.then((binding: ListenerBind): void => {
-            bindings[instanceId] = binding
-          })
+        const out = instance.listenerBind(
+          lid,
+          id,
+          instances[id],
+          this,
+          options
         )
-      } else {
-        bindings[instanceId] = out
+
+        if (out && out.then) {
+          return out.then((binding: ListenerBind): void => {
+            bindings[id] = binding
+          })
+        } else {
+          bindings[id] = out
+        }
       }
-    }
+    )
 
     return [bindings, promises]
   }
