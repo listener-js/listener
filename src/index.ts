@@ -45,6 +45,30 @@ export class Listener {
     }
   }
 
+  public reducePromises(
+    items: any[] | Record<string, any>,
+    fn: (string) => void | Promise<any>
+  ): void | Promise<any>[] {
+    let promises = []
+    let array = []
+
+    array = Array.isArray(items)
+      ? items
+      : Object.keys(items)
+
+    for (const id of array) {
+      const out = fn(id)
+
+      if (out && out.then) {
+        promises = promises.concat(out)
+      }
+    }
+
+    if (promises.length) {
+      return promises
+    }
+  }
+
   public load(
     lid: string[],
     instances: Record<string, any>,
@@ -76,8 +100,8 @@ export class Listener {
       }
     }
 
-    if (loadPromises.length || bindingPromises.length) {
-      return Promise.all(loadPromises)
+    if (loadPromises || bindingPromises.length) {
+      return Promise.all(loadPromises || [])
         .then(() => Promise.all(bindingPromises))
         .then(() => {
           this.loadBindings(
@@ -90,7 +114,11 @@ export class Listener {
         .then(
           (): Promise<any> =>
             Promise.all(
-              this.instancesLoaded(lid, instances, options)
+              this.instancesLoaded(
+                lid,
+                instances,
+                options
+              ) || []
             )
         )
         .then((): Record<string, any> => this.instances)
@@ -103,7 +131,7 @@ export class Listener {
         options
       )
 
-      if (loadedPromises.length) {
+      if (loadedPromises) {
         return Promise.all(loadedPromises).then(
           (): Record<string, any> => this.instances
         )
@@ -396,24 +424,16 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): Promise<Record<string, any>>[] {
-    let promises = []
-
-    for (const instanceId in instances) {
-      const out = this.instanceLoaded(
-        [instanceId, ...lid],
-        instanceId,
-        instances[instanceId],
+  ): void | Promise<any>[] {
+    return this.reducePromises(instances, (id: string) =>
+      this.instanceLoaded(
+        [id, ...lid],
+        id,
+        instances[id],
         this,
         options
       )
-
-      if (out && out.then) {
-        promises = promises.concat(out)
-      }
-    }
-
-    return promises
+    )
   }
 
   private instanceLoaded(
@@ -518,28 +538,10 @@ export class Listener {
   private loadInstances(
     lid: string[],
     instances: Record<string, any>
-  ): Promise<Record<string, any>>[] {
-    let promises = []
-
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
-
-      if (instance.then) {
-        continue
-      }
-
-      const out = this.loadInstance(
-        [instanceId, ...lid],
-        instanceId,
-        instance
-      )
-
-      if (out && out.then) {
-        promises = promises.concat(out)
-      }
-    }
-
-    return promises
+  ): void | Promise<any>[] {
+    return this.reducePromises(instances, (id: string) =>
+      this.loadInstance([id, ...lid], id, instances[id])
+    )
   }
 
   private loadInstance(
@@ -547,6 +549,10 @@ export class Listener {
     instanceId: string,
     instance: any
   ): void | Promise<any> {
+    if (instance.then) {
+      return
+    }
+
     const listeners = this.extractListeners(instance)
 
     this.instances[instanceId] = instance
