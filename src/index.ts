@@ -7,6 +7,8 @@ import {
   ListenerBindingItem,
   LogEvent,
   ListenerBind,
+  ListenerCallback,
+  ListenerOutputs,
 } from "./types"
 
 export class Listener {
@@ -20,8 +22,9 @@ export class Listener {
 
   private bindOutputs: Record<string, ListenerBind> = {}
   private listenerFns: Listeners = {}
-  private log: LogEvent = (): void => {}
   private originalFns: Listeners = {}
+
+  private log: LogEvent
 
   public constructor() {
     this.reset(["listener.constructor"])
@@ -79,24 +82,12 @@ export class Listener {
     return [joinInstanceId, fnId]
   }
 
-  public separatePromises(
+  public captureOutputs(
     _lid: string[],
     args: any[],
     instances: Record<string, any>,
-    fn:
-      | string
-      | ((
-          lid: string[],
-          instanceId: string,
-          instance: any,
-          ...args: any[]
-        ) => void | Promise<any>)
-  ): [
-    Promise<any>[],
-    any[],
-    Record<string, Promise<any>>,
-    Record<string, any>
-  ] {
+    fn: string | ListenerCallback
+  ): ListenerOutputs {
     const promisesById = {}
     const valuesById = {}
 
@@ -130,7 +121,7 @@ export class Listener {
       }
     }
 
-    return [promises, values, promisesById, valuesById]
+    return { promises, promisesById, values, valuesById }
   }
 
   public reset(lid: string[]): void {
@@ -434,7 +425,7 @@ export class Listener {
       return
     }
 
-    const [promises] = this.separatePromises(
+    const { promises } = this.captureOutputs(
       lid,
       [this, options],
       instances,
@@ -475,12 +466,10 @@ export class Listener {
 
     let promises = []
 
-    const [
-      ,
-      ,
+    const {
       promisesById,
       valuesById,
-    ] = this.separatePromises(
+    } = this.captureOutputs(
       lid,
       [this, options],
       instances,
@@ -558,7 +547,7 @@ export class Listener {
       return
     }
 
-    const [promises] = this.separatePromises(
+    const { promises } = this.captureOutputs(
       lid,
       [],
       instances,
@@ -601,16 +590,6 @@ export class Listener {
     }
   }
 
-  private listenerWrapper(
-    fnId: string,
-    instanceId: string
-  ): Function {
-    return (_lid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(_lid || [])
-      return this.emit(id, fnId, id, instanceId, ...args)
-    }
-  }
-
   private listSort(
     [, a = {}]: ListenerBindingItem,
     [, b = {}]: ListenerBindingItem
@@ -619,6 +598,16 @@ export class Listener {
     const bIndex = this.optsToIndex(b)
 
     return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
+  }
+
+  private listenerWrapper(
+    fnId: string,
+    instanceId: string
+  ): Function {
+    return (_lid: string[], ...args: any[]): any => {
+      const id = [fnId].concat(_lid || [])
+      return this.emit(id, fnId, id, instanceId, ...args)
+    }
   }
 
   private optsToIndex(opts: ListenerOptions): number {

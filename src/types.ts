@@ -36,7 +36,21 @@ export type ListenerBindingsListSorter = (
   b: ListenerBindingItem
 ) => number
 
+export type ListenerCallback = (
+  lid: string[],
+  instanceId: string,
+  instance: any,
+  ...args: any[]
+) => void | Promise<any>
+
 export type ListenerInstances = Record<string, any>
+
+export type ListenerOutputs = {
+  promises: Promise<any>[]
+  promisesById: Record<string, Promise<any>>
+  values: any[]
+  valuesById: Record<string, any>
+}
 
 export type ListenerPending = Record<string, Promise<any>>
 

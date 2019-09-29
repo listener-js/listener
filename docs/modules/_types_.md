@@ -16,8 +16,10 @@
 * [ListenerBindingOptions](_types_.md#listenerbindingoptions)
 * [ListenerBindings](_types_.md#listenerbindings)
 * [ListenerBindingsListSorter](_types_.md#listenerbindingslistsorter)
+* [ListenerCallback](_types_.md#listenercallback)
 * [ListenerFunction](_types_.md#listenerfunction)
 * [ListenerInstances](_types_.md#listenerinstances)
+* [ListenerOutputs](_types_.md#listeneroutputs)
 * [ListenerPending](_types_.md#listenerpending)
 * [ListenerPendingResolvers](_types_.md#listenerpendingresolvers)
 * [Listeners](_types_.md#listeners)
@@ -84,6 +86,27 @@ Name | Type |
 
 ___
 
+###  ListenerCallback
+
+Ƭ **ListenerCallback**: *function*
+
+Defined in types.ts:39
+
+#### Type declaration:
+
+▸ (`lid`: string[], `instanceId`: string, `instance`: any, ...`args`: any[]): *void | Promise‹any›*
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`lid` | string[] |
+`instanceId` | string |
+`instance` | any |
+`...args` | any[] |
+
+___
+
 ###  ListenerFunction
 
 Ƭ **ListenerFunction**: *function*
@@ -107,7 +130,25 @@ ___
 
 Ƭ **ListenerInstances**: *Record‹string, any›*
 
-Defined in types.ts:39
+Defined in types.ts:46
+
+___
+
+###  ListenerOutputs
+
+Ƭ **ListenerOutputs**: *object*
+
+Defined in types.ts:48
+
+#### Type declaration:
+
+* **promises**: *Promise‹any›[]*
+
+* **promisesById**: *Record‹string, Promise‹any››*
+
+* **values**: *any[]*
+
+* **valuesById**: *Record‹string, any›*
 
 ___
 
@@ -115,7 +156,7 @@ ___
 
 Ƭ **ListenerPending**: *Record‹string, Promise‹any››*
 
-Defined in types.ts:41
+Defined in types.ts:55
 
 ___
 
@@ -123,7 +164,7 @@ ___
 
 Ƭ **ListenerPendingResolvers**: *Record‹string, Function›*
 
-Defined in types.ts:43
+Defined in types.ts:57
 
 ___
 
@@ -139,7 +180,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:48
+Defined in types.ts:62
 
 #### Type declaration:
 
