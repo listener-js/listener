@@ -84,21 +84,19 @@ export class Listener {
 
     for (const id in instances) {
       const instance = instances[id]
-      let out
+      const instanceFn =
+        typeof fn === "string" ? instance[fn] : fn
 
-      if (typeof fn === "string") {
-        if (!instance[fn]) {
-          continue
-        }
-        out = instance[fn](
-          [id, ..._lid],
-          id,
-          instances[id],
-          ...args
-        )
-      } else {
-        out = fn([id, ..._lid], id, instances[id], ...args)
+      if (instance.then || !instanceFn) {
+        continue
       }
+
+      const out = instanceFn(
+        [id, ..._lid],
+        id,
+        instances[id],
+        ...args
+      )
 
       if (out && out.then) {
         promises.push(out)
@@ -533,10 +531,6 @@ export class Listener {
     instanceId: string,
     instance: any
   ): void | Promise<any> {
-    if (instance.then) {
-      return
-    }
-
     const listeners = this.extractListeners(instance)
 
     this.instances[instanceId] = instance

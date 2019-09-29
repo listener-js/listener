@@ -43,6 +43,13 @@ export type ListenerCallback = (
   ...args: any[]
 ) => void | Promise<any>
 
+export type ListenerCallbackArgs = [
+  string[],
+  string,
+  any,
+  ...any[]
+]
+
 export type ListenerInstances = Record<string, any>
 
 export type ListenerOutputs = {
