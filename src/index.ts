@@ -88,11 +88,11 @@ export class Listener {
     instances: Record<string, any>,
     fn: string | ListenerCallback
   ): ListenerOutputs {
+    const promises = []
     const promisesById = {}
-    const valuesById = {}
 
-    let promises = []
-    let values = []
+    const values = []
+    const valuesById = {}
 
     for (const id in instances) {
       const instance = instances[id]
@@ -113,11 +113,11 @@ export class Listener {
       }
 
       if (out && out.then) {
+        promises.push(out)
         promisesById[id] = out
-        promises = promises.concat(out)
       } else {
+        values.push(out)
         valuesById[id] = out
-        values = values.concat(out)
       }
     }
 
@@ -200,17 +200,16 @@ export class Listener {
     lists: ListenerBindings,
     list: ListenerBindingItem[],
     key: string
-  ): ListenerBindingItem[] {
+  ): void {
     if (lists[key]) {
       for (const item of lists[key]) {
         const opts = this.options[key]
           ? this.options[key][item]
           : {}
 
-        list = list.concat([[item, opts]])
+        list.push([item, opts])
       }
     }
-    return list
   }
 
   private emit(
@@ -330,31 +329,31 @@ export class Listener {
     let key2: string
     let list: ListenerBindingItem[] = [[fnId, { index: 0 }]]
 
-    list = this.addList(lists, list, "**")
+    this.addList(lists, list, "**")
 
     for (const i of id.slice(0).reverse()) {
       key = key ? i + "." + key : i
-      list = this.addList(lists, list, "**." + key)
+      this.addList(lists, list, "**." + key)
     }
 
     if (key) {
-      list = this.addList(lists, list, key)
+      this.addList(lists, list, key)
     }
 
     for (const i of id) {
       key2 = key2 ? key2 + "." + i : i
-      list = this.addList(lists, list, key2 + ".**")
+      this.addList(lists, list, key2 + ".**")
     }
 
     if (id.length <= 1) {
-      list = this.addList(lists, list, "*")
+      this.addList(lists, list, "*")
     } else {
-      list = this.addList(
+      this.addList(
         lists,
         list,
         "*." + id.slice(1).join(".")
       )
-      list = this.addList(
+      this.addList(
         lists,
         list,
         id.slice(0, -1).join(".") + ".*"
@@ -375,7 +374,7 @@ export class Listener {
   }
 
   private extractListeners(instance: any): string[] {
-    let listeners = []
+    const listeners = []
 
     for (const name in instance) {
       const fn = instance[name]
@@ -387,7 +386,7 @@ export class Listener {
           .replace(this.commentRegex, "")
           .match(this.fnRegex)
       ) {
-        listeners = listeners.concat(name)
+        listeners.push(name)
       }
     }
 
@@ -464,7 +463,7 @@ export class Listener {
       return
     }
 
-    let promises = []
+    const promises = []
 
     const {
       promisesById,
@@ -484,7 +483,7 @@ export class Listener {
     for (const id in promisesById) {
       const promise = promisesById[id]
 
-      promises = promises.concat(
+      promises.push(
         promise.then((binding: ListenerBind): void => {
           this.bindOutputs = {
             ...this.bindOutputs,
