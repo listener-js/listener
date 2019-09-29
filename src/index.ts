@@ -12,6 +12,8 @@ import {
 } from "./types"
 
 export class Listener {
+  public arrow = " < "
+
   public commentRegex = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm
   public fnRegex = /^(\(|function \w*\()?\s*lid[\),\s]/
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
@@ -36,7 +38,7 @@ export class Listener {
     targetId: string,
     options?: ListenerOptions
   ): void {
-    const match = matchId.join(".")
+    const match = matchId.join(this.arrow)
 
     this.bindings[match] = this.bindings[match] || []
 
@@ -332,8 +334,8 @@ export class Listener {
     this.addList(lists, list, "**")
 
     for (const i of id.slice(0).reverse()) {
-      key = key ? i + "." + key : i
-      this.addList(lists, list, "**." + key)
+      key = key ? i + this.arrow + key : i
+      this.addList(lists, list, "**" + this.arrow + key)
     }
 
     if (key) {
@@ -341,8 +343,8 @@ export class Listener {
     }
 
     for (const i of id) {
-      key2 = key2 ? key2 + "." + i : i
-      this.addList(lists, list, key2 + ".**")
+      key2 = key2 ? key2 + this.arrow + i : i
+      this.addList(lists, list, key2 + this.arrow + "**")
     }
 
     if (id.length <= 1) {
@@ -351,12 +353,12 @@ export class Listener {
       this.addList(
         lists,
         list,
-        "*." + id.slice(1).join(".")
+        "*" + this.arrow + id.slice(1).join(this.arrow)
       )
       this.addList(
         lists,
         list,
-        id.slice(0, -1).join(".") + ".*"
+        id.slice(0, -1).join(this.arrow) + this.arrow + "*"
       )
     }
 
