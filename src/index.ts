@@ -76,9 +76,9 @@ export class Listener {
       }
     }
 
-    if (loadPromises || bindingPromises) {
+    if (loadPromises || bindingPromises.length) {
       return Promise.all(loadPromises || [])
-        .then(() => Promise.all(bindingPromises || []))
+        .then(() => Promise.all(bindingPromises))
         .then(() => {
           this.loadBindings(
             lid,
@@ -131,28 +131,58 @@ export class Listener {
     return [joinInstanceId, fnId]
   }
 
-  public reducePromises(
-    items: any[] | Record<string, any>,
-    fn: (string) => void | Promise<any>
-  ): void | Promise<any>[] {
+  public separatePromises(
+    _lid: string[],
+    args: any[],
+    instances: Record<string, any>,
+    fn:
+      | string
+      | ((
+          lid: string[],
+          instanceId: string,
+          instance: any,
+          ...args: any[]
+        ) => void | Promise<any>)
+  ): [
+    Promise<any>[],
+    any[],
+    Record<string, Promise<any>>,
+    Record<string, any>
+  ] {
+    const promisesById = {}
+    const valuesById = {}
+
     let promises = []
-    let array = []
+    let values = []
 
-    array = Array.isArray(items)
-      ? items
-      : Object.keys(items)
+    for (const id in instances) {
+      const instance = instances[id]
+      let out
 
-    for (const id of array) {
-      const out = fn(id)
+      if (typeof fn === "string") {
+        if (!instance[fn]) {
+          continue
+        }
+        out = instance[fn](
+          [id, ..._lid],
+          id,
+          instances[id],
+          ...args
+        )
+      } else {
+        out = fn([id, ..._lid], id, instances[id], ...args)
+      }
 
       if (out && out.then) {
+        promisesById[id] = out
         promises = promises.concat(out)
+      } else {
+        valuesById[id] = out
+        values = values.concat(out)
       }
     }
 
-    if (promises.length) {
-      return promises
-    }
+    return [promises, values, promisesById, valuesById]
   }
 
   public reset(lid: string[]): void {
@@ -425,15 +455,16 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any>[] {
-    return this.reducePromises(instances, (id: string) =>
-      this.instanceLoaded(
-        [id, ...lid],
-        id,
-        instances[id],
-        this,
-        options
-      )
+    const [promises] = this.separatePromises(
+      lid,
+      [this, options],
+      instances,
+      this.instanceLoaded
     )
+
+    if (promises.length) {
+      return promises
+    }
   }
 
   private instanceLoaded(
@@ -458,37 +489,32 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): [Record<string, ListenerBind>, Promise<any>[] | void] {
-    const bindings = {}
+  ): [Record<string, ListenerBind>, Promise<any>[]] {
+    let promises = []
 
-    const promises = this.reducePromises(
+    const [
+      ,
+      ,
+      promisesById,
+      valuesById,
+    ] = this.separatePromises(
+      lid,
+      [this, options],
       instances,
-      (id: string) => {
-        const instance = instances[id]
-
-        if (!instance.listenerBind) {
-          return
-        }
-
-        const out = instance.listenerBind(
-          lid,
-          id,
-          instances[id],
-          this,
-          options
-        )
-
-        if (out && out.then) {
-          return out.then((binding: ListenerBind): void => {
-            bindings[id] = binding
-          })
-        } else {
-          bindings[id] = out
-        }
-      }
+      "listenerBind"
     )
 
-    return [bindings, promises]
+    for (const id in promisesById) {
+      const promise = promisesById[id]
+
+      promises = promises.concat(
+        promise.then((binding: ListenerBind): void => {
+          valuesById[id] = binding
+        })
+      )
+    }
+
+    return [valuesById, promises]
   }
 
   private loadBindings(
@@ -535,9 +561,16 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>
   ): void | Promise<any>[] {
-    return this.reducePromises(instances, (id: string) =>
-      this.loadInstance([id, ...lid], id, instances[id])
+    const [promises] = this.separatePromises(
+      lid,
+      [],
+      instances,
+      this.loadInstance
     )
+
+    if (promises.length) {
+      return promises
+    }
   }
 
   private loadInstance(
