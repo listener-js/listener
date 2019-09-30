@@ -56,7 +56,7 @@ export class Listener {
     _lid: string[],
     args: any[],
     instances: Record<string, any>,
-    fn: string | ListenerCallback
+    fn: ListenerCallback
   ): ListenerOutputs {
     const promises = []
     const promisesById = {}
@@ -65,15 +65,11 @@ export class Listener {
     const valuesById = {}
 
     for (const id in instances) {
-      const instance = instances[id]
-      const instanceFn =
-        typeof fn === "string" ? instance[fn] : fn
-
-      if (!instanceFn) {
+      if (!fn) {
         continue
       }
 
-      const out = instanceFn(
+      const out = fn(
         [id, ..._lid],
         id,
         instances[id],
@@ -149,56 +145,79 @@ export class Listener {
       }
     }
 
-    this.loadInstance(
+    this.wrapFunction(
       ["listener", ...lid],
       "listener",
       this
     )
 
-    this.loadBinding(
+    this.applyBinding(
       ["listener", ...lid],
       [
         [
-          ["listener.instanceLoaded", "log", "**"],
+          ["listener.listenerLoaded", "log", "**"],
           "listener.logLoaded",
         ],
         [
           ["listener.load", "**"],
-          "listener.loadInstances",
+          "listener.wrapFunctions",
           { prepend: 0.3 },
         ],
         [
           ["listener.load", "**"],
-          "listener.readBindings",
+          "listener.listenersBindings",
           { prepend: 0.2 },
         ],
         [
           ["listener.load", "**"],
-          "listener.loadBindings",
+          "listener.applyBindings",
           { prepend: 0.1 },
         ],
         [
           ["listener.load", "**"],
-          "listener.instancesLoaded",
+          "listener.listenersLoaded",
           { append: 0.1 },
         ],
       ]
     )
   }
 
-  private addList(
-    lists: ListenerBindings,
-    list: ListenerBindingItem[],
-    key: string
+  private applyBindings(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
   ): void {
-    if (lists[key]) {
-      for (const item of lists[key]) {
-        const opts = this.options[key]
-          ? this.options[key][item]
-          : {}
+    if (options && options.reload === true) {
+      return
+    }
 
-        list.push([item, opts])
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+      const binding = this.bindOutputs[instanceId]
+
+      if (!binding) {
+        continue
       }
+
+      this.applyBinding(
+        [instanceId, ...lid],
+        binding,
+        instanceId,
+        instance,
+        options
+      )
+    }
+  }
+
+  private applyBinding(
+    lid: string[],
+    binding: ListenerBind,
+    instanceId?: string,
+    instance?: any,
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    for (const [match, targetId, options] of binding) {
+      this.bind(lid, match, targetId, options)
     }
   }
 
@@ -319,31 +338,31 @@ export class Listener {
     let key2: string
     let list: ListenerBindingItem[] = [[fnId, { index: 0 }]]
 
-    this.addList(lists, list, "**")
+    this.listAdd(lists, list, "**")
 
     for (const i of id.slice(0).reverse()) {
       key = key ? i + this.arrow + key : i
-      this.addList(lists, list, "**" + this.arrow + key)
+      this.listAdd(lists, list, "**" + this.arrow + key)
     }
 
     if (key) {
-      this.addList(lists, list, key)
+      this.listAdd(lists, list, key)
     }
 
     for (const i of id) {
       key2 = key2 ? key2 + this.arrow + i : i
-      this.addList(lists, list, key2 + this.arrow + "**")
+      this.listAdd(lists, list, key2 + this.arrow + "**")
     }
 
     if (id.length <= 1) {
-      this.addList(lists, list, "*")
+      this.listAdd(lists, list, "*")
     } else {
-      this.addList(
+      this.listAdd(
         lists,
         list,
         "*" + this.arrow + id.slice(1).join(this.arrow)
       )
-      this.addList(
+      this.listAdd(
         lists,
         list,
         id.slice(0, -1).join(this.arrow) + this.arrow + "*"
@@ -405,7 +424,72 @@ export class Listener {
     return found
   }
 
-  private instancesLoaded(
+  private listenersBindings(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): Promise<any> | void {
+    if (options && options.reload === true) {
+      return
+    }
+
+    const promises = []
+
+    for (const instanceId in instances) {
+      if (instances[instanceId].listenerBindings) {
+        this.bind(
+          lid,
+          ["listener.listenerBindings", instanceId, "**"],
+          `${instanceId}.listenerBindings`,
+          { prepend: true, return: true }
+        )
+      }
+    }
+
+    const {
+      promisesById,
+      valuesById,
+    } = this.captureOutputs(
+      lid,
+      [this, options],
+      instances,
+      this.listenerBindings
+    )
+
+    this.bindOutputs = {
+      ...this.bindOutputs,
+      ...valuesById,
+    }
+
+    for (const id in promisesById) {
+      const promise = promisesById[id]
+
+      promises.push(
+        promise.then((binding: ListenerBind): void => {
+          this.bindOutputs = {
+            ...this.bindOutputs,
+            [id]: binding,
+          }
+        })
+      )
+    }
+
+    if (promises.length) {
+      return Promise.all(promises)
+    }
+  }
+
+  private listenerBindings(
+    lid: string[],
+    instanceId: string,
+    instance: any,
+    listener: Listener,
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    return
+  }
+
+  private listenersLoaded(
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
@@ -418,7 +502,7 @@ export class Listener {
       lid,
       [this, options],
       instances,
-      this.instanceLoaded
+      this.listenerLoaded
     )
 
     if (promises.length) {
@@ -426,7 +510,7 @@ export class Listener {
     }
   }
 
-  private instanceLoaded(
+  private listenerLoaded(
     lid: string[],
     instanceId: string,
     instance: any,
@@ -434,16 +518,6 @@ export class Listener {
     options?: Record<string, any>
   ): void | Promise<any> {
     return
-  }
-
-  private listSort(
-    [, a = {}]: ListenerBindingItem,
-    [, b = {}]: ListenerBindingItem
-  ): number {
-    const aIndex = this.optsToIndex(a)
-    const bIndex = this.optsToIndex(b)
-
-    return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
   }
 
   private listenerWrapper(
@@ -456,95 +530,30 @@ export class Listener {
     }
   }
 
-  private loadBindings(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
+  private listAdd(
+    lists: ListenerBindings,
+    list: ListenerBindingItem[],
+    key: string
   ): void {
-    if (options && options.reload === true) {
-      return
-    }
+    if (lists[key]) {
+      for (const item of lists[key]) {
+        const opts = this.options[key]
+          ? this.options[key][item]
+          : {}
 
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
-      const binding = this.bindOutputs[instanceId]
-
-      if (!binding) {
-        continue
+        list.push([item, opts])
       }
-
-      this.loadBinding(
-        [instanceId, ...lid],
-        binding,
-        instanceId,
-        instance,
-        options
-      )
     }
   }
 
-  private loadBinding(
-    lid: string[],
-    binding: ListenerBind,
-    instanceId?: string,
-    instance?: any,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    for (const [match, targetId, options] of binding) {
-      this.bind(lid, match, targetId, options)
-    }
-  }
+  private listSort(
+    [, a = {}]: ListenerBindingItem,
+    [, b = {}]: ListenerBindingItem
+  ): number {
+    const aIndex = this.optsToIndex(a)
+    const bIndex = this.optsToIndex(b)
 
-  private loadInstances(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    if (options && options.reload === true) {
-      return
-    }
-
-    const { promises } = this.captureOutputs(
-      lid,
-      [],
-      instances,
-      this.loadInstance
-    )
-
-    if (promises.length) {
-      return Promise.all(promises)
-    }
-  }
-
-  private loadInstance(
-    lid: string[],
-    instanceId: string,
-    instance: any
-  ): void | Promise<any> {
-    this.instances[instanceId] = instance
-
-    if (instance.then) {
-      return
-    }
-
-    const listeners = this.extractListeners(instance)
-
-    for (const fnName of listeners) {
-      const fnId = `${instanceId}.${fnName}`
-
-      if (!instance[fnName] || this.originalFns[fnId]) {
-        continue
-      }
-
-      this.originalFns[fnId] = instance[fnName]
-
-      instance[fnName] = this.listenerWrapper(
-        fnId,
-        instanceId
-      )
-
-      this.listenerFns[fnId] = instance[fnName]
-    }
+    return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
   }
 
   private logLoaded(
@@ -576,47 +585,55 @@ export class Listener {
     return 1
   }
 
-  private readBindings(
+  private wrapFunctions(
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): Promise<any> | void {
+  ): void | Promise<any> {
     if (options && options.reload === true) {
       return
     }
 
-    const promises = []
-
-    const {
-      promisesById,
-      valuesById,
-    } = this.captureOutputs(
+    const { promises } = this.captureOutputs(
       lid,
-      [this, options],
+      [],
       instances,
-      "listenerBind"
+      this.wrapFunction
     )
-
-    this.bindOutputs = {
-      ...this.bindOutputs,
-      ...valuesById,
-    }
-
-    for (const id in promisesById) {
-      const promise = promisesById[id]
-
-      promises.push(
-        promise.then((binding: ListenerBind): void => {
-          this.bindOutputs = {
-            ...this.bindOutputs,
-            [id]: binding,
-          }
-        })
-      )
-    }
 
     if (promises.length) {
       return Promise.all(promises)
+    }
+  }
+
+  private wrapFunction(
+    lid: string[],
+    instanceId: string,
+    instance: any
+  ): void | Promise<any> {
+    this.instances[instanceId] = instance
+
+    if (instance.then) {
+      return
+    }
+
+    const listeners = this.extractListeners(instance)
+
+    for (const fnName of listeners) {
+      const fnId = `${instanceId}.${fnName}`
+
+      if (!instance[fnName] || this.originalFns[fnId]) {
+        continue
+      }
+
+      this.originalFns[fnId] = instance[fnName]
+
+      instance[fnName] = this.listenerWrapper(
+        fnId,
+        instanceId
+      )
+
+      this.listenerFns[fnId] = instance[fnName]
     }
   }
 }

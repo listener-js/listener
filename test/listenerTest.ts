@@ -127,14 +127,14 @@ test("bind", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerBind", (): void => {
+test("listenerBindings", (): void => {
   expect.assertions(1)
 
   const Test = {
     fn: (lid: string[]): void => {
       expect(lid).toEqual(["Test.fn", "MyClass.fn"])
     },
-    listenerBind: (
+    listenerBindings: (
       lid: string[],
       instanceId: string
     ): any[] => [[["MyClass.fn"], `${instanceId}.fn`]],
@@ -145,7 +145,7 @@ test("listenerBind", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerBind self", (): void => {
+test("listenerBindings self", (): void => {
   expect.assertions(2)
 
   const Test = {
@@ -155,7 +155,7 @@ test("listenerBind self", (): void => {
     fn2: (lid: string[]): void => {
       expect(lid).toEqual(["Test.fn2", "Test.fn"])
     },
-    listenerBind: (
+    listenerBindings: (
       lid: string[],
       instanceId: string
     ): any[] => [
@@ -168,7 +168,7 @@ test("listenerBind self", (): void => {
   Test.fn([])
 })
 
-test("listenerBind with listener.load", (): void => {
+test("listenerBindings with listener.load", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -179,7 +179,7 @@ test("listenerBind with listener.load", (): void => {
         "listener.load",
       ])
     },
-    listenerBind: (
+    listenerBindings: (
       lid: string[],
       instanceId: string
     ): any[] => [
@@ -190,25 +190,25 @@ test("listenerBind with listener.load", (): void => {
   load([], { Test })
 })
 
-test("listenerBind with listener.instanceLoaded", (): void => {
+test("listenerBindings with listener.listenerLoaded", (): void => {
   expect.assertions(1)
 
   const Test = {
     fn: (lid: string[]): void => {
       expect(lid).toEqual([
         "Test.fn",
-        "listener.instanceLoaded",
+        "listener.listenerLoaded",
         "Test",
-        "listener.instancesLoaded",
+        "listener.listenersLoaded",
         "listener.load",
       ])
     },
-    listenerBind: (
+    listenerBindings: (
       lid: string[],
       instanceId: string
     ): any[] => [
       [
-        ["listener.instanceLoaded", instanceId, "**"],
+        ["listener.listenerLoaded", instanceId, "**"],
         `${instanceId}.fn`,
       ],
     ],
