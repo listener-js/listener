@@ -444,6 +444,20 @@ export class Listener {
           { prepend: true, return: true }
         )
       }
+      if (instances[instanceId].listenerLoaded) {
+        this.bind(
+          lid,
+          ["listener.listenerLoaded", instanceId, "**"],
+          `${instanceId}.listenerLoaded`
+        )
+      }
+      if (instances[instanceId].listenerReset) {
+        this.bind(
+          lid,
+          ["listener.listenerReset", instanceId, "**"],
+          `${instanceId}.listenerReset`
+        )
+      }
     }
 
     const {
