@@ -155,38 +155,34 @@ export class Listener {
       this
     )
 
-    this.bind(
-      lid,
-      ["listener.instanceLoaded", "log", "**"],
-      "listener.logLoaded"
-    )
-
-    this.bind(
-      lid,
-      ["listener.load", "**"],
-      "listener.loadInstances",
-      { prepend: 0.3 }
-    )
-
-    this.bind(
-      lid,
-      ["listener.load", "**"],
-      "listener.readBindings",
-      { prepend: 0.2 }
-    )
-
-    this.bind(
-      lid,
-      ["listener.load", "**"],
-      "listener.loadBindings",
-      { prepend: 0.1 }
-    )
-
-    this.bind(
-      lid,
-      ["listener.load", "**"],
-      "listener.instancesLoaded",
-      { append: 0.1 }
+    this.loadBinding(
+      ["listener", ...lid],
+      [
+        [
+          ["listener.instanceLoaded", "log", "**"],
+          "listener.logLoaded",
+        ],
+        [
+          ["listener.load", "**"],
+          "listener.loadInstances",
+          { prepend: 0.3 },
+        ],
+        [
+          ["listener.load", "**"],
+          "listener.readBindings",
+          { prepend: 0.2 },
+        ],
+        [
+          ["listener.load", "**"],
+          "listener.loadBindings",
+          { prepend: 0.1 },
+        ],
+        [
+          ["listener.load", "**"],
+          "listener.instancesLoaded",
+          { append: 0.1 },
+        ],
+      ]
     )
   }
 
@@ -490,8 +486,8 @@ export class Listener {
   private loadBinding(
     lid: string[],
     binding: ListenerBind,
-    instanceId: string,
-    instance: any,
+    instanceId?: string,
+    instance?: any,
     options?: Record<string, any>
   ): void | Promise<any> {
     for (const [match, targetId, options] of binding) {

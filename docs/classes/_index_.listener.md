@@ -154,7 +154,7 @@ Defined in index.ts:27
 
 ▸ **addList**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *void*
 
-Defined in index.ts:193
+Defined in index.ts:189
 
 **Parameters:**
 
@@ -210,7 +210,7 @@ ___
 
 ▸ **emit**(`_lid`: string[], `fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:209
+Defined in index.ts:205
 
 **Parameters:**
 
@@ -230,7 +230,7 @@ ___
 
 ▸ **emitList**(`_lid`: string[], `fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:315
+Defined in index.ts:311
 
 **Parameters:**
 
@@ -248,7 +248,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *string[]*
 
-Defined in index.ts:370
+Defined in index.ts:366
 
 **Parameters:**
 
@@ -264,7 +264,7 @@ ___
 
 ▸ **findLoadBindings**(`instances`: Record‹string, any›): *boolean*
 
-Defined in index.ts:390
+Defined in index.ts:386
 
 **Parameters:**
 
@@ -280,7 +280,7 @@ ___
 
 ▸ **instanceLoaded**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:433
+Defined in index.ts:429
 
 **Parameters:**
 
@@ -300,7 +300,7 @@ ___
 
 ▸ **instancesLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:412
+Defined in index.ts:408
 
 **Parameters:**
 
@@ -318,7 +318,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:443
+Defined in index.ts:439
 
 **Parameters:**
 
@@ -335,7 +335,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:453
+Defined in index.ts:449
 
 **Parameters:**
 
@@ -368,9 +368,9 @@ ___
 
 ### `Private` loadBinding
 
-▸ **loadBinding**(`lid`: string[], `binding`: [ListenerBind](../modules/_types_.md#listenerbind), `instanceId`: string, `instance`: any, `options?`: Record‹string, any›): *void | Promise‹any›*
+▸ **loadBinding**(`lid`: string[], `binding`: [ListenerBind](../modules/_types_.md#listenerbind), `instanceId?`: string, `instance?`: any, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:490
+Defined in index.ts:486
 
 **Parameters:**
 
@@ -378,8 +378,8 @@ Name | Type |
 ------ | ------ |
 `lid` | string[] |
 `binding` | [ListenerBind](../modules/_types_.md#listenerbind) |
-`instanceId` | string |
-`instance` | any |
+`instanceId?` | string |
+`instance?` | any |
 `options?` | Record‹string, any› |
 
 **Returns:** *void | Promise‹any›*
@@ -390,7 +390,7 @@ ___
 
 ▸ **loadBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void*
 
-Defined in index.ts:463
+Defined in index.ts:459
 
 **Parameters:**
 
@@ -408,7 +408,7 @@ ___
 
 ▸ **loadInstance**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:523
+Defined in index.ts:519
 
 **Parameters:**
 
@@ -426,7 +426,7 @@ ___
 
 ▸ **loadInstances**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:502
+Defined in index.ts:498
 
 **Parameters:**
 
@@ -444,7 +444,7 @@ ___
 
 ▸ **logLoaded**(`lid`: string[], `instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:554
+Defined in index.ts:550
 
 **Parameters:**
 
@@ -462,7 +462,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:562
+Defined in index.ts:558
 
 **Parameters:**
 
@@ -494,7 +494,7 @@ ___
 
 ▸ **readBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any› | void*
 
-Defined in index.ts:583
+Defined in index.ts:579
 
 **Parameters:**
 
