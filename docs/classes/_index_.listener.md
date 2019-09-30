@@ -444,7 +444,7 @@ ___
 
 ▸ **logLoaded**(`lid`: string[], `instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:556
+Defined in index.ts:560
 
 **Parameters:**
 
@@ -462,7 +462,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:564
+Defined in index.ts:568
 
 **Parameters:**
 
@@ -494,7 +494,7 @@ ___
 
 ▸ **readBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›[] | void*
 
-Defined in index.ts:585
+Defined in index.ts:589
 
 **Parameters:**
 

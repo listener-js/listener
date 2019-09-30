@@ -87,7 +87,7 @@ export class Listener {
       const instanceFn =
         typeof fn === "string" ? instance[fn] : fn
 
-      if (instance.then || !instanceFn) {
+      if (!instanceFn) {
         continue
       }
 
@@ -531,9 +531,13 @@ export class Listener {
     instanceId: string,
     instance: any
   ): void | Promise<any> {
-    const listeners = this.extractListeners(instance)
-
     this.instances[instanceId] = instance
+
+    if (instance.then) {
+      return
+    }
+
+    const listeners = this.extractListeners(instance)
 
     for (const fnName of listeners) {
       const fnId = `${instanceId}.${fnName}`

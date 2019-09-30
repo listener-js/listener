@@ -704,10 +704,10 @@ test("load return value", () => {
   expect(load([], { test })).toBe(instance.instances)
 })
 
-test("ignore promise instances", async () => {
+test("promise instance", async () => {
   expect.assertions(1)
   const promise = delay(1, test)
   load([], { test: promise })
   await promise
-  expect(instance.instances.test).not.toBeDefined()
+  expect(instance.instances.test).toBe(promise)
 })
