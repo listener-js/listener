@@ -191,7 +191,7 @@ ___
 
 ▸ **captureOutputs**(`_lid`: string[], `args`: any[], `instances`: Record‹string, any›, `fn`: string | [ListenerCallback](../modules/_types_.md#listenercallback)): *[ListenerOutputs](../modules/_types_.md#listeneroutputs)*
 
-Defined in index.ts:73
+Defined in index.ts:55
 
 **Parameters:**
 
@@ -298,7 +298,7 @@ ___
 
 ### `Private` instancesLoaded
 
-▸ **instancesLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›[]*
+▸ **instancesLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
 Defined in index.ts:418
 
@@ -310,7 +310,7 @@ Name | Type |
 `instances` | Record‹string, any› |
 `options?` | Record‹string, any› |
 
-**Returns:** *void | Promise‹any›[]*
+**Returns:** *void | Promise‹any›*
 
 ___
 
@@ -352,7 +352,7 @@ ___
 
 ▸ **load**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Record‹string, any› | Promise‹Record‹string, any››*
 
-Defined in index.ts:55
+Defined in index.ts:95
 
 **Parameters:**
 
@@ -424,7 +424,7 @@ ___
 
 ### `Private` loadInstances
 
-▸ **loadInstances**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›[]*
+▸ **loadInstances**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
 Defined in index.ts:508
 
@@ -436,7 +436,7 @@ Name | Type |
 `instances` | Record‹string, any› |
 `options?` | Record‹string, any› |
 
-**Returns:** *void | Promise‹any›[]*
+**Returns:** *void | Promise‹any›*
 
 ___
 
@@ -492,7 +492,7 @@ ___
 
 ### `Private` readBindings
 
-▸ **readBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any›[] | void*
+▸ **readBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any› | void*
 
 Defined in index.ts:589
 
@@ -504,7 +504,7 @@ Name | Type |
 `instances` | Record‹string, any› |
 `options?` | Record‹string, any› |
 
-**Returns:** *Promise‹any›[] | void*
+**Returns:** *Promise‹any› | void*
 
 ___
 

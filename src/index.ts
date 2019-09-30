@@ -52,24 +52,6 @@ export class Listener {
     }
   }
 
-  public load(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): Record<string, any> | Promise<Record<string, any>> {
-    if (
-      (!options || options.reload !== true) &&
-      this.findLoadBindings(instances)
-    ) {
-      return this.load(lid, instances, {
-        ...options,
-        reload: true,
-      })
-    }
-
-    return this.instances
-  }
-
   public captureOutputs(
     _lid: string[],
     args: any[],
@@ -108,6 +90,24 @@ export class Listener {
     }
 
     return { promises, promisesById, values, valuesById }
+  }
+
+  public load(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): Record<string, any> | Promise<Record<string, any>> {
+    if (
+      (!options || options.reload !== true) &&
+      this.findLoadBindings(instances)
+    ) {
+      return this.load(lid, instances, {
+        ...options,
+        reload: true,
+      })
+    }
+
+    return this.instances
   }
 
   public parseId(id: string): [string, string] {
@@ -419,7 +419,7 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): void | Promise<any>[] {
+  ): void | Promise<any> {
     if (options && options.reload === true) {
       return
     }
@@ -432,7 +432,7 @@ export class Listener {
     )
 
     if (promises.length) {
-      return promises
+      return Promise.all(promises)
     }
   }
 
@@ -509,7 +509,7 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): void | Promise<any>[] {
+  ): void | Promise<any> {
     if (options && options.reload === true) {
       return
     }
@@ -522,7 +522,7 @@ export class Listener {
     )
 
     if (promises.length) {
-      return promises
+      return Promise.all(promises)
     }
   }
 
@@ -590,7 +590,7 @@ export class Listener {
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
-  ): Promise<any>[] | void {
+  ): Promise<any> | void {
     if (options && options.reload === true) {
       return
     }
@@ -626,7 +626,7 @@ export class Listener {
     }
 
     if (promises.length) {
-      return promises
+      return Promise.all(promises)
     }
   }
 }
