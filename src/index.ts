@@ -129,13 +129,7 @@ export class Listener {
 
     for (const key in this.originalFns) {
       const [instanceId, fnId] = this.parseId(key)
-
       const instance = this.instances[instanceId]
-
-      if (instance.instanceId) {
-        delete instance.instanceId
-        delete instance.listener
-      }
 
       instance[fnId] = this.originalFns[key]
     }
