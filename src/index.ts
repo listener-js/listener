@@ -454,7 +454,7 @@ export class Listener {
       if (instances[instanceId].listenerReset) {
         this.bind(
           lid,
-          ["listener.listenerReset", instanceId, "**"],
+          ["listener.listenerReset", "**"],
           `${instanceId}.listenerReset`,
           { prepend: true }
         )
