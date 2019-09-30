@@ -1,6 +1,6 @@
 {
   "name": "@listener-js/listener",
-  "version": "2.12.2",
+  "version": "2.12.3",
   "description": "Library loader and event framework",
   "keywords": [
     "library",
