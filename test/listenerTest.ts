@@ -1,5 +1,5 @@
 import { bind, instance, load, reset } from "../"
-import { log } from "@listener-js/log"
+import log from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
   return new Promise((resolve): void => {
