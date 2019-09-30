@@ -706,8 +706,21 @@ test("load return value", () => {
 
 test("promise instance", async () => {
   expect.assertions(1)
-  const promise = delay(1, test)
+  const promise = delay(1)
   load([], { test: promise })
   await promise
   expect(instance.instances.test).toBe(promise)
+})
+
+test("promise instance overwrite", async () => {
+  expect.assertions(1)
+  const promise = delay(1)
+  const test = {
+    fn: (lid): void => {
+      expect(lid).toEqual(["test.fn"])
+    },
+  }
+  load([], { test: promise })
+  load([], { test })
+  test.fn([])
 })
