@@ -151,7 +151,7 @@ export class Listener {
       this
     )
 
-    this.applyBinding(
+    this.applyListenerBindings(
       ["listener", ...lid],
       [
         [
@@ -175,7 +175,7 @@ export class Listener {
         ],
         [
           ["listener.load", "**"],
-          "listener.applyBindings",
+          "listener.applyListenersBindings",
           { prepend: 0.1 },
         ],
         [
@@ -187,7 +187,7 @@ export class Listener {
     )
   }
 
-  private applyBindings(
+  private applyListenersBindings(
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
@@ -204,7 +204,7 @@ export class Listener {
         continue
       }
 
-      this.applyBinding(
+      this.applyListenerBindings(
         [instanceId, ...lid],
         binding,
         instanceId,
@@ -215,7 +215,7 @@ export class Listener {
     }
   }
 
-  private applyBinding(
+  private applyListenerBindings(
     lid: string[],
     binding: ListenerBind,
     instanceId?: string,
