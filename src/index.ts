@@ -436,6 +436,20 @@ export class Listener {
     const promises = []
 
     for (const instanceId in instances) {
+      if (instances[instanceId].anyListenerLoaded) {
+        this.bind(
+          lid,
+          ["listener.listenerLoaded", "**"],
+          `${instanceId}.anyListenerLoaded`
+        )
+      }
+      if (instances[instanceId].anyListenerBindings) {
+        this.bind(
+          lid,
+          ["listener.listenerBindings", "**"],
+          `${instanceId}.anyListenerBindings`
+        )
+      }
       if (instances[instanceId].listenerBindings) {
         this.bind(
           lid,
