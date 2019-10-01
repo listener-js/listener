@@ -348,13 +348,18 @@ export class Listener {
         continue
       }
 
+      const extArgs =
+        options && options.listener ? [this, ...args] : args
+
       if (isBefore) {
         let tmpOut: any
 
         if (promise) {
-          tmpOut = promise.then((): any => fn(id, ...args))
+          tmpOut = promise.then((): any =>
+            fn(id, ...extArgs)
+          )
         } else {
-          tmpOut = fn(id, ...args)
+          tmpOut = fn(id, ...extArgs)
         }
 
         if (tmpOut && tmpOut.then) {
@@ -367,10 +372,10 @@ export class Listener {
       } else if (isMain) {
         if (promise) {
           promise = promise.then(
-            (): any => out || fn(id, ...args)
+            (): any => out || fn(id, ...extArgs)
           )
         } else {
-          out = out || fn(id, ...args)
+          out = out || fn(id, ...extArgs)
 
           if (out && out.then) {
             promise = out
@@ -383,12 +388,14 @@ export class Listener {
 
         if (promise) {
           tmpOut = promise.then((): any =>
-            isPeek ? fn(id, out, ...args) : fn(id, ...args)
+            isPeek
+              ? fn(id, out, ...extArgs)
+              : fn(id, ...extArgs)
           )
         } else {
           tmpOut = isPeek
-            ? fn(id, out, ...args)
-            : fn(id, ...args)
+            ? fn(id, out, ...extArgs)
+            : fn(id, ...extArgs)
         }
 
         if (tmpOut && tmpOut.then) {

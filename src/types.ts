@@ -2,6 +2,7 @@ export interface ListenerOptions {
   append?: boolean | number
   index?: number
   intercept?: boolean
+  listener?: boolean
   peek?: boolean
   prepend?: boolean | number
   return?: boolean
