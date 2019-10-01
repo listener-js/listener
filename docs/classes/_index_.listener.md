@@ -342,7 +342,7 @@ ___
 
 ▸ **listAdd**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *void*
 
-Defined in index.ts:601
+Defined in index.ts:600
 
 **Parameters:**
 
@@ -360,7 +360,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:617
+Defined in index.ts:616
 
 **Parameters:**
 
@@ -377,7 +377,7 @@ ___
 
 ▸ **listenerBindings**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:550
+Defined in index.ts:549
 
 **Parameters:**
 
@@ -397,7 +397,7 @@ ___
 
 ▸ **listenerLoaded**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:581
+Defined in index.ts:580
 
 **Parameters:**
 
@@ -417,7 +417,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:591
+Defined in index.ts:590
 
 **Parameters:**
 
@@ -434,7 +434,7 @@ ___
 
 ▸ **listenersBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any› | void*
 
-Defined in index.ts:506
+Defined in index.ts:505
 
 **Parameters:**
 
@@ -452,7 +452,7 @@ ___
 
 ▸ **listenersLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:560
+Defined in index.ts:559
 
 **Parameters:**
 
@@ -488,7 +488,7 @@ ___
 
 ▸ **logLoaded**(`lid`: string[], `instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:627
+Defined in index.ts:626
 
 **Parameters:**
 
@@ -506,7 +506,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:635
+Defined in index.ts:634
 
 **Parameters:**
 
@@ -554,7 +554,7 @@ ___
 
 ▸ **wrapFunction**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:677
+Defined in index.ts:676
 
 **Parameters:**
 
@@ -572,7 +572,7 @@ ___
 
 ▸ **wrapFunctions**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:656
+Defined in index.ts:655
 
 **Parameters:**
 

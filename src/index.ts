@@ -160,12 +160,12 @@ export class Listener {
         ],
         [
           ["listener.load", "**"],
-          "listener.applyCallbacksBindings",
+          "listener.wrapFunctions",
           { prepend: 0.4 },
         ],
         [
           ["listener.load", "**"],
-          "listener.wrapFunctions",
+          "listener.applyCallbacksBindings",
           { prepend: 0.3 },
         ],
         [
@@ -494,9 +494,8 @@ export class Listener {
       }
 
       for (const bind of binding) {
-        if (bind[0].indexOf("listener.load") > -1) {
-          found = true
-        }
+        found =
+          found || bind[0].indexOf("listener.load") > -1
       }
     }
 
