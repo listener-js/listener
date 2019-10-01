@@ -257,22 +257,6 @@ export class Listener {
     listener: Listener,
     options?: Record<string, any>
   ): void | Promise<any> {
-    if (instance.anyListenerLoaded) {
-      this.bind(
-        lid,
-        ["listener.listenerLoaded", "**"],
-        `${instanceId}.anyListenerLoaded`
-      )
-    }
-
-    if (instance.anyListenerBindings) {
-      this.bind(
-        lid,
-        ["listener.listenerBindings", "**"],
-        `${instanceId}.anyListenerBindings`
-      )
-    }
-
     if (instance.listenerBindings) {
       this.bind(
         lid,
