@@ -30,6 +30,8 @@
 
 * [applyBinding](_index_.listener.md#private-applybinding)
 * [applyBindings](_index_.listener.md#private-applybindings)
+* [applyCallbackBinding](_index_.listener.md#private-applycallbackbinding)
+* [applyCallbackBindings](_index_.listener.md#private-applycallbackbindings)
 * [bind](_index_.listener.md#bind)
 * [captureOutputs](_index_.listener.md#captureoutputs)
 * [emit](_index_.listener.md#private-emit)
@@ -153,9 +155,9 @@ Defined in index.ts:27
 
 ### `Private` applyBinding
 
-▸ **applyBinding**(`lid`: string[], `binding`: [ListenerBind](../modules/_types_.md#listenerbind), `instanceId?`: string, `instance?`: any, `options?`: Record‹string, any›): *void | Promise‹any›*
+▸ **applyBinding**(`lid`: string[], `binding`: [ListenerBind](../modules/_types_.md#listenerbind), `instanceId?`: string, `instance?`: any, `listener?`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:212
+Defined in index.ts:218
 
 **Parameters:**
 
@@ -165,6 +167,7 @@ Name | Type |
 `binding` | [ListenerBind](../modules/_types_.md#listenerbind) |
 `instanceId?` | string |
 `instance?` | any |
+`listener?` | [Listener](_index_.listener.md) |
 `options?` | Record‹string, any› |
 
 **Returns:** *void | Promise‹any›*
@@ -175,7 +178,45 @@ ___
 
 ▸ **applyBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void*
 
-Defined in index.ts:185
+Defined in index.ts:190
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`lid` | string[] |
+`instances` | Record‹string, any› |
+`options?` | Record‹string, any› |
+
+**Returns:** *void*
+
+___
+
+### `Private` applyCallbackBinding
+
+▸ **applyCallbackBinding**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
+
+Defined in index.ts:253
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`lid` | string[] |
+`instanceId` | string |
+`instance` | any |
+`listener` | [Listener](_index_.listener.md) |
+`options?` | Record‹string, any› |
+
+**Returns:** *void | Promise‹any›*
+
+___
+
+### `Private` applyCallbackBindings
+
+▸ **applyCallbackBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void*
+
+Defined in index.ts:231
 
 **Parameters:**
 
@@ -231,7 +272,7 @@ ___
 
 ▸ **emit**(`_lid`: string[], `fnId`: string, `id`: string[], `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:224
+Defined in index.ts:303
 
 **Parameters:**
 
@@ -251,7 +292,7 @@ ___
 
 ▸ **emitList**(`_lid`: string[], `fnId`: string, `id`: string[]): *[ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[]*
 
-Defined in index.ts:330
+Defined in index.ts:409
 
 **Parameters:**
 
@@ -269,7 +310,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *string[]*
 
-Defined in index.ts:385
+Defined in index.ts:464
 
 **Parameters:**
 
@@ -285,7 +326,7 @@ ___
 
 ▸ **findLoadBindings**(`instances`: Record‹string, any›): *boolean*
 
-Defined in index.ts:405
+Defined in index.ts:484
 
 **Parameters:**
 
@@ -301,7 +342,7 @@ ___
 
 ▸ **listAdd**(`lists`: [ListenerBindings](../modules/_types_.md#listenerbindings), `list`: [ListenerBindingItem](../modules/_types_.md#listenerbindingitem)[], `key`: string): *void*
 
-Defined in index.ts:562
+Defined in index.ts:601
 
 **Parameters:**
 
@@ -319,7 +360,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)], `__namedParameters`: [undefined, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]): *number*
 
-Defined in index.ts:578
+Defined in index.ts:617
 
 **Parameters:**
 
@@ -336,7 +377,7 @@ ___
 
 ▸ **listenerBindings**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:511
+Defined in index.ts:550
 
 **Parameters:**
 
@@ -356,7 +397,7 @@ ___
 
 ▸ **listenerLoaded**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:542
+Defined in index.ts:581
 
 **Parameters:**
 
@@ -376,7 +417,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:552
+Defined in index.ts:591
 
 **Parameters:**
 
@@ -393,7 +434,7 @@ ___
 
 ▸ **listenersBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Promise‹any› | void*
 
-Defined in index.ts:427
+Defined in index.ts:506
 
 **Parameters:**
 
@@ -411,7 +452,7 @@ ___
 
 ▸ **listenersLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:521
+Defined in index.ts:560
 
 **Parameters:**
 
@@ -447,7 +488,7 @@ ___
 
 ▸ **logLoaded**(`lid`: string[], `instanceId`: string, `instance`: any): *void*
 
-Defined in index.ts:588
+Defined in index.ts:627
 
 **Parameters:**
 
@@ -465,7 +506,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerOptions](../interfaces/_types_.listeneroptions.md)): *number*
 
-Defined in index.ts:596
+Defined in index.ts:635
 
 **Parameters:**
 
@@ -513,7 +554,7 @@ ___
 
 ▸ **wrapFunction**(`lid`: string[], `instanceId`: string, `instance`: any): *void | Promise‹any›*
 
-Defined in index.ts:638
+Defined in index.ts:677
 
 **Parameters:**
 
@@ -531,7 +572,7 @@ ___
 
 ▸ **wrapFunctions**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:617
+Defined in index.ts:656
 
 **Parameters:**
 

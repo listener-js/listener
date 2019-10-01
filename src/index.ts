@@ -160,6 +160,11 @@ export class Listener {
         ],
         [
           ["listener.load", "**"],
+          "listener.applyCallbackBindings",
+          { prepend: 0.4 },
+        ],
+        [
+          ["listener.load", "**"],
           "listener.wrapFunctions",
           { prepend: 0.3 },
         ],
@@ -204,6 +209,7 @@ export class Listener {
         binding,
         instanceId,
         instance,
+        this,
         options
       )
     }
@@ -214,10 +220,83 @@ export class Listener {
     binding: ListenerBind,
     instanceId?: string,
     instance?: any,
+    listener?: Listener,
     options?: Record<string, any>
   ): void | Promise<any> {
     for (const [match, targetId, options] of binding) {
       this.bind(lid, match, targetId, options)
+    }
+  }
+
+  private applyCallbackBindings(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void {
+    if (options && options.reload === true) {
+      return
+    }
+
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      this.applyCallbackBinding(
+        [instanceId, ...lid],
+        instanceId,
+        instance,
+        this,
+        options
+      )
+    }
+  }
+
+  private applyCallbackBinding(
+    lid: string[],
+    instanceId: string,
+    instance: any,
+    listener: Listener,
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    if (instance.anyListenerLoaded) {
+      this.bind(
+        lid,
+        ["listener.listenerLoaded", "**"],
+        `${instanceId}.anyListenerLoaded`
+      )
+    }
+
+    if (instance.anyListenerBindings) {
+      this.bind(
+        lid,
+        ["listener.listenerBindings", "**"],
+        `${instanceId}.anyListenerBindings`
+      )
+    }
+
+    if (instance.listenerBindings) {
+      this.bind(
+        lid,
+        ["listener.listenerBindings", instanceId, "**"],
+        `${instanceId}.listenerBindings`,
+        { prepend: true, return: true }
+      )
+    }
+
+    if (instance.listenerLoaded) {
+      this.bind(
+        lid,
+        ["listener.listenerLoaded", instanceId, "**"],
+        `${instanceId}.listenerLoaded`
+      )
+    }
+
+    if (instance.listenerReset) {
+      this.bind(
+        lid,
+        ["listener.reset", "**"],
+        `${instanceId}.listenerReset`,
+        { prepend: true }
+      )
     }
   }
 
@@ -434,46 +513,6 @@ export class Listener {
     }
 
     const promises = []
-
-    for (const instanceId in instances) {
-      if (instances[instanceId].anyListenerLoaded) {
-        this.bind(
-          lid,
-          ["listener.listenerLoaded", "**"],
-          `${instanceId}.anyListenerLoaded`
-        )
-      }
-      if (instances[instanceId].anyListenerBindings) {
-        this.bind(
-          lid,
-          ["listener.listenerBindings", "**"],
-          `${instanceId}.anyListenerBindings`
-        )
-      }
-      if (instances[instanceId].listenerBindings) {
-        this.bind(
-          lid,
-          ["listener.listenerBindings", instanceId, "**"],
-          `${instanceId}.listenerBindings`,
-          { prepend: true, return: true }
-        )
-      }
-      if (instances[instanceId].listenerLoaded) {
-        this.bind(
-          lid,
-          ["listener.listenerLoaded", instanceId, "**"],
-          `${instanceId}.listenerLoaded`
-        )
-      }
-      if (instances[instanceId].listenerReset) {
-        this.bind(
-          lid,
-          ["listener.reset", "**"],
-          `${instanceId}.listenerReset`,
-          { prepend: true }
-        )
-      }
-    }
 
     const {
       promisesById,
