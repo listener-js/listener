@@ -30,8 +30,8 @@
 
 * [applyBinding](_index_.listener.md#private-applybinding)
 * [applyBindings](_index_.listener.md#private-applybindings)
-* [applyCallbackBinding](_index_.listener.md#private-applycallbackbinding)
 * [applyCallbackBindings](_index_.listener.md#private-applycallbackbindings)
+* [applyCallbacksBindings](_index_.listener.md#private-applycallbacksbindings)
 * [bind](_index_.listener.md#bind)
 * [captureOutputs](_index_.listener.md#captureoutputs)
 * [emit](_index_.listener.md#private-emit)
@@ -192,9 +192,9 @@ Name | Type |
 
 ___
 
-### `Private` applyCallbackBinding
+### `Private` applyCallbackBindings
 
-▸ **applyCallbackBinding**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
+▸ **applyCallbackBindings**(`lid`: string[], `instanceId`: string, `instance`: any, `listener`: [Listener](_index_.listener.md), `options?`: Record‹string, any›): *void | Promise‹any›*
 
 Defined in index.ts:253
 
@@ -212,9 +212,9 @@ Name | Type |
 
 ___
 
-### `Private` applyCallbackBindings
+### `Private` applyCallbacksBindings
 
-▸ **applyCallbackBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void*
+▸ **applyCallbacksBindings**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void*
 
 Defined in index.ts:231
 

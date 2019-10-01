@@ -127,7 +127,7 @@ test("bind", (): void => {
   MyClass.fn([], true)
 })
 
-test.only("listenerBindings", (): void => {
+test("listenerBindings", (): void => {
   expect.assertions(1)
 
   const Test = {

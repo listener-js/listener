@@ -160,7 +160,7 @@ export class Listener {
         ],
         [
           ["listener.load", "**"],
-          "listener.applyCallbackBindings",
+          "listener.applyCallbacksBindings",
           { prepend: 0.4 },
         ],
         [
@@ -228,7 +228,7 @@ export class Listener {
     }
   }
 
-  private applyCallbackBindings(
+  private applyCallbacksBindings(
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
@@ -240,7 +240,7 @@ export class Listener {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
-      this.applyCallbackBinding(
+      this.applyCallbackBindings(
         [instanceId, ...lid],
         instanceId,
         instance,
@@ -250,7 +250,7 @@ export class Listener {
     }
   }
 
-  private applyCallbackBinding(
+  private applyCallbackBindings(
     lid: string[],
     instanceId: string,
     instance: any,
