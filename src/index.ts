@@ -192,7 +192,7 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
-    if (options && options.reload === true) {
+    if (options && options.reload) {
       return
     }
 
@@ -233,7 +233,7 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
-    if (options && options.reload === true) {
+    if (options && options.reload) {
       return
     }
 
@@ -498,7 +498,7 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Promise<any> | void {
-    if (options && options.reload === true) {
+    if (options && options.reload) {
       return
     }
 
@@ -552,7 +552,7 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
-    if (options && options.reload === true) {
+    if (options && options.reload) {
       return
     }
 
@@ -648,7 +648,7 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
-    if (options && options.reload === true) {
+    if (options && options.reload) {
       return
     }
 
