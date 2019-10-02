@@ -54,7 +54,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset([])
-  load([], { MyClass, MyClass2, log })
+  load([], { MyClass, MyClass2 })
 })
 
 test("defined", (): void => {
@@ -136,7 +136,6 @@ test("listenerBindings", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      listener: Listener,
       instanceId: string
     ): any[] => [[["MyClass.fn"], `${instanceId}.fn`]],
   }
@@ -158,7 +157,6 @@ test("listenerBindings self", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      listener: Listener,
       instanceId: string
     ): any[] => [
       [[`${instanceId}.fn`], `${instanceId}.fn2`],
@@ -183,7 +181,6 @@ test("listenerBindings with listener.load", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      listener: Listener,
       instanceId: string
     ): any[] => [
       [["listener.load", "**"], `${instanceId}.fn`],
@@ -208,7 +205,6 @@ test("listenerBindings with listener.listenerLoaded", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      listener: Listener,
       instanceId: string
     ): any[] => [
       [

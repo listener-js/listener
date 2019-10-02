@@ -1,4 +1,4 @@
-export interface ListenerOptions {
+export interface ListenerBindingOptions {
   append?: boolean | number
   index?: number
   intercept?: boolean
@@ -8,34 +8,13 @@ export interface ListenerOptions {
   return?: boolean
 }
 
-export type ListenerFunction = (
-  id: string[],
-  ...arg: any[]
-) => any
+export type ListenerBindings = ListenerBinding[]
 
-export type Listeners = Record<string, ListenerFunction>
-
-export type ListenerBind = ListenerBindItem[]
-
-export type ListenerBindItem = [
+export type ListenerBinding = [
   string[],
   string,
-  ListenerOptions?
+  ListenerBindingOptions?
 ]
-
-export type ListenerBindingItem = [string, ListenerOptions]
-
-export type ListenerBindingOptions = Record<
-  string,
-  ListenerOptions
->
-
-export type ListenerBindings = Record<string, string[]>
-
-export type ListenerBindingsListSorter = (
-  a: ListenerBindingItem,
-  b: ListenerBindingItem
-) => number
 
 export type ListenerCallback = (
   lid: string[],
@@ -51,21 +30,39 @@ export type ListenerCallbackArgs = [
   ...any[]
 ]
 
-export type ListenerInstances = Record<string, any>
-
-export type ListenerOutputs = {
+export type ListenerCaptureOutputs = {
   promises: Promise<any>[]
   promisesById: Record<string, Promise<any>>
   values: any[]
   valuesById: Record<string, any>
 }
 
-export type ListenerPending = Record<string, Promise<any>>
-
-export type ListenerPendingResolvers = Record<
+export type ListenerInternalBindings = Record<
   string,
-  Function
+  string[]
 >
+
+export type ListenerInternalBinding = [
+  string,
+  ListenerBindingOptions
+]
+
+export type ListenerInternalFunctions = Record<
+  string,
+  ListenerInternalFunction
+>
+
+export type ListenerInternalFunction = (
+  id: string[],
+  ...arg: any[]
+) => any
+
+export type ListenerInternalOptions = Record<
+  string,
+  ListenerBindingOptions
+>
+
+export type ListenerInternalInstances = Record<string, any>
 
 export type LogEvent = (
   id: string[],

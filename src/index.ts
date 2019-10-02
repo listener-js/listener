@@ -1,14 +1,14 @@
 import {
   ListenerBindings,
-  ListenerInstances,
-  Listeners,
+  ListenerInternalInstances,
+  ListenerInternalBindings,
+  ListenerInternalOptions,
   ListenerBindingOptions,
-  ListenerOptions,
-  ListenerBindingItem,
   LogEvent,
-  ListenerBind,
   ListenerCallback,
-  ListenerOutputs,
+  ListenerInternalBinding,
+  ListenerInternalFunctions,
+  ListenerCaptureOutputs,
 } from "./types"
 
 export class Listener {
@@ -18,13 +18,17 @@ export class Listener {
   public fnRegex = /^(\(|function \w*\()?\s*lid[\),\s]/
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
-  public bindings: ListenerBindings = {}
-  public instances: ListenerInstances = {}
-  public options: ListenerBindingOptions = {}
+  public bindings: ListenerInternalBindings = {}
+  public instances: ListenerInternalInstances = {}
+  public options: ListenerInternalOptions = {}
 
-  private bindOutputs: Record<string, ListenerBind> = {}
-  private listenerFns: Listeners = {}
-  private originalFns: Listeners = {}
+  private callbackBindings: Record<
+    string,
+    ListenerBindings
+  > = {}
+
+  private listenerFns: ListenerInternalFunctions = {}
+  private originalFns: ListenerInternalFunctions = {}
 
   private log: LogEvent
 
@@ -36,7 +40,7 @@ export class Listener {
     lid: string[],
     matchId: string[],
     targetId: string,
-    options?: ListenerOptions
+    options?: ListenerBindingOptions
   ): void {
     const match = matchId.join(this.arrow)
 
@@ -57,7 +61,7 @@ export class Listener {
     args: any[],
     instances: Record<string, any>,
     fn: ListenerCallback
-  ): ListenerOutputs {
+  ): ListenerCaptureOutputs {
     const promises = []
     const promisesById = {}
 
@@ -131,7 +135,7 @@ export class Listener {
     }
 
     const recordKeys = [
-      "bindOutputs",
+      "callbackBindings",
       "bindings",
       "instances",
       "listenerFns",
@@ -198,7 +202,7 @@ export class Listener {
 
     for (const instanceId in instances) {
       const instance = instances[instanceId]
-      const binding = this.bindOutputs[instanceId]
+      const binding = this.callbackBindings[instanceId]
 
       if (!binding) {
         continue
@@ -216,7 +220,7 @@ export class Listener {
 
   private applyListenerBindings(
     lid: string[],
-    binding: ListenerBind,
+    binding: ListenerBindings,
     instanceId?: string,
     instance?: any,
     options?: Record<string, any>
@@ -258,7 +262,7 @@ export class Listener {
         lid,
         ["listener.listenerBindings", instanceId, "**"],
         `${instanceId}.listenerBindings`,
-        { listener: true, prepend: true, return: true }
+        { prepend: true, return: true }
       )
     }
 
@@ -398,12 +402,14 @@ export class Listener {
     _lid: string[],
     fnId: string,
     id: string[]
-  ): ListenerBindingItem[] {
+  ): ListenerInternalBinding[] {
     const lists = this.bindings
 
     let key: string
     let key2: string
-    let list: ListenerBindingItem[] = [[fnId, { index: 0 }]]
+    let list: ListenerInternalBinding[] = [
+      [fnId, { index: 0 }],
+    ]
 
     this.listAdd(lists, list, "**")
 
@@ -475,7 +481,7 @@ export class Listener {
     let found: boolean
 
     for (const instanceId in instances) {
-      const binding = this.bindOutputs[instanceId]
+      const binding = this.callbackBindings[instanceId]
 
       if (!binding) {
         continue
@@ -511,8 +517,8 @@ export class Listener {
       this.listenerBindings
     )
 
-    this.bindOutputs = {
-      ...this.bindOutputs,
+    this.callbackBindings = {
+      ...this.callbackBindings,
       ...valuesById,
     }
 
@@ -520,9 +526,9 @@ export class Listener {
       const promise = promisesById[id]
 
       promises.push(
-        promise.then((binding: ListenerBind): void => {
-          this.bindOutputs = {
-            ...this.bindOutputs,
+        promise.then((binding: ListenerBindings): void => {
+          this.callbackBindings = {
+            ...this.callbackBindings,
             [id]: binding,
           }
         })
@@ -538,7 +544,6 @@ export class Listener {
     lid: string[],
     instanceId: string,
     instance: any,
-    listener: Listener,
     options?: Record<string, any>
   ): void | Promise<any> {
     return
@@ -586,8 +591,8 @@ export class Listener {
   }
 
   private listAdd(
-    lists: ListenerBindings,
-    list: ListenerBindingItem[],
+    lists: ListenerInternalBindings,
+    list: ListenerInternalBinding[],
     key: string
   ): void {
     if (lists[key]) {
@@ -602,8 +607,8 @@ export class Listener {
   }
 
   private listSort(
-    [, a = {}]: ListenerBindingItem,
-    [, b = {}]: ListenerBindingItem
+    [, a = {}]: ListenerInternalBinding,
+    [, b = {}]: ListenerInternalBinding
   ): number {
     const aIndex = this.optsToIndex(a)
     const bIndex = this.optsToIndex(b)
@@ -619,7 +624,9 @@ export class Listener {
     this.log = instance.logEvent
   }
 
-  private optsToIndex(opts: ListenerOptions): number {
+  private optsToIndex(
+    opts: ListenerBindingOptions
+  ): number {
     if (typeof opts.index === "number") {
       return opts.index
     }

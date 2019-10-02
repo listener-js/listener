@@ -6,84 +6,38 @@
 
 ### Interfaces
 
-* [ListenerOptions](../interfaces/_types_.listeneroptions.md)
+* [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)
 
 ### Type aliases
 
-* [ListenerBind](_types_.md#listenerbind)
-* [ListenerBindItem](_types_.md#listenerbinditem)
-* [ListenerBindingItem](_types_.md#listenerbindingitem)
-* [ListenerBindingOptions](_types_.md#listenerbindingoptions)
+* [ListenerBinding](_types_.md#listenerbinding)
 * [ListenerBindings](_types_.md#listenerbindings)
-* [ListenerBindingsListSorter](_types_.md#listenerbindingslistsorter)
 * [ListenerCallback](_types_.md#listenercallback)
 * [ListenerCallbackArgs](_types_.md#listenercallbackargs)
-* [ListenerFunction](_types_.md#listenerfunction)
-* [ListenerInstances](_types_.md#listenerinstances)
-* [ListenerOutputs](_types_.md#listeneroutputs)
-* [ListenerPending](_types_.md#listenerpending)
-* [ListenerPendingResolvers](_types_.md#listenerpendingresolvers)
-* [Listeners](_types_.md#listeners)
+* [ListenerCaptureOutputs](_types_.md#listenercaptureoutputs)
+* [ListenerInternalBinding](_types_.md#listenerinternalbinding)
+* [ListenerInternalBindings](_types_.md#listenerinternalbindings)
+* [ListenerInternalFunction](_types_.md#listenerinternalfunction)
+* [ListenerInternalFunctions](_types_.md#listenerinternalfunctions)
+* [ListenerInternalInstances](_types_.md#listenerinternalinstances)
+* [ListenerInternalOptions](_types_.md#listenerinternaloptions)
 * [LogEvent](_types_.md#logevent)
 
 ## Type aliases
 
-###  ListenerBind
+###  ListenerBinding
 
-Ƭ **ListenerBind**: *[ListenerBindItem](_types_.md#listenerbinditem)[]*
+Ƭ **ListenerBinding**: *[string[], string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
 
-Defined in types.ts:18
-
-___
-
-###  ListenerBindItem
-
-Ƭ **ListenerBindItem**: *[string[], string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]*
-
-Defined in types.ts:20
-
-___
-
-###  ListenerBindingItem
-
-Ƭ **ListenerBindingItem**: *[string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)]*
-
-Defined in types.ts:26
-
-___
-
-###  ListenerBindingOptions
-
-Ƭ **ListenerBindingOptions**: *Record‹string, [ListenerOptions](../interfaces/_types_.listeneroptions.md)›*
-
-Defined in types.ts:28
+Defined in types.ts:13
 
 ___
 
 ###  ListenerBindings
 
-Ƭ **ListenerBindings**: *Record‹string, string[]›*
+Ƭ **ListenerBindings**: *[ListenerBinding](_types_.md#listenerbinding)[]*
 
-Defined in types.ts:33
-
-___
-
-###  ListenerBindingsListSorter
-
-Ƭ **ListenerBindingsListSorter**: *function*
-
-Defined in types.ts:35
-
-#### Type declaration:
-
-▸ (`a`: [ListenerBindingItem](_types_.md#listenerbindingitem), `b`: [ListenerBindingItem](_types_.md#listenerbindingitem)): *number*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`a` | [ListenerBindingItem](_types_.md#listenerbindingitem) |
-`b` | [ListenerBindingItem](_types_.md#listenerbindingitem) |
+Defined in types.ts:11
 
 ___
 
@@ -91,7 +45,7 @@ ___
 
 Ƭ **ListenerCallback**: *function*
 
-Defined in types.ts:40
+Defined in types.ts:19
 
 #### Type declaration:
 
@@ -112,15 +66,49 @@ ___
 
 Ƭ **ListenerCallbackArgs**: *[string[], string, any, Array]*
 
-Defined in types.ts:47
+Defined in types.ts:26
 
 ___
 
-###  ListenerFunction
+###  ListenerCaptureOutputs
 
-Ƭ **ListenerFunction**: *function*
+Ƭ **ListenerCaptureOutputs**: *object*
 
-Defined in types.ts:11
+Defined in types.ts:33
+
+#### Type declaration:
+
+* **promises**: *Promise‹any›[]*
+
+* **promisesById**: *Record‹string, Promise‹any››*
+
+* **values**: *any[]*
+
+* **valuesById**: *Record‹string, any›*
+
+___
+
+###  ListenerInternalBinding
+
+Ƭ **ListenerInternalBinding**: *[string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
+
+Defined in types.ts:45
+
+___
+
+###  ListenerInternalBindings
+
+Ƭ **ListenerInternalBindings**: *Record‹string, string[]›*
+
+Defined in types.ts:40
+
+___
+
+###  ListenerInternalFunction
+
+Ƭ **ListenerInternalFunction**: *function*
+
+Defined in types.ts:55
 
 #### Type declaration:
 
@@ -135,53 +123,27 @@ Name | Type |
 
 ___
 
-###  ListenerInstances
+###  ListenerInternalFunctions
 
-Ƭ **ListenerInstances**: *Record‹string, any›*
+Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:54
-
-___
-
-###  ListenerOutputs
-
-Ƭ **ListenerOutputs**: *object*
-
-Defined in types.ts:56
-
-#### Type declaration:
-
-* **promises**: *Promise‹any›[]*
-
-* **promisesById**: *Record‹string, Promise‹any››*
-
-* **values**: *any[]*
-
-* **valuesById**: *Record‹string, any›*
+Defined in types.ts:50
 
 ___
 
-###  ListenerPending
+###  ListenerInternalInstances
 
-Ƭ **ListenerPending**: *Record‹string, Promise‹any››*
-
-Defined in types.ts:63
-
-___
-
-###  ListenerPendingResolvers
-
-Ƭ **ListenerPendingResolvers**: *Record‹string, Function›*
+Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
 Defined in types.ts:65
 
 ___
 
-###  Listeners
+###  ListenerInternalOptions
 
-Ƭ **Listeners**: *Record‹string, [ListenerFunction](_types_.md#listenerfunction)›*
+Ƭ **ListenerInternalOptions**: *Record‹string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)›*
 
-Defined in types.ts:16
+Defined in types.ts:60
 
 ___
 
@@ -189,7 +151,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:70
+Defined in types.ts:67
 
 #### Type declaration:
 
