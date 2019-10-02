@@ -209,7 +209,6 @@ export class Listener {
         binding,
         instanceId,
         instance,
-        this,
         options
       )
     }
@@ -220,7 +219,6 @@ export class Listener {
     binding: ListenerBind,
     instanceId?: string,
     instance?: any,
-    listener?: Listener,
     options?: Record<string, any>
   ): void | Promise<any> {
     for (const [match, targetId, options] of binding) {
@@ -244,7 +242,6 @@ export class Listener {
         [instanceId, ...lid],
         instanceId,
         instance,
-        this,
         options
       )
     }
@@ -254,7 +251,6 @@ export class Listener {
     lid: string[],
     instanceId: string,
     instance: any,
-    listener: Listener,
     options?: Record<string, any>
   ): void | Promise<any> {
     if (instance.listenerBindings) {
@@ -509,7 +505,7 @@ export class Listener {
       valuesById,
     } = this.captureOutputs(
       lid,
-      [this, options],
+      [options],
       instances,
       this.listenerBindings
     )
@@ -558,7 +554,7 @@ export class Listener {
 
     const { promises } = this.captureOutputs(
       lid,
-      [this, options],
+      [options],
       instances,
       this.listenerLoaded
     )
