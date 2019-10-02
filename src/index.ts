@@ -258,7 +258,7 @@ export class Listener {
         lid,
         ["listener.listenerBindings", instanceId, "**"],
         `${instanceId}.listenerBindings`,
-        { prepend: true, return: true }
+        { listener: true, prepend: true, return: true }
       )
     }
 
@@ -266,7 +266,8 @@ export class Listener {
       this.bind(
         lid,
         ["listener.listenerLoaded", instanceId, "**"],
-        `${instanceId}.listenerLoaded`
+        `${instanceId}.listenerLoaded`,
+        { listener: true }
       )
     }
 
