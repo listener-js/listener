@@ -54,7 +54,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset([])
-  load([], { MyClass, MyClass2 })
+  load([], { MyClass, MyClass2, log })
 })
 
 test("defined", (): void => {
