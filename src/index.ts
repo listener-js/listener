@@ -36,7 +36,7 @@ export class Listener {
 
   public constructor(id: string) {
     this.id = id
-    this.reset(["listener.constructor"])
+    this.reset([`${id}.constructor`])
   }
 
   public bind(
@@ -159,46 +159,46 @@ export class Listener {
       }
     }
 
-    this.applyInstanceFunctions(["listener", ...lid], {
+    this.applyInstanceFunctions([this.id, ...lid], {
       instance: this,
       listener: this,
     })
 
     this.applyListenerBindings(
-      ["listener", ...lid],
+      [this.id, ...lid],
       [
         [
-          ["listener.listenerLoaded", "log", "**"],
-          "listener.logLoaded",
+          [`${this.id}.listenerLoaded`, "log", "**"],
+          `${this.id}.logLoaded`,
         ],
         [
-          ["listener.load", "**"],
-          "listener.applyInstancesId",
+          [`${this.id}.load`, "**"],
+          `${this.id}.applyInstancesId`,
           { prepend: 0.5 },
         ],
         [
-          ["listener.load", "**"],
-          "listener.applyInstancesFunctions",
+          [`${this.id}.load`, "**"],
+          `${this.id}.applyInstancesFunctions`,
           { prepend: 0.4 },
         ],
         [
-          ["listener.load", "**"],
-          "listener.applyCallbacksBindings",
+          [`${this.id}.load`, "**"],
+          `${this.id}.applyCallbacksBindings`,
           { prepend: 0.3 },
         ],
         [
-          ["listener.load", "**"],
-          "listener.listenersBindings",
+          [`${this.id}.load`, "**"],
+          `${this.id}.listenersBindings`,
           { prepend: 0.2 },
         ],
         [
-          ["listener.load", "**"],
-          "listener.applyListenersBindings",
+          [`${this.id}.load`, "**"],
+          `${this.id}.applyListenersBindings`,
           { prepend: 0.1 },
         ],
         [
-          ["listener.load", "**"],
-          "listener.listenersLoaded",
+          [`${this.id}.load`, "**"],
+          `${this.id}.listenersLoaded`,
           { append: 0.1 },
         ],
       ]
@@ -354,7 +354,7 @@ export class Listener {
     if (instance.listenerBindings) {
       this.bind(
         lid,
-        ["listener.listenerBindings", instanceId, "**"],
+        [`${this.id}.listenerBindings`, instanceId, "**"],
         `${instanceId}.listenerBindings`,
         { prepend: true, return: true }
       )
@@ -363,7 +363,7 @@ export class Listener {
     if (instance.listenerLoaded) {
       this.bind(
         lid,
-        ["listener.listenerLoaded", instanceId, "**"],
+        [`${this.id}.listenerLoaded`, instanceId, "**"],
         `${instanceId}.listenerLoaded`
       )
     }
@@ -371,7 +371,7 @@ export class Listener {
     if (instance.listenerReset) {
       this.bind(
         lid,
-        ["listener.reset", "**"],
+        [`${this.id}.reset`, "**"],
         `${instanceId}.listenerReset`,
         { prepend: true }
       )
@@ -539,7 +539,11 @@ export class Listener {
 
     if (_lid.indexOf("log.logEvent") < 0 && this.log) {
       this.log(
-        ["listener.buildList", "listener.emit", ..._lid],
+        [
+          `${this.id}.buildList`,
+          `${this.id}.emit`,
+          ..._lid,
+        ],
         "internal",
         list
       )
@@ -582,7 +586,7 @@ export class Listener {
 
       for (const bind of binding) {
         found =
-          found || bind[0].indexOf("listener.load") > -1
+          found || bind[0].indexOf(`${this.id}.load`) > -1
       }
     }
 
