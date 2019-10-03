@@ -129,6 +129,14 @@ export class Listener {
   public reset(lid: string[]): void {
     this.log = (): void => {}
 
+    for (const instanceId in this.instances) {
+      const instance = this.instances[instanceId]
+
+      if (instance !== this) {
+        delete instance.id
+      }
+    }
+
     for (const key in this.originalFns) {
       const [instanceId, fnId] = this.parseId(key)
       const instance = this.instances[instanceId]
