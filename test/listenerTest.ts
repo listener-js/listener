@@ -5,6 +5,7 @@ import {
   reset,
   ListenerEvent,
 } from "../"
+
 import log from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
@@ -60,7 +61,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset([])
-  load([], { MyClass, MyClass2 })
+  load([], { MyClass, MyClass2, log })
 })
 
 test("defined", (): void => {
