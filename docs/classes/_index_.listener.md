@@ -342,7 +342,7 @@ ___
 
 ###  captureOutputs
 
-▸ **captureOutputs**(`_lid`: string[], `instances`: Record‹string, any›, `options`: Record‹string, any›, `fn`: [ListenerCallback](../modules/_types_.md#listenercallback)): *[ListenerCaptureOutputs](../modules/_types_.md#listenercaptureoutputs)*
+▸ **captureOutputs**(`_lid`: string[], `instances`: Record‹string, any›, `eventAssigns`: Record‹string, any›, `fn`: [ListenerCallback](../modules/_types_.md#listenercallback)): *[ListenerCaptureOutputs](../modules/_types_.md#listenercaptureoutputs)*
 
 Defined in index.ts:62
 
@@ -352,7 +352,7 @@ Name | Type |
 ------ | ------ |
 `_lid` | string[] |
 `instances` | Record‹string, any› |
-`options` | Record‹string, any› |
+`eventAssigns` | Record‹string, any› |
 `fn` | [ListenerCallback](../modules/_types_.md#listenercallback) |
 
 **Returns:** *[ListenerCaptureOutputs](../modules/_types_.md#listenercaptureoutputs)*

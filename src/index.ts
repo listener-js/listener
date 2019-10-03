@@ -62,7 +62,7 @@ export class Listener {
   public captureOutputs(
     _lid: string[],
     instances: Record<string, any>,
-    options: Record<string, any>,
+    eventAssigns: Record<string, any>,
     fn: ListenerCallback
   ): ListenerCaptureOutputs {
     const promises = []
@@ -79,7 +79,7 @@ export class Listener {
       const out = fn([id, ..._lid], {
         instance: instances[id],
         listener: this,
-        options,
+        ...eventAssigns,
       })
 
       if (out && out.then) {
@@ -217,7 +217,7 @@ export class Listener {
     const { promises } = this.captureOutputs(
       lid,
       instances,
-      options,
+      { options },
       this.applyInstanceFunctions
     )
 
@@ -268,7 +268,7 @@ export class Listener {
     const { promises } = this.captureOutputs(
       lid,
       instances,
-      options,
+      { options },
       this.applyInstanceId
     )
 
@@ -610,7 +610,7 @@ export class Listener {
     } = this.captureOutputs(
       lid,
       instances,
-      options,
+      { options },
       this.listenerBindings
     )
 
@@ -656,7 +656,7 @@ export class Listener {
     const { promises } = this.captureOutputs(
       lid,
       instances,
-      options,
+      { options },
       this.listenerLoaded
     )
 
