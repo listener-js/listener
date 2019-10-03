@@ -253,6 +253,10 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
+    if (options && options.reload) {
+      return
+    }
+
     const { promises } = this.captureOutputs(
       lid,
       instances,

@@ -23,7 +23,7 @@
   instance
 )
 
-Defined in index.ts:730
+Defined in index.ts:734
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 • **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener("listener")
 
-Defined in index.ts:726
+Defined in index.ts:730
 
 ___
 
@@ -41,7 +41,7 @@ ___
   instance
 )
 
-Defined in index.ts:735
+Defined in index.ts:739
 
 ___
 
@@ -51,4 +51,4 @@ ___
   instance
 )
 
-Defined in index.ts:739
+Defined in index.ts:743
