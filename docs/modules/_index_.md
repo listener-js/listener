@@ -23,15 +23,15 @@
   instance
 )
 
-Defined in index.ts:707
+Defined in index.ts:730
 
 ___
 
 ### `Const` instance
 
-• **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener()
+• **instance**: *[Listener](../classes/_index_.listener.md)* =  new Listener("listener")
 
-Defined in index.ts:703
+Defined in index.ts:726
 
 ___
 
@@ -41,7 +41,7 @@ ___
   instance
 )
 
-Defined in index.ts:712
+Defined in index.ts:735
 
 ___
 
@@ -51,4 +51,4 @@ ___
   instance
 )
 
-Defined in index.ts:716
+Defined in index.ts:739

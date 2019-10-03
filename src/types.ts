@@ -1,3 +1,11 @@
+import { Listener } from "."
+
+export interface ListenerEvent {
+  instance: any
+  listener: Listener
+  options?: Record<string, any>
+}
+
 export interface ListenerBindingOptions {
   append?: boolean | number
   index?: number
@@ -18,17 +26,8 @@ export type ListenerBinding = [
 
 export type ListenerCallback = (
   lid: string[],
-  instanceId: string,
-  instance: any,
-  ...args: any[]
+  event: ListenerEvent
 ) => void | Promise<any>
-
-export type ListenerCallbackArgs = [
-  string[],
-  string,
-  any,
-  ...any[]
-]
 
 export type ListenerCaptureOutputs = {
   promises: Promise<any>[]

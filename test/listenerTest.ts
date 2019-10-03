@@ -1,4 +1,10 @@
-import { bind, instance, load, reset, Listener } from "../"
+import {
+  bind,
+  instance,
+  load,
+  reset,
+  ListenerEvent,
+} from "../"
 import log from "@listener-js/log"
 
 function delay(t: number, v?: any): Promise<any> {
@@ -54,7 +60,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset([])
-  load([], { MyClass, MyClass2, log })
+  load([], { MyClass, MyClass2 })
 })
 
 test("defined", (): void => {
@@ -136,8 +142,8 @@ test("listenerBindings", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      instanceId: string
-    ): any[] => [[["MyClass.fn"], `${instanceId}.fn`]],
+      { instance }: ListenerEvent
+    ): any[] => [[["MyClass.fn"], `${instance.id}.fn`]],
   }
 
   load([], { Test })
@@ -157,9 +163,9 @@ test("listenerBindings self", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      instanceId: string
+      { instance }: ListenerEvent
     ): any[] => [
-      [[`${instanceId}.fn`], `${instanceId}.fn2`],
+      [[`${instance.id}.fn`], `${instance.id}.fn2`],
     ],
   }
 
@@ -181,9 +187,9 @@ test("listenerBindings with listener.load", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      instanceId: string
+      { instance }: ListenerEvent
     ): any[] => [
-      [["listener.load", "**"], `${instanceId}.fn`],
+      [["listener.load", "**"], `${instance.id}.fn`],
     ],
   }
 
@@ -205,11 +211,11 @@ test("listenerBindings with listener.listenerLoaded", (): void => {
     },
     listenerBindings: (
       lid: string[],
-      instanceId: string
+      { instance }: ListenerEvent
     ): any[] => [
       [
-        ["listener.listenerLoaded", instanceId, "**"],
-        `${instanceId}.fn`,
+        ["listener.listenerLoaded", instance.id, "**"],
+        `${instance.id}.fn`,
       ],
     ],
   }

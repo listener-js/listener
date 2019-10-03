@@ -9,9 +9,11 @@ import {
   ListenerInternalBinding,
   ListenerInternalFunctions,
   ListenerCaptureOutputs,
+  ListenerEvent,
 } from "./types"
 
 export class Listener {
+  public id: string
   public arrow = " < "
 
   public commentRegex = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm
@@ -32,7 +34,8 @@ export class Listener {
 
   private log: LogEvent
 
-  public constructor() {
+  public constructor(id: string) {
+    this.id = id
     this.reset(["listener.constructor"])
   }
 
@@ -58,8 +61,8 @@ export class Listener {
 
   public captureOutputs(
     _lid: string[],
-    args: any[],
     instances: Record<string, any>,
+    options: Record<string, any>,
     fn: ListenerCallback
   ): ListenerCaptureOutputs {
     const promises = []
@@ -73,12 +76,11 @@ export class Listener {
         continue
       }
 
-      const out = fn(
-        [id, ..._lid],
-        id,
-        instances[id],
-        ...args
-      )
+      const out = fn([id, ..._lid], {
+        instance: instances[id],
+        listener: this,
+        options,
+      })
 
       if (out && out.then) {
         promises.push(out)
@@ -149,11 +151,10 @@ export class Listener {
       }
     }
 
-    this.wrapFunction(
-      ["listener", ...lid],
-      "listener",
-      this
-    )
+    this.applyInstanceFunctions(["listener", ...lid], {
+      instance: this,
+      listener: this,
+    })
 
     this.applyListenerBindings(
       ["listener", ...lid],
@@ -164,7 +165,12 @@ export class Listener {
         ],
         [
           ["listener.load", "**"],
-          "listener.wrapFunctions",
+          "listener.applyInstancesId",
+          { prepend: 0.5 },
+        ],
+        [
+          ["listener.load", "**"],
+          "listener.applyInstancesFunctions",
           { prepend: 0.4 },
         ],
         [
@@ -189,6 +195,82 @@ export class Listener {
         ],
       ]
     )
+  }
+
+  private applyInstancesFunctions(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    if (options && options.reload) {
+      return
+    }
+
+    const { promises } = this.captureOutputs(
+      lid,
+      instances,
+      options,
+      this.applyInstanceFunctions
+    )
+
+    if (promises.length) {
+      return Promise.all(promises)
+    }
+  }
+
+  private applyInstanceFunctions(
+    lid: string[],
+    { instance }: ListenerEvent
+  ): void | Promise<any> {
+    this.instances[instance.id] = instance
+
+    if (instance.then) {
+      return
+    }
+
+    const listeners = this.extractListeners(instance)
+
+    for (const fnName of listeners) {
+      const fnId = `${instance.id}.${fnName}`
+
+      if (!instance[fnName] || this.originalFns[fnId]) {
+        continue
+      }
+
+      this.originalFns[fnId] = instance[fnName]
+
+      instance[fnName] = this.listenerWrapper(
+        fnId,
+        instance.id
+      )
+
+      this.listenerFns[fnId] = instance[fnName]
+    }
+  }
+
+  private applyInstancesId(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    const { promises } = this.captureOutputs(
+      lid,
+      instances,
+      options,
+      this.applyInstanceId
+    )
+
+    if (promises.length) {
+      return Promise.all(promises)
+    }
+  }
+
+  private applyInstanceId(
+    lid: string[],
+    { instance }: ListenerEvent
+  ): void | Promise<any> {
+    this.instances[lid[1]] = instance
+    instance.id = lid[1]
   }
 
   private applyListenersBindings(
@@ -270,8 +352,7 @@ export class Listener {
       this.bind(
         lid,
         ["listener.listenerLoaded", instanceId, "**"],
-        `${instanceId}.listenerLoaded`,
-        { listener: true }
+        `${instanceId}.listenerLoaded`
       )
     }
 
@@ -512,8 +593,8 @@ export class Listener {
       valuesById,
     } = this.captureOutputs(
       lid,
-      [options],
       instances,
+      options,
       this.listenerBindings
     )
 
@@ -542,9 +623,7 @@ export class Listener {
 
   private listenerBindings(
     lid: string[],
-    instanceId: string,
-    instance: any,
-    options?: Record<string, any>
+    event: ListenerEvent
   ): void | Promise<any> {
     return
   }
@@ -560,8 +639,8 @@ export class Listener {
 
     const { promises } = this.captureOutputs(
       lid,
-      [options],
       instances,
+      options,
       this.listenerLoaded
     )
 
@@ -572,10 +651,7 @@ export class Listener {
 
   private listenerLoaded(
     lid: string[],
-    instanceId: string,
-    instance: any,
-    listener: Listener,
-    options?: Record<string, any>
+    event: ListenerEvent
   ): void | Promise<any> {
     return
   }
@@ -618,8 +694,7 @@ export class Listener {
 
   private logLoaded(
     lid: string[],
-    instanceId: string,
-    instance: any
+    { instance }: ListenerEvent
   ): void {
     this.log = instance.logEvent
   }
@@ -646,61 +721,9 @@ export class Listener {
     }
     return 1
   }
-
-  private wrapFunctions(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    if (options && options.reload) {
-      return
-    }
-
-    const { promises } = this.captureOutputs(
-      lid,
-      [],
-      instances,
-      this.wrapFunction
-    )
-
-    if (promises.length) {
-      return Promise.all(promises)
-    }
-  }
-
-  private wrapFunction(
-    lid: string[],
-    instanceId: string,
-    instance: any
-  ): void | Promise<any> {
-    this.instances[instanceId] = instance
-
-    if (instance.then) {
-      return
-    }
-
-    const listeners = this.extractListeners(instance)
-
-    for (const fnName of listeners) {
-      const fnId = `${instanceId}.${fnName}`
-
-      if (!instance[fnName] || this.originalFns[fnId]) {
-        continue
-      }
-
-      this.originalFns[fnId] = instance[fnName]
-
-      instance[fnName] = this.listenerWrapper(
-        fnId,
-        instanceId
-      )
-
-      this.listenerFns[fnId] = instance[fnName]
-    }
-  }
 }
 
-export const instance = new Listener()
+export const instance = new Listener("listener")
 export default instance
 
 // eslint-disable-next-line max-len
