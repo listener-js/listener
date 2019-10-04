@@ -175,28 +175,6 @@ test("listenerBindings self", (): void => {
   Test.fn([])
 })
 
-test("listenerBindings with listener.load", (): void => {
-  expect.assertions(1)
-
-  const Test = {
-    fn: (lid: string[]): void => {
-      expect(lid).toEqual([
-        "Test.fn",
-        "listener.load",
-        "listener.load",
-      ])
-    },
-    listenerBindings: (
-      lid: string[],
-      { instance }: ListenerEvent
-    ): any[] => [
-      [["listener.load", "**"], `${instance.id}.fn`],
-    ],
-  }
-
-  load([], { Test })
-})
-
 test("listenerBindings with listener.listenerLoaded", (): void => {
   expect.assertions(1)
 

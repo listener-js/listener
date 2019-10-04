@@ -102,16 +102,6 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Record<string, any> | Promise<Record<string, any>> {
-    if (
-      (!options || options.reload !== true) &&
-      this.findLoadBindings(instances)
-    ) {
-      return this.load(lid, instances, {
-        ...options,
-        reload: true,
-      })
-    }
-
     return this.instances
   }
 
@@ -213,10 +203,6 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
-    if (options && options.reload) {
-      return
-    }
-
     const { promises } = this.captureOutputs(
       lid,
       instances,
@@ -264,10 +250,6 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
-    if (options && options.reload) {
-      return
-    }
-
     const { promises } = this.captureOutputs(
       lid,
       instances,
@@ -293,10 +275,6 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
-    if (options && options.reload) {
-      return
-    }
-
     for (const instanceId in instances) {
       const instance = instances[instanceId]
       const binding = this.callbackBindings[instanceId]
@@ -332,10 +310,6 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void {
-    if (options && options.reload) {
-      return
-    }
-
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
@@ -575,36 +549,11 @@ export class Listener {
     return listeners
   }
 
-  private findLoadBindings(
-    instances: Record<string, any>
-  ): boolean {
-    let found: boolean
-
-    for (const instanceId in instances) {
-      const binding = this.callbackBindings[instanceId]
-
-      if (!binding) {
-        continue
-      }
-
-      for (const bind of binding) {
-        found =
-          found || bind[0].indexOf(`${this.id}.load`) > -1
-      }
-    }
-
-    return found
-  }
-
   private listenersBindings(
     lid: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Promise<any> | void {
-    if (options && options.reload) {
-      return
-    }
-
     const promises = []
 
     const {
@@ -652,10 +601,6 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
-    if (options && options.reload) {
-      return
-    }
-
     const { promises } = this.captureOutputs(
       lid,
       instances,
