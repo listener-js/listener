@@ -24,7 +24,7 @@
 
 • **append**? : *boolean | number*
 
-Defined in types.ts:10
+Defined in types.ts:11
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 • **index**? : *number*
 
-Defined in types.ts:11
+Defined in types.ts:12
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 • **intercept**? : *boolean*
 
-Defined in types.ts:12
+Defined in types.ts:13
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 • **listener**? : *boolean*
 
-Defined in types.ts:13
+Defined in types.ts:14
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 • **peek**? : *boolean*
 
-Defined in types.ts:14
+Defined in types.ts:15
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 • **prepend**? : *boolean | number*
 
-Defined in types.ts:15
+Defined in types.ts:16
 
 ___
 
@@ -72,4 +72,4 @@ ___
 
 • **return**? : *boolean*
 
-Defined in types.ts:16
+Defined in types.ts:17

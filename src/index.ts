@@ -49,13 +49,15 @@ export class Listener {
 
     this.bindings[match] = this.bindings[match] || []
 
-    this.bindings[match] = this.bindings[match].concat(
-      targetId
-    )
+    if (this.bindings[match].indexOf(targetId) < 0) {
+      this.bindings[match] = this.bindings[match].concat(
+        targetId
+      )
 
-    if (options) {
-      this.options[match] = this.options[match] || {}
-      this.options[match][targetId] = options
+      if (options) {
+        this.options[match] = this.options[match] || {}
+        this.options[match][targetId] = options
+      }
     }
   }
 
@@ -78,6 +80,7 @@ export class Listener {
 
       const out = fn([id, ..._lid], {
         instance: instances[id],
+        instances,
         listener: this,
         ...eventAssigns,
       })

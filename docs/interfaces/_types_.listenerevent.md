@@ -11,6 +11,7 @@
 ### Properties
 
 * [instance](_types_.listenerevent.md#instance)
+* [instances](_types_.listenerevent.md#optional-instances)
 * [listener](_types_.listenerevent.md#listener)
 * [options](_types_.listenerevent.md#optional-options)
 
@@ -21,6 +22,14 @@
 • **instance**: *any*
 
 Defined in types.ts:4
+
+___
+
+### `Optional` instances
+
+• **instances**? : *Record‹string, any›*
+
+Defined in types.ts:6
 
 ___
 
@@ -36,4 +45,4 @@ ___
 
 • **options**? : *Record‹string, any›*
 
-Defined in types.ts:6
+Defined in types.ts:7

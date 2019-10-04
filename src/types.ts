@@ -3,6 +3,7 @@ import { Listener } from "."
 export interface ListenerEvent {
   instance: any
   listener: Listener
+  instances?: Record<string, any>
   options?: Record<string, any>
 }
 
