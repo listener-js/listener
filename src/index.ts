@@ -337,6 +337,15 @@ export class Listener {
       )
     }
 
+    if (instance.listenerExtendBindings) {
+      this.bind(
+        lid,
+        [`${this.id}.listenerBindings`, "**"],
+        `${instanceId}.listenerExtendBindings`,
+        { intercept: true }
+      )
+    }
+
     if (instance.listenerLoaded) {
       this.bind(
         lid,
