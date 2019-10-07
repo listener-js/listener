@@ -606,6 +606,45 @@ test("intercept", (): void => {
   expect(test.test([], "hi")).toBe(false)
 })
 
+test("async intercept", async (): Promise<any> => {
+  expect.assertions(2)
+
+  class Test {
+    public listeners = ["test"]
+
+    public test(
+      lid: string[],
+      arg: string
+    ): Promise<boolean> {
+      return delay(1, true)
+    }
+  }
+
+  const test = new Test()
+
+  class Test2 {
+    public listeners = ["test"]
+
+    public test(
+      lid: string[],
+      value: boolean,
+      arg: string
+    ): boolean {
+      expect(value).toBe(true)
+      return false
+    }
+  }
+
+  const test2 = new Test2()
+
+  load([], { test, test2 })
+  bind([], ["test.test"], "test2.test", { intercept: true })
+
+  return test
+    .test([], "hi")
+    .then(out => expect(out).toBe(false))
+})
+
 test("intercept cancel", (): void => {
   expect.assertions(6)
 

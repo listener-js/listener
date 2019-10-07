@@ -451,7 +451,7 @@ export class Listener {
         let tmpOut: any
 
         if (promise) {
-          tmpOut = promise.then((): any =>
+          tmpOut = promise.then((out): any =>
             isPeek
               ? fn(id, out, ...extArgs)
               : fn(id, ...extArgs)
