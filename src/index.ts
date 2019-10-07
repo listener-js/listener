@@ -443,6 +443,7 @@ export class Listener {
 
           if (out && out.then) {
             promise = out
+            out = undefined
           } else {
             promise = undefined
           }
@@ -451,11 +452,19 @@ export class Listener {
         let tmpOut: any
 
         if (promise) {
-          tmpOut = promise.then((out): any =>
-            isPeek
+          tmpOut = promise.then((out): any => {
+            const tmpOut = isPeek
               ? fn(id, out, ...extArgs)
               : fn(id, ...extArgs)
-          )
+
+            if (tmpOut && tmpOut.then) {
+              return tmpOut
+            }
+
+            return isReturn && tmpOut !== undefined
+              ? tmpOut
+              : out
+          })
         } else {
           tmpOut = isPeek
             ? fn(id, out, ...extArgs)
