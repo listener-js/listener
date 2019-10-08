@@ -17,6 +17,11 @@ export interface ListenerBindingOptions {
   return?: boolean
 }
 
+export interface ListenerEmitItemSetter {
+  out: (o: any) => any
+  promise: (p: Promise<any>) => any
+}
+
 export interface ListenerEmitOptions {
   addListener: boolean
   isBefore: boolean
@@ -26,7 +31,7 @@ export interface ListenerEmitOptions {
   isReturn: boolean
 }
 
-export interface ListenerEmitItem {
+export interface ListenerEmitFunction {
   promise: Promise<any>
   out: any
 }

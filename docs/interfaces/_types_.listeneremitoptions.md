@@ -23,7 +23,7 @@
 
 • **addListener**: *boolean*
 
-Defined in types.ts:21
+Defined in types.ts:26
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 • **isBefore**: *boolean*
 
-Defined in types.ts:22
+Defined in types.ts:27
 
 ___
 
@@ -39,7 +39,7 @@ ___
 
 • **isIntercept**: *boolean*
 
-Defined in types.ts:23
+Defined in types.ts:28
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 • **isMain**: *boolean*
 
-Defined in types.ts:24
+Defined in types.ts:29
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 • **isPeek**: *boolean*
 
-Defined in types.ts:25
+Defined in types.ts:30
 
 ___
 
@@ -63,4 +63,4 @@ ___
 
 • **isReturn**: *boolean*
 
-Defined in types.ts:26
+Defined in types.ts:31

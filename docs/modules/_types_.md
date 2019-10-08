@@ -7,7 +7,8 @@
 ### Interfaces
 
 * [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)
-* [ListenerEmitItem](../interfaces/_types_.listeneremititem.md)
+* [ListenerEmitFunction](../interfaces/_types_.listeneremitfunction.md)
+* [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md)
 * [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md)
 * [ListenerEvent](../interfaces/_types_.listenerevent.md)
 
@@ -31,7 +32,7 @@
 
 Ƭ **ListenerBinding**: *[string[], string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
 
-Defined in types.ts:36
+Defined in types.ts:41
 
 ___
 
@@ -39,7 +40,7 @@ ___
 
 Ƭ **ListenerBindings**: *[ListenerBinding](_types_.md#listenerbinding)[]*
 
-Defined in types.ts:34
+Defined in types.ts:39
 
 ___
 
@@ -47,7 +48,7 @@ ___
 
 Ƭ **ListenerCallback**: *function*
 
-Defined in types.ts:42
+Defined in types.ts:47
 
 #### Type declaration:
 
@@ -66,7 +67,7 @@ ___
 
 Ƭ **ListenerCaptureOutputs**: *object*
 
-Defined in types.ts:47
+Defined in types.ts:52
 
 #### Type declaration:
 
@@ -84,7 +85,7 @@ ___
 
 Ƭ **ListenerInternalBinding**: *[string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
 
-Defined in types.ts:59
+Defined in types.ts:64
 
 ___
 
@@ -92,7 +93,7 @@ ___
 
 Ƭ **ListenerInternalBindings**: *Record‹string, string[]›*
 
-Defined in types.ts:54
+Defined in types.ts:59
 
 ___
 
@@ -100,7 +101,7 @@ ___
 
 Ƭ **ListenerInternalFunction**: *function*
 
-Defined in types.ts:69
+Defined in types.ts:74
 
 #### Type declaration:
 
@@ -119,7 +120,7 @@ ___
 
 Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:64
+Defined in types.ts:69
 
 ___
 
@@ -127,7 +128,7 @@ ___
 
 Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
-Defined in types.ts:79
+Defined in types.ts:84
 
 ___
 
@@ -135,7 +136,7 @@ ___
 
 Ƭ **ListenerInternalOptions**: *Record‹string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)›*
 
-Defined in types.ts:74
+Defined in types.ts:79
 
 ___
 
@@ -143,7 +144,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:81
+Defined in types.ts:86
 
 #### Type declaration:
 

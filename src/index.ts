@@ -11,8 +11,9 @@ import {
   ListenerCaptureOutputs,
   ListenerEvent,
   ListenerEmitOptions,
-  ListenerEmitItem,
   ListenerInternalFunction,
+  ListenerEmitFunction,
+  ListenerEmitItemSetter,
 } from "./types"
 
 export class Listener {
@@ -391,11 +392,16 @@ export class Listener {
     }
 
     const list = this.emitList(_lid, fnId, id)
-    const setOut = (o): any => (out = o)
+
+    const setter = {
+      out: (o): any => (out = o === undefined ? out : o),
+      promise: (p): any =>
+        (promise = p === undefined ? promise : p),
+    }
 
     for (const [target, options] of list) {
       const opts = this.emitOptions(options)
-      const { addListener, isMain, isReturn } = opts
+      const { addListener, isMain } = opts
 
       if (!isMain && fnId === target) {
         continue
@@ -411,42 +417,82 @@ export class Listener {
 
       args = addListener ? [this, ...args] : args
 
-      const emitItem = (): any => {
-        const {
-          out: o,
-          promise: p,
-        } = this.emitItemFunction(args, id, fn, opts, out)
-
-        out = o === undefined ? out : o
-        promise = p === undefined ? promise : p
-
-        if (
-          p &&
-          ((isMain && out === undefined) || isReturn)
-        ) {
-          return p ? p.then(setOut) : out
-        } else {
-          return p ? p : out
-        }
-      }
-
       if (promise) {
-        promise = promise.then(emitItem)
+        promise = promise.then(() =>
+          this.emitItem(
+            args,
+            id,
+            fn,
+            opts,
+            out,
+            promise,
+            setter
+          )
+        )
       } else {
-        emitItem()
+        this.emitItem(
+          args,
+          id,
+          fn,
+          opts,
+          out,
+          promise,
+          setter
+        )
       }
     }
 
-    return promise ? promise.then(setOut) : out
+    return promise ? promise.then(setter.out) : out
   }
 
-  emitItemFunction(
+  emitItem(
     args: any[],
     id: string[],
     fn: ListenerInternalFunction,
-    { isMain, isPeek, isReturn }: ListenerEmitOptions,
+    opts: ListenerEmitOptions,
+    out: any,
+    promise: Promise<any>,
+    setter: ListenerEmitItemSetter
+  ): any {
+    const { out: o, promise: p } = this.emitFunction(
+      args,
+      id,
+      fn,
+      opts,
+      out
+    )
+
+    out = setter.out(o)
+    promise = setter.promise(p)
+
+    return this.emitItemOutput(p, opts, out, setter)
+  }
+
+  emitItemOutput(
+    promise: Promise<any>,
+    opts: ListenerEmitOptions,
+    out: any,
+    setter: ListenerEmitItemSetter
+  ): any {
+    const { isMain, isReturn } = opts
+    const isMainWithoutReturn = isMain && out === undefined
+
+    if (promise && (isMainWithoutReturn || isReturn)) {
+      return promise ? promise.then(setter.out) : out
+    } else {
+      return promise ? promise : out
+    }
+  }
+
+  emitFunction(
+    args: any[],
+    id: string[],
+    fn: ListenerInternalFunction,
+    opts: ListenerEmitOptions,
     out: any
-  ): ListenerEmitItem {
+  ): ListenerEmitFunction {
+    const { isMain, isPeek, isReturn } = opts
+
     let promise
 
     if (isMain && out !== undefined) {
