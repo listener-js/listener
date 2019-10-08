@@ -391,6 +391,7 @@ export class Listener {
     }
 
     const list = this.emitList(_lid, fnId, id)
+    const setOut = (o): any => (out = o)
 
     for (const [target, options] of list) {
       const opts = this.emitOptions(options)
@@ -410,18 +411,7 @@ export class Listener {
 
       args = addListener ? [this, ...args] : args
 
-      if (promise) {
-        promise = promise.then((): any => {
-          const {
-            out: o,
-            promise: p,
-          } = this.emitItemFunction(args, id, fn, opts, out)
-
-          out = o === undefined ? out : o
-
-          return p ? p.then((o): any => (out = o)) : out
-        })
-      } else {
+      const emitItem = (): any => {
         const {
           out: o,
           promise: p,
@@ -434,12 +424,20 @@ export class Listener {
           p &&
           ((isMain && out === undefined) || isReturn)
         ) {
-          promise = promise.then((o): any => (out = o))
+          return p ? p.then(setOut) : out
+        } else {
+          return p ? p : out
         }
+      }
+
+      if (promise) {
+        promise = promise.then(emitItem)
+      } else {
+        emitItem()
       }
     }
 
-    return promise ? promise.then((): any => out) : out
+    return promise ? promise.then(setOut) : out
   }
 
   emitItemFunction(
