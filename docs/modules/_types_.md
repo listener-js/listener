@@ -7,6 +7,8 @@
 ### Interfaces
 
 * [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)
+* [ListenerEmitItem](../interfaces/_types_.listeneremititem.md)
+* [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md)
 * [ListenerEvent](../interfaces/_types_.listenerevent.md)
 
 ### Type aliases
@@ -29,7 +31,7 @@
 
 Ƭ **ListenerBinding**: *[string[], string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
 
-Defined in types.ts:22
+Defined in types.ts:36
 
 ___
 
@@ -37,7 +39,7 @@ ___
 
 Ƭ **ListenerBindings**: *[ListenerBinding](_types_.md#listenerbinding)[]*
 
-Defined in types.ts:20
+Defined in types.ts:34
 
 ___
 
@@ -45,7 +47,7 @@ ___
 
 Ƭ **ListenerCallback**: *function*
 
-Defined in types.ts:28
+Defined in types.ts:42
 
 #### Type declaration:
 
@@ -64,7 +66,7 @@ ___
 
 Ƭ **ListenerCaptureOutputs**: *object*
 
-Defined in types.ts:33
+Defined in types.ts:47
 
 #### Type declaration:
 
@@ -82,7 +84,7 @@ ___
 
 Ƭ **ListenerInternalBinding**: *[string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
 
-Defined in types.ts:45
+Defined in types.ts:59
 
 ___
 
@@ -90,7 +92,7 @@ ___
 
 Ƭ **ListenerInternalBindings**: *Record‹string, string[]›*
 
-Defined in types.ts:40
+Defined in types.ts:54
 
 ___
 
@@ -98,7 +100,7 @@ ___
 
 Ƭ **ListenerInternalFunction**: *function*
 
-Defined in types.ts:55
+Defined in types.ts:69
 
 #### Type declaration:
 
@@ -117,7 +119,7 @@ ___
 
 Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:50
+Defined in types.ts:64
 
 ___
 
@@ -125,7 +127,7 @@ ___
 
 Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
-Defined in types.ts:65
+Defined in types.ts:79
 
 ___
 
@@ -133,7 +135,7 @@ ___
 
 Ƭ **ListenerInternalOptions**: *Record‹string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)›*
 
-Defined in types.ts:60
+Defined in types.ts:74
 
 ___
 
@@ -141,7 +143,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:67
+Defined in types.ts:81
 
 #### Type declaration:
 

@@ -10,6 +10,9 @@ import {
   ListenerInternalFunctions,
   ListenerCaptureOutputs,
   ListenerEvent,
+  ListenerEmitOptions,
+  ListenerEmitItem,
+  ListenerInternalFunction,
 } from "./types"
 
 export class Listener {
@@ -390,15 +393,8 @@ export class Listener {
     const list = this.emitList(_lid, fnId, id)
 
     for (const [target, options] of list) {
-      const isBefore = options && options.index < 0
-      const isMain = options && options.index === 0
-      const isIntercept = options && options.intercept
-
-      const isPeek =
-        isIntercept || (options && options.peek)
-
-      const isReturn =
-        isIntercept || (options && options.return)
+      const opts = this.emitOptions(options)
+      const { addListener, isMain, isReturn } = opts
 
       if (!isMain && fnId === target) {
         continue
@@ -412,78 +408,67 @@ export class Listener {
         continue
       }
 
-      const extArgs =
-        options && options.listener ? [this, ...args] : args
+      args = addListener ? [this, ...args] : args
 
-      if (isBefore) {
-        let tmpOut: any
+      if (promise) {
+        promise = promise.then((): any => {
+          const {
+            out: o,
+            promise: p,
+          } = this.emitItemFunction(args, id, fn, opts, out)
 
-        if (promise) {
-          tmpOut = promise.then((): any =>
-            fn(id, ...extArgs)
-          )
-        } else {
-          tmpOut = fn(id, ...extArgs)
-        }
+          out = o === undefined ? out : o
 
-        if (tmpOut && tmpOut.then) {
-          promise = tmpOut
-        }
-
-        if (isReturn && tmpOut !== undefined) {
-          out = tmpOut
-        }
-      } else if (isMain) {
-        if (promise) {
-          promise = promise.then(
-            (): any => out || fn(id, ...extArgs)
-          )
-        } else {
-          out = out || fn(id, ...extArgs)
-
-          if (out && out.then) {
-            promise = out
-            out = undefined
-          } else {
-            promise = undefined
-          }
-        }
+          return p ? p.then((o): any => (out = o)) : out
+        })
       } else {
-        let tmpOut: any
+        const {
+          out: o,
+          promise: p,
+        } = this.emitItemFunction(args, id, fn, opts, out)
 
-        if (promise) {
-          tmpOut = promise.then((out): any => {
-            const tmpOut = isPeek
-              ? fn(id, out, ...extArgs)
-              : fn(id, ...extArgs)
+        out = o === undefined ? out : o
+        promise = p === undefined ? promise : p
 
-            if (tmpOut && tmpOut.then) {
-              return tmpOut
-            }
-
-            return isReturn && tmpOut !== undefined
-              ? tmpOut
-              : out
-          })
-        } else {
-          tmpOut = isPeek
-            ? fn(id, out, ...extArgs)
-            : fn(id, ...extArgs)
-        }
-
-        if (tmpOut && tmpOut.then) {
-          promise = tmpOut
-        }
-
-        if (isReturn && tmpOut !== undefined) {
-          out = tmpOut
+        if (
+          p &&
+          ((isMain && out === undefined) || isReturn)
+        ) {
+          promise = promise.then((o): any => (out = o))
         }
       }
     }
 
-    return promise && out
-      ? promise.then((): any => out)
-      : promise || out
+    return promise ? promise.then((): any => out) : out
+  }
+
+  emitItemFunction(
+    args: any[],
+    id: string[],
+    fn: ListenerInternalFunction,
+    { isMain, isPeek, isReturn }: ListenerEmitOptions,
+    out: any
+  ): ListenerEmitItem {
+    let promise
+
+    if (isMain && out !== undefined) {
+      return { out, promise }
+    }
+
+    const tmpOut = isPeek
+      ? fn(id, out, ...args)
+      : fn(id, ...args)
+
+    if (tmpOut && tmpOut.then) {
+      promise = tmpOut
+    } else if (
+      (isMain || isReturn) &&
+      tmpOut !== undefined
+    ) {
+      out = tmpOut
+    }
+
+    return { out, promise }
   }
 
   private emitList(
@@ -545,6 +530,21 @@ export class Listener {
     }
 
     return list
+  }
+
+  private emitOptions(
+    options: ListenerBindingOptions
+  ): ListenerEmitOptions {
+    const isIntercept = options && options.intercept
+
+    return {
+      addListener: options && options.listener,
+      isBefore: options && options.index < 0,
+      isIntercept,
+      isMain: options && options.index === 0,
+      isPeek: isIntercept || (options && options.peek),
+      isReturn: isIntercept || (options && options.return),
+    }
   }
 
   private extractListeners(instance: any): string[] {

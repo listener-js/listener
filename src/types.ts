@@ -17,6 +17,20 @@ export interface ListenerBindingOptions {
   return?: boolean
 }
 
+export interface ListenerEmitOptions {
+  addListener: boolean
+  isBefore: boolean
+  isIntercept: boolean
+  isMain: boolean
+  isPeek: boolean
+  isReturn: boolean
+}
+
+export interface ListenerEmitItem {
+  promise: Promise<any>
+  out: any
+}
+
 export type ListenerBindings = ListenerBinding[]
 
 export type ListenerBinding = [
