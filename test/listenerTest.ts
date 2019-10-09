@@ -102,9 +102,11 @@ test("load bad arg", (): void => {
 })
 
 test("bind return", (): void => {
-  bind([], ["MyClass.fn"], "MyClass2.fn2", {
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn2", { return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
@@ -134,17 +136,22 @@ test("bind", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerBindings", (): void => {
+test("listenerLoaded bind", (): void => {
   expect.assertions(1)
 
   const Test = {
     fn: (lid: string[]): void => {
       expect(lid).toEqual(["Test.fn", "MyClass.fn"])
     },
-    listenerBindings: (
+    listenerLoaded: (
       lid: string[],
-      { instance }: ListenerEvent
-    ): any[] => [[["MyClass.fn"], `${instance.id}.fn`]],
+      { instance, listener }: ListenerEvent
+    ): void =>
+      listener.bind(
+        lid,
+        ["MyClass.fn"],
+        `${instance.id}.fn`
+      ),
   }
 
   load([], { Test })
@@ -152,7 +159,7 @@ test("listenerBindings", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerBindings self", (): void => {
+test("listenerLoaded bind self", (): void => {
   expect.assertions(2)
 
   const Test = {
@@ -162,44 +169,20 @@ test("listenerBindings self", (): void => {
     fn2: (lid: string[]): void => {
       expect(lid).toEqual(["Test.fn2", "Test.fn"])
     },
-    listenerBindings: (
+    listenerLoaded: (
       lid: string[],
-      { instance }: ListenerEvent
-    ): any[] => [
-      [[`${instance.id}.fn`], `${instance.id}.fn2`],
-    ],
+      { instance, listener }: ListenerEvent
+    ): void =>
+      listener.bind(
+        lid,
+        [`${instance.id}.fn`],
+        `${instance.id}.fn2`
+      ),
   }
 
   load([], { Test })
 
   Test.fn([])
-})
-
-test("listenerBindings with listener.listenerLoaded", (): void => {
-  expect.assertions(1)
-
-  const Test = {
-    fn: (lid: string[]): void => {
-      expect(lid).toEqual([
-        "Test.fn",
-        "listener.listenerLoaded",
-        "Test",
-        "listener.listenersLoaded",
-        "listener.load",
-      ])
-    },
-    listenerBindings: (
-      lid: string[],
-      { instance }: ListenerEvent
-    ): any[] => [
-      [
-        ["listener.listenerLoaded", instance.id, "**"],
-        `${instance.id}.fn`,
-      ],
-    ],
-  }
-
-  load([], { Test })
 })
 
 test("async listener", async (): Promise<void> => {
@@ -217,9 +200,11 @@ test("async listener", async (): Promise<void> => {
 })
 
 test("async bind return", async (): Promise<void> => {
-  bind([], ["MyClass.asyncFn"], "MyClass2.asyncFn2", {
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.asyncFn"],
+    ["MyClass2.asyncFn2", { return: true }]
+  )
 
   expect(await MyClass.asyncFn([], true)).toEqual({
     asyncFn2: true,
@@ -251,17 +236,21 @@ test("async bind", async (): Promise<void> => {
 })
 
 test("async bind null return", async (): Promise<void> => {
-  bind([], ["MyClass.asyncFn"], "MyClass2.asyncFn3", {
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.asyncFn"],
+    ["MyClass2.asyncFn3", { return: true }]
+  )
 
   expect(await MyClass.asyncFn([], true)).toBe(null)
 })
 
 test("bind id", (): void => {
-  bind([], ["MyClass.fn", "id"], "MyClass2.fn2", {
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn", "id"],
+    ["MyClass2.fn2", { return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
@@ -283,7 +272,7 @@ test("bind id", (): void => {
 })
 
 test("bind *", (): void => {
-  bind([], ["*"], "MyClass2.fn2", { return: true })
+  bind([], ["*"], ["MyClass2.fn2", { return: true }])
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
@@ -299,7 +288,7 @@ test("bind *", (): void => {
 })
 
 test("bind **", (): void => {
-  bind([], ["**"], "MyClass2.fn2", { return: true })
+  bind([], ["**"], ["MyClass2.fn2", { return: true }])
 
   expect(MyClass.fn(["id"], true)).toEqual({
     fn2: true,
@@ -309,9 +298,7 @@ test("bind **", (): void => {
 })
 
 test("bind * and id", (): void => {
-  bind([], ["*", "id"], "MyClass2.fn2", {
-    return: true,
-  })
+  bind([], ["*", "id"], ["MyClass2.fn2", { return: true }])
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
@@ -333,9 +320,11 @@ test("bind * and id", (): void => {
 })
 
 test("bind id and *", (): void => {
-  bind([], ["MyClass.fn", "*"], "MyClass2.fn2", {
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn", "*"],
+    ["MyClass2.fn2", { return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
@@ -357,9 +346,11 @@ test("bind id and *", (): void => {
 })
 
 test("bind ** and id", (): void => {
-  bind([], ["**", "id2"], "MyClass2.fn2", {
-    return: true,
-  })
+  bind(
+    [],
+    ["**", "id2"],
+    ["MyClass2.fn2", { return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn: true,
@@ -381,9 +372,11 @@ test("bind ** and id", (): void => {
 })
 
 test("bind id and **", (): void => {
-  bind([], ["MyClass.fn", "**"], "MyClass2.fn2", {
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn", "**"],
+    ["MyClass2.fn2", { return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
@@ -407,10 +400,11 @@ test("bind id and **", (): void => {
 test("prepend option", (): void => {
   bind([], ["MyClass.fn"], "MyClass2.fn2")
 
-  bind([], ["MyClass.fn"], "MyClass2.fn3", {
-    prepend: true,
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn3", { prepend: true, return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn3: true,
@@ -442,7 +436,7 @@ test("prepend async to sync", async (): Promise<void> => {
 
   load([], { Test, Test2 })
 
-  bind([], ["Test2.fn"], "Test.fn", { prepend: true })
+  bind([], ["Test2.fn"], ["Test.fn", { prepend: true }])
 
   await Test2.fn([])
 
@@ -472,7 +466,7 @@ test("prepend async to async", async (): Promise<void> => {
 
   load([], { Test, Test2 })
 
-  bind([], ["Test2.fn"], "Test.fn", { prepend: true })
+  bind([], ["Test2.fn"], ["Test.fn", { prepend: true }])
 
   await Test2.fn([])
 
@@ -503,10 +497,11 @@ test("prepend async overwrite", async (): Promise<void> => {
 
   load([], { Test, Test2 })
 
-  bind([], ["Test2.fn"], "Test.fn", {
-    prepend: true,
-    return: true,
-  })
+  bind(
+    [],
+    ["Test2.fn"],
+    ["Test.fn", { prepend: true, return: true }]
+  )
 
   expect(await Test2.fn([])).toBe(true)
 
@@ -514,14 +509,17 @@ test("prepend async overwrite", async (): Promise<void> => {
 })
 
 test("append option", (): void => {
-  bind([], ["MyClass.fn"], "MyClass2.fn3", {
-    append: 2,
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn3", { append: 2, return: true }]
+  )
 
-  bind([], ["MyClass.fn"], "MyClass2.fn2", {
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn2", { return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn3: true,
@@ -531,15 +529,17 @@ test("append option", (): void => {
 })
 
 test("numeric prepend option", (): void => {
-  bind([], ["MyClass.fn"], "MyClass2.fn2", {
-    prepend: 1,
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn2", { prepend: 1, return: true }]
+  )
 
-  bind([], ["MyClass.fn"], "MyClass2.fn3", {
-    prepend: 2,
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn3", { prepend: 2, return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn2: true,
@@ -549,15 +549,17 @@ test("numeric prepend option", (): void => {
 })
 
 test("numeric append option", (): void => {
-  bind([], ["MyClass.fn"], "MyClass2.fn3", {
-    append: 2,
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn3", { append: 2, return: true }]
+  )
 
-  bind([], ["MyClass.fn"], "MyClass2.fn2", {
-    append: 1,
-    return: true,
-  })
+  bind(
+    [],
+    ["MyClass.fn"],
+    ["MyClass2.fn2", { append: 1, return: true }]
+  )
 
   expect(MyClass.fn([], true)).toEqual({
     fn3: true,
@@ -599,9 +601,11 @@ test("intercept", (): void => {
   const test2 = new Test2()
 
   load([], { test, test2 })
-  bind([], ["test.test"], "test2.test", {
-    intercept: true,
-  })
+  bind(
+    [],
+    ["test.test"],
+    ["test2.test", { intercept: true }]
+  )
 
   expect(test.test([], "hi")).toBe(false)
 })
@@ -638,7 +642,11 @@ test("async intercept", async (): Promise<any> => {
   const test2 = new Test2()
 
   load([], { test, test2 })
-  bind([], ["test.test"], "test2.test", { intercept: true })
+  bind(
+    [],
+    ["test.test"],
+    ["test2.test", { intercept: true }]
+  )
 
   return test
     .test([], "hi")
@@ -678,9 +686,11 @@ test("intercept cancel", (): void => {
   const test2 = new Test2()
 
   load([], { test, test2 })
-  bind([], ["test.test"], "test2.test", {
-    intercept: true,
-  })
+  bind(
+    [],
+    ["test.test"],
+    ["test2.test", { intercept: true }]
+  )
 
   expect(test.test([], "hi")).toBe(true)
 })
@@ -718,7 +728,7 @@ test("peek", (): void => {
   const test2 = new Test2()
 
   load([], { test, test2 })
-  bind([], ["test.test"], "test2.test", { peek: true })
+  bind([], ["test.test"], ["test2.test", { peek: true }])
 
   expect(test.test([], "hi")).toBe(true)
 })

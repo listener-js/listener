@@ -14,6 +14,8 @@
 
 ### Type aliases
 
+* [ListenerBindTarget](_types_.md#listenerbindtarget)
+* [ListenerBindTargets](_types_.md#listenerbindtargets)
 * [ListenerBinding](_types_.md#listenerbinding)
 * [ListenerBindings](_types_.md#listenerbindings)
 * [ListenerCallback](_types_.md#listenercallback)
@@ -27,6 +29,22 @@
 * [LogEvent](_types_.md#logevent)
 
 ## Type aliases
+
+###  ListenerBindTarget
+
+Ƭ **ListenerBindTarget**: *[string] | [string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
+
+Defined in types.ts:51
+
+___
+
+###  ListenerBindTargets
+
+Ƭ **ListenerBindTargets**: *string[] | [string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)][]*
+
+Defined in types.ts:47
+
+___
 
 ###  ListenerBinding
 
@@ -48,7 +66,7 @@ ___
 
 Ƭ **ListenerCallback**: *function*
 
-Defined in types.ts:47
+Defined in types.ts:55
 
 #### Type declaration:
 
@@ -67,7 +85,7 @@ ___
 
 Ƭ **ListenerCaptureOutputs**: *object*
 
-Defined in types.ts:52
+Defined in types.ts:60
 
 #### Type declaration:
 
@@ -85,7 +103,7 @@ ___
 
 Ƭ **ListenerInternalBinding**: *[string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
 
-Defined in types.ts:64
+Defined in types.ts:72
 
 ___
 
@@ -93,7 +111,7 @@ ___
 
 Ƭ **ListenerInternalBindings**: *Record‹string, string[]›*
 
-Defined in types.ts:59
+Defined in types.ts:67
 
 ___
 
@@ -101,7 +119,7 @@ ___
 
 Ƭ **ListenerInternalFunction**: *function*
 
-Defined in types.ts:74
+Defined in types.ts:82
 
 #### Type declaration:
 
@@ -120,7 +138,7 @@ ___
 
 Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:69
+Defined in types.ts:77
 
 ___
 
@@ -128,7 +146,7 @@ ___
 
 Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
-Defined in types.ts:84
+Defined in types.ts:92
 
 ___
 
@@ -136,7 +154,7 @@ ___
 
 Ƭ **ListenerInternalOptions**: *Record‹string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)›*
 
-Defined in types.ts:79
+Defined in types.ts:87
 
 ___
 
@@ -144,7 +162,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:86
+Defined in types.ts:94
 
 #### Type declaration:
 

@@ -14,6 +14,8 @@ import {
   ListenerInternalFunction,
   ListenerEmitFunction,
   ListenerEmitItemSetter,
+  ListenerBindTargets,
+  ListenerBindTarget,
 } from "./types"
 
 export class Listener {
@@ -46,21 +48,27 @@ export class Listener {
   public bind(
     lid: string[],
     matchId: string[],
-    targetId: string,
-    options?: ListenerBindingOptions
+    ...targets: ListenerBindTargets
   ): void {
     const match = matchId.join(this.arrow)
 
-    this.bindings[match] = this.bindings[match] || []
+    for (const target of targets) {
+      const targetArray: ListenerBindTarget =
+        typeof target === "string" ? [target] : target
 
-    if (this.bindings[match].indexOf(targetId) < 0) {
-      this.bindings[match] = this.bindings[match].concat(
-        targetId
-      )
+      const [targetId, options] = targetArray
 
-      if (options) {
-        this.options[match] = this.options[match] || {}
-        this.options[match][targetId] = options
+      this.bindings[match] = this.bindings[match] || []
+
+      if (this.bindings[match].indexOf(targetId) < 0) {
+        this.bindings[match] = this.bindings[match].concat(
+          targetId
+        )
+
+        if (options) {
+          this.options[match] = this.options[match] || {}
+          this.options[match][targetId] = options
+        }
       }
     }
   }
@@ -305,7 +313,7 @@ export class Listener {
     options?: Record<string, any>
   ): void | Promise<any> {
     for (const [match, targetId, options] of binding) {
-      this.bind(lid, match, targetId, options)
+      this.bind(lid, match, [targetId, options])
     }
   }
 
@@ -332,24 +340,6 @@ export class Listener {
     instance: any,
     options?: Record<string, any>
   ): void | Promise<any> {
-    if (instance.listenerBindings) {
-      this.bind(
-        lid,
-        [`${this.id}.listenerBindings`, instanceId, "**"],
-        `${instanceId}.listenerBindings`,
-        { prepend: true, return: true }
-      )
-    }
-
-    if (instance.listenerExtendBindings) {
-      this.bind(
-        lid,
-        [`${this.id}.listenerBindings`, "**"],
-        `${instanceId}.listenerExtendBindings`,
-        { intercept: true }
-      )
-    }
-
     if (instance.listenerLoaded) {
       this.bind(
         lid,
@@ -358,12 +348,19 @@ export class Listener {
       )
     }
 
+    if (instance.listenerLoadedAny) {
+      this.bind(
+        lid,
+        [`${this.id}.listenerLoaded`, "**"],
+        `${instanceId}.listenerLoadedAny`
+      )
+    }
+
     if (instance.listenerReset) {
       this.bind(
         lid,
         [`${this.id}.reset`, "**"],
-        `${instanceId}.listenerReset`,
-        { prepend: true }
+        [`${instanceId}.listenerReset`, { prepend: true }]
       )
     }
   }
