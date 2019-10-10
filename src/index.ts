@@ -29,11 +29,6 @@ export class Listener {
   public instances: ListenerInternalInstances = {}
   public options: ListenerInternalOptions = {}
 
-  private callbackBindings: Record<
-    string,
-    ListenerBindings
-  > = {}
-
   private listenerFns: ListenerInternalFunctions = {}
   private originalFns: ListenerInternalFunctions = {}
 
@@ -166,49 +161,30 @@ export class Listener {
       }
     }
 
-    this.applyInstanceFunctions([this.id, ...lid], {
+    this.applyInstanceFunctions(lid, {
       instance: this,
       listener: this,
     })
 
-    this.applyListenerBindings(
-      [this.id, ...lid],
+    this.bind(
+      lid,
+      [`${this.id}.listenerLoaded`, "log", "**"],
+      `${this.id}.logLoaded`
+    )
+
+    this.bind(
+      lid,
+      [`${this.id}.load`, "**"],
+      [`${this.id}.applyInstancesId`, { prepend: 0.3 }],
       [
-        [
-          [`${this.id}.listenerLoaded`, "log", "**"],
-          `${this.id}.logLoaded`,
-        ],
-        [
-          [`${this.id}.load`, "**"],
-          `${this.id}.applyInstancesId`,
-          { prepend: 0.5 },
-        ],
-        [
-          [`${this.id}.load`, "**"],
-          `${this.id}.applyInstancesFunctions`,
-          { prepend: 0.4 },
-        ],
-        [
-          [`${this.id}.load`, "**"],
-          `${this.id}.applyCallbacksBindings`,
-          { prepend: 0.3 },
-        ],
-        [
-          [`${this.id}.load`, "**"],
-          `${this.id}.listenersBindings`,
-          { prepend: 0.2 },
-        ],
-        [
-          [`${this.id}.load`, "**"],
-          `${this.id}.applyListenersBindings`,
-          { prepend: 0.1 },
-        ],
-        [
-          [`${this.id}.load`, "**"],
-          `${this.id}.listenersLoaded`,
-          { append: 0.1 },
-        ],
-      ]
+        `${this.id}.applyInstancesFunctions`,
+        { prepend: 0.2 },
+      ],
+      [
+        `${this.id}.applyCallbacksBindings`,
+        { prepend: 0.1 },
+      ],
+      [`${this.id}.listenersLoaded`, { append: 0.1 }]
     )
   }
 
@@ -282,41 +258,6 @@ export class Listener {
   ): void | Promise<any> {
     this.instances[lid[1]] = instance
     instance.id = lid[1]
-  }
-
-  private applyListenersBindings(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): void {
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
-      const binding = this.callbackBindings[instanceId]
-
-      if (!binding) {
-        continue
-      }
-
-      this.applyListenerBindings(
-        [instanceId, ...lid],
-        binding,
-        instanceId,
-        instance,
-        options
-      )
-    }
-  }
-
-  private applyListenerBindings(
-    lid: string[],
-    binding: ListenerBindings,
-    instanceId?: string,
-    instance?: any,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    for (const [match, targetId, options] of binding) {
-      this.bind(lid, match, [targetId, options])
-    }
   }
 
   private applyCallbacksBindings(
@@ -608,53 +549,6 @@ export class Listener {
     }
 
     return listeners
-  }
-
-  private listenersBindings(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): Promise<any> | void {
-    const promises = []
-
-    const {
-      promisesById,
-      valuesById,
-    } = this.captureOutputs(
-      lid,
-      instances,
-      { options },
-      this.listenerBindings
-    )
-
-    this.callbackBindings = {
-      ...this.callbackBindings,
-      ...valuesById,
-    }
-
-    for (const id in promisesById) {
-      const promise = promisesById[id]
-
-      promises.push(
-        promise.then((binding: ListenerBindings): void => {
-          this.callbackBindings = {
-            ...this.callbackBindings,
-            [id]: binding,
-          }
-        })
-      )
-    }
-
-    if (promises.length) {
-      return Promise.all(promises)
-    }
-  }
-
-  private listenerBindings(
-    lid: string[],
-    event: ListenerEvent
-  ): void | Promise<any> {
-    return
   }
 
   private listenersLoaded(
