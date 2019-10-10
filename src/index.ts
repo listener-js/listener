@@ -173,13 +173,17 @@ export class Listener {
     this.bind(
       lid,
       [`${this.id}.load`, "**"],
-      [`${this.id}.applyInstancesId`, { prepend: 0.3 }],
+      [`${this.id}.applyInstancesId`, { prepend: 0.4 }],
       [
         `${this.id}.applyInstancesFunctions`,
-        { prepend: 0.2 },
+        { prepend: 0.3 },
       ],
       [
         `${this.id}.applyCallbacksBindings`,
+        { prepend: 0.2 },
+      ],
+      [
+        `${this.id}.listenersBeforeLoaded`,
         { prepend: 0.1 },
       ],
       [`${this.id}.listenersLoaded`, { append: 0.1 }]
@@ -281,11 +285,31 @@ export class Listener {
     instance: any,
     options?: Record<string, any>
   ): void | Promise<any> {
+    if (instance.listenerBeforeLoaded) {
+      this.bind(
+        lid,
+        [
+          `${this.id}.listenerBeforeLoaded`,
+          instanceId,
+          "**",
+        ],
+        `${instanceId}.listenerBeforeLoaded`
+      )
+    }
+
     if (instance.listenerLoaded) {
       this.bind(
         lid,
         [`${this.id}.listenerLoaded`, instanceId, "**"],
         `${instanceId}.listenerLoaded`
+      )
+    }
+
+    if (instance.listenerBeforeLoadedAny) {
+      this.bind(
+        lid,
+        [`${this.id}.listenerBeforeLoaded`, "**"],
+        `${instanceId}.listenerBeforeLoadedAny`
       )
     }
 
@@ -301,7 +325,10 @@ export class Listener {
       this.bind(
         lid,
         [`${this.id}.reset`, "**"],
-        [`${instanceId}.listenerReset`, { prepend: true }]
+        [
+          `${instanceId}.listenerReset`,
+          { listener: true, prepend: true },
+        ]
       )
     }
   }
@@ -558,6 +585,32 @@ export class Listener {
     }
 
     return listeners
+  }
+
+  private listenersBeforeLoaded(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<any> {
+    const existing = this.diffInstances(instances)
+
+    const { promises } = this.captureOutputs(
+      lid,
+      instances,
+      { existing, options },
+      this.listenerBeforeLoaded
+    )
+
+    if (promises.length) {
+      return Promise.all(promises)
+    }
+  }
+
+  private listenerBeforeLoaded(
+    lid: string[],
+    event: ListenerEvent
+  ): void | Promise<any> {
+    return
   }
 
   private listenersLoaded(
