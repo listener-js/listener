@@ -1,5 +1,4 @@
 import {
-  ListenerBindings,
   ListenerInternalInstances,
   ListenerInternalBindings,
   ListenerInternalOptions,
@@ -147,7 +146,6 @@ export class Listener {
     }
 
     const recordKeys = [
-      "callbackBindings",
       "bindings",
       "instances",
       "listenerFns",

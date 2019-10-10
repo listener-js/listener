@@ -36,14 +36,6 @@ export interface ListenerEmitFunction {
   out: any
 }
 
-export type ListenerBindings = ListenerBinding[]
-
-export type ListenerBinding = [
-  string[],
-  string,
-  ListenerBindingOptions?
-]
-
 export type ListenerBindTargets =
   | string[]
   | [string, ListenerBindingOptions][]
