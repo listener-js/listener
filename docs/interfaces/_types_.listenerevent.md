@@ -10,6 +10,7 @@
 
 ### Properties
 
+* [existing](_types_.listenerevent.md#optional-existing)
 * [instance](_types_.listenerevent.md#instance)
 * [instances](_types_.listenerevent.md#optional-instances)
 * [listener](_types_.listenerevent.md#listener)
@@ -17,11 +18,19 @@
 
 ## Properties
 
+### `Optional` existing
+
+• **existing**? : *string[]*
+
+Defined in types.ts:4
+
+___
+
 ###  instance
 
 • **instance**: *any*
 
-Defined in types.ts:4
+Defined in types.ts:5
 
 ___
 
@@ -29,7 +38,7 @@ ___
 
 • **instances**? : *Record‹string, any›*
 
-Defined in types.ts:6
+Defined in types.ts:7
 
 ___
 
@@ -37,7 +46,7 @@ ___
 
 • **listener**: *[Listener](../classes/_index_.listener.md)*
 
-Defined in types.ts:5
+Defined in types.ts:6
 
 ___
 
@@ -45,4 +54,4 @@ ___
 
 • **options**? : *Record‹string, any›*
 
-Defined in types.ts:7
+Defined in types.ts:8

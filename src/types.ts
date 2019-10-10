@@ -1,6 +1,7 @@
 import { Listener } from "."
 
 export interface ListenerEvent {
+  existing?: string[]
   instance: any
   listener: Listener
   instances?: Record<string, any>

@@ -46,7 +46,7 @@ export class Listener {
     const match = matchId.join(this.arrow)
 
     for (const target of targets) {
-      let options, targetId
+      let options: ListenerBindingOptions, targetId: string
 
       if (typeof target === "string") {
         targetId = target
@@ -306,6 +306,17 @@ export class Listener {
     }
   }
 
+  private diffInstances(
+    instances: Record<string, any>
+  ): string[] {
+    const allInstances = Object.keys(this.instances)
+    const newInstances = Object.keys(instances)
+
+    return allInstances.filter(
+      i => newInstances.indexOf(i) < 0
+    )
+  }
+
   private emit(
     _lid: string[],
     fnId: string,
@@ -383,7 +394,7 @@ export class Listener {
     return promise ? promise.then(setter.out) : out
   }
 
-  emitItem(
+  private emitItem(
     args: any[],
     id: string[],
     fn: ListenerInternalFunction,
@@ -406,7 +417,7 @@ export class Listener {
     return this.emitItemOutput(p, opts, out, setter)
   }
 
-  emitItemOutput(
+  private emitItemOutput(
     promise: Promise<any>,
     opts: ListenerEmitOptions,
     out: any,
@@ -554,10 +565,12 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
+    const existing = this.diffInstances(instances)
+
     const { promises } = this.captureOutputs(
       lid,
       instances,
-      { options },
+      { existing, options },
       this.listenerLoaded
     )
 

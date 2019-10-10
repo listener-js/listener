@@ -185,6 +185,31 @@ test("listenerLoaded bind self", (): void => {
   Test.fn([])
 })
 
+test("listenerLoaded existing", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn", "MyClass.fn"])
+    },
+    listenerLoaded: (
+      lid: string[],
+      { existing }: ListenerEvent
+    ): void => {
+      expect(existing).toEqual([
+        "listener",
+        "MyClass",
+        "MyClass2",
+        "log",
+      ])
+    },
+  }
+
+  load([], { Test })
+
+  MyClass.fn([], true)
+})
+
 test("async listener", async (): Promise<void> => {
   expect(await MyClass.asyncFn(["id"], true)).toEqual({
     asyncFn: true,
