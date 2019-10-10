@@ -48,10 +48,6 @@ export type ListenerBindTargets =
   | string[]
   | [string, ListenerBindingOptions][]
 
-export type ListenerBindTarget =
-  | [string]
-  | [string, ListenerBindingOptions]
-
 export type ListenerCallback = (
   lid: string[],
   event: ListenerEvent

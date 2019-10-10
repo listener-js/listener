@@ -15,7 +15,6 @@ import {
   ListenerEmitFunction,
   ListenerEmitItemSetter,
   ListenerBindTargets,
-  ListenerBindTarget,
 } from "./types"
 
 export class Listener {
@@ -53,10 +52,13 @@ export class Listener {
     const match = matchId.join(this.arrow)
 
     for (const target of targets) {
-      const targetArray: ListenerBindTarget =
-        typeof target === "string" ? [target] : target
+      let options, targetId
 
-      const [targetId, options] = targetArray
+      if (typeof target === "string") {
+        targetId = target
+      } else {
+        ;[targetId, options] = target
+      }
 
       this.bindings[match] = this.bindings[match] || []
 

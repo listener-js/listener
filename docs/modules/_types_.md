@@ -14,7 +14,6 @@
 
 ### Type aliases
 
-* [ListenerBindTarget](_types_.md#listenerbindtarget)
 * [ListenerBindTargets](_types_.md#listenerbindtargets)
 * [ListenerBinding](_types_.md#listenerbinding)
 * [ListenerBindings](_types_.md#listenerbindings)
@@ -29,14 +28,6 @@
 * [LogEvent](_types_.md#logevent)
 
 ## Type aliases
-
-###  ListenerBindTarget
-
-Ƭ **ListenerBindTarget**: *[string] | [string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
-
-Defined in types.ts:51
-
-___
 
 ###  ListenerBindTargets
 
@@ -66,7 +57,7 @@ ___
 
 Ƭ **ListenerCallback**: *function*
 
-Defined in types.ts:55
+Defined in types.ts:51
 
 #### Type declaration:
 
@@ -85,7 +76,7 @@ ___
 
 Ƭ **ListenerCaptureOutputs**: *object*
 
-Defined in types.ts:60
+Defined in types.ts:56
 
 #### Type declaration:
 
@@ -103,7 +94,7 @@ ___
 
 Ƭ **ListenerInternalBinding**: *[string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
 
-Defined in types.ts:72
+Defined in types.ts:68
 
 ___
 
@@ -111,7 +102,7 @@ ___
 
 Ƭ **ListenerInternalBindings**: *Record‹string, string[]›*
 
-Defined in types.ts:67
+Defined in types.ts:63
 
 ___
 
@@ -119,7 +110,7 @@ ___
 
 Ƭ **ListenerInternalFunction**: *function*
 
-Defined in types.ts:82
+Defined in types.ts:78
 
 #### Type declaration:
 
@@ -138,7 +129,7 @@ ___
 
 Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:77
+Defined in types.ts:73
 
 ___
 
@@ -146,7 +137,7 @@ ___
 
 Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
-Defined in types.ts:92
+Defined in types.ts:88
 
 ___
 
@@ -154,7 +145,7 @@ ___
 
 Ƭ **ListenerInternalOptions**: *Record‹string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)›*
 
-Defined in types.ts:87
+Defined in types.ts:83
 
 ___
 
@@ -162,7 +153,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:94
+Defined in types.ts:90
 
 #### Type declaration:
 
