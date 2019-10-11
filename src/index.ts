@@ -127,40 +127,25 @@ export class Listener {
         ]
       )
 
-      if (instance.listenerBeforeLoaded) {
-        this.bind(
-          lid,
-          [
-            `${this.id}.listenerBeforeLoaded`,
-            instanceId,
-            "**",
-          ],
-          `${instanceId}.listenerBeforeLoaded`
-        )
-      }
+      for (const before of [true, false]) {
+        for (const any of [true, false]) {
+          const match =
+            "listener" + (before ? "Before" : "") + "Loaded"
 
-      if (instance.listenerLoaded) {
-        this.bind(
-          lid,
-          [`${this.id}.listenerLoaded`, instanceId, "**"],
-          `${instanceId}.listenerLoaded`
-        )
-      }
+          const key = match + (any ? "Any" : "")
 
-      if (instance.listenerBeforeLoadedAny) {
-        this.bind(
-          lid,
-          [`${this.id}.listenerBeforeLoaded`, "**"],
-          `${instanceId}.listenerBeforeLoadedAny`
-        )
-      }
-
-      if (instance.listenerLoadedAny) {
-        this.bind(
-          lid,
-          [`${this.id}.listenerLoaded`, "**"],
-          `${instanceId}.listenerLoadedAny`
-        )
+          if (instance[key]) {
+            this.bind(
+              lid,
+              [
+                `${this.id}.${match}`,
+                ...(any ? [] : [instanceId]),
+                "**",
+              ],
+              `${instanceId}.${key}`
+            )
+          }
+        }
       }
 
       if (instance.listenerReset) {
