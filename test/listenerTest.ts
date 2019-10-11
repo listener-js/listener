@@ -151,6 +151,22 @@ test("bind with custom id", (): void => {
   MyClass.fn([], true)
 })
 
+test("bind with once", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn", "MyClass.fn"])
+    },
+  }
+
+  load([], { Test })
+  bind([], ["MyClass.fn"], ["Test.fn", { once: true }])
+
+  MyClass.fn([], true)
+  MyClass.fn([], true)
+})
+
 test("listenerBeforeLoaded bind", (): void => {
   expect.assertions(1)
 

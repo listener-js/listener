@@ -5,6 +5,7 @@ export interface ListenerInternalBindingOptions {
   index?: number
   intercept?: boolean
   listener?: boolean
+  once?: boolean
   peek?: boolean
   prepend?: boolean | number
   return?: boolean
@@ -17,20 +18,22 @@ export type ListenerInternalBindings =
 export interface ListenerInternalBinding {
   targetId: string
   customIds?: string[]
+  matchId?: string
   options?: ListenerInternalBindingOptions
 }
 
 export class Bindings {
   public bindings: ListenerInternalBinding[] = []
+  public matchId: string
   public targetIds: Set<string> = new Set()
 
-  constructor(...bindings: ListenerInternalBindings[]) {
-    this.add(...bindings)
+  constructor(matchId?: string) {
+    this.matchId = matchId
   }
 
   public add(
     ...bindings: ListenerInternalBindings[]
-  ): void {
+  ): Bindings {
     for (let binding of bindings) {
       let customIds: string[]
       let options: ListenerInternalBindingOptions
@@ -50,6 +53,8 @@ export class Bindings {
 
       this.addBinding({ customIds, options, targetId })
     }
+
+    return this
   }
 
   public addBinding({
@@ -63,12 +68,23 @@ export class Bindings {
           customIds && customIds.length
             ? customIds
             : undefined,
+        matchId: this.matchId,
         options,
         targetId,
       })
 
       this.targetIds.add(targetId)
     }
+  }
+
+  public remove(binding: ListenerInternalBinding): void {
+    const index = this.bindings.indexOf(binding)
+
+    if (index > -1) {
+      this.bindings.splice(index, 1)
+    }
+
+    this.targetIds.delete(binding.targetId)
   }
 
   public static list(

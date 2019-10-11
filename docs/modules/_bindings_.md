@@ -23,4 +23,4 @@
 
 Ƭ **ListenerInternalBindings**: *string | string | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)[]*
 
-Defined in bindings.ts:13
+Defined in bindings.ts:14

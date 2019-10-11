@@ -11,6 +11,7 @@
 ### Properties
 
 * [customIds](_bindings_.listenerinternalbinding.md#optional-customids)
+* [matchId](_bindings_.listenerinternalbinding.md#optional-matchid)
 * [options](_bindings_.listenerinternalbinding.md#optional-options)
 * [targetId](_bindings_.listenerinternalbinding.md#targetid)
 
@@ -20,7 +21,15 @@
 
 • **customIds**? : *string[]*
 
-Defined in bindings.ts:19
+Defined in bindings.ts:20
+
+___
+
+### `Optional` matchId
+
+• **matchId**? : *string*
+
+Defined in bindings.ts:21
 
 ___
 
@@ -28,7 +37,7 @@ ___
 
 • **options**? : *[ListenerInternalBindingOptions](_bindings_.listenerinternalbindingoptions.md)*
 
-Defined in bindings.ts:20
+Defined in bindings.ts:22
 
 ___
 
@@ -36,4 +45,4 @@ ___
 
 • **targetId**: *string*
 
-Defined in bindings.ts:18
+Defined in bindings.ts:19

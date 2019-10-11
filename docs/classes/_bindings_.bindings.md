@@ -15,12 +15,14 @@
 ### Properties
 
 * [bindings](_bindings_.bindings.md#bindings)
+* [matchId](_bindings_.bindings.md#matchid)
 * [targetIds](_bindings_.bindings.md#targetids)
 
 ### Methods
 
 * [add](_bindings_.bindings.md#add)
 * [addBinding](_bindings_.bindings.md#addbinding)
+* [remove](_bindings_.bindings.md#remove)
 * [separateOptions](_bindings_.bindings.md#private-separateoptions)
 * [list](_bindings_.bindings.md#static-list)
 * [listSort](_bindings_.bindings.md#static-private-listsort)
@@ -30,15 +32,15 @@
 
 ###  constructor
 
-\+ **new Bindings**(...`bindings`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[]): *[Bindings](_bindings_.bindings.md)*
+\+ **new Bindings**(`matchId?`: string): *[Bindings](_bindings_.bindings.md)*
 
-Defined in bindings.ts:25
+Defined in bindings.ts:28
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`...bindings` | [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[] |
+`matchId?` | string |
 
 **Returns:** *[Bindings](_bindings_.bindings.md)*
 
@@ -48,7 +50,15 @@ Name | Type |
 
 • **bindings**: *[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[]* =  []
 
-Defined in bindings.ts:24
+Defined in bindings.ts:26
+
+___
+
+###  matchId
+
+• **matchId**: *string*
+
+Defined in bindings.ts:27
 
 ___
 
@@ -56,15 +66,15 @@ ___
 
 • **targetIds**: *Set‹string›* =  new Set()
 
-Defined in bindings.ts:25
+Defined in bindings.ts:28
 
 ## Methods
 
 ###  add
 
-▸ **add**(...`bindings`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[]): *void*
+▸ **add**(...`bindings`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[]): *[Bindings](_bindings_.bindings.md)*
 
-Defined in bindings.ts:31
+Defined in bindings.ts:34
 
 **Parameters:**
 
@@ -72,7 +82,7 @@ Name | Type |
 ------ | ------ |
 `...bindings` | [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[] |
 
-**Returns:** *void*
+**Returns:** *[Bindings](_bindings_.bindings.md)*
 
 ___
 
@@ -80,7 +90,7 @@ ___
 
 ▸ **addBinding**(`__namedParameters`: object): *void*
 
-Defined in bindings.ts:55
+Defined in bindings.ts:60
 
 **Parameters:**
 
@@ -96,11 +106,27 @@ Name | Type |
 
 ___
 
+###  remove
+
+▸ **remove**(`binding`: [ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)): *void*
+
+Defined in bindings.ts:80
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`binding` | [ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md) |
+
+**Returns:** *void*
+
+___
+
 ### `Private` separateOptions
 
 ▸ **separateOptions**(`binding`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)): *[string | string[][], [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)]*
 
-Defined in bindings.ts:160
+Defined in bindings.ts:176
 
 **Parameters:**
 
@@ -116,7 +142,7 @@ ___
 
 ▸ **list**(`_lid`: string[], `bindings`: Record‹string, [Bindings](_bindings_.bindings.md)›, `fnId`: string, `id`: string[]): *[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[]*
 
-Defined in bindings.ts:74
+Defined in bindings.ts:90
 
 **Parameters:**
 
@@ -135,7 +161,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: object, `__namedParameters`: object): *number*
 
-Defined in bindings.ts:120
+Defined in bindings.ts:136
 
 **Parameters:**
 
@@ -159,7 +185,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *number*
 
-Defined in bindings.ts:130
+Defined in bindings.ts:146
 
 **Parameters:**
 

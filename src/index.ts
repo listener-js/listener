@@ -42,7 +42,7 @@ export class Listener {
     const match = matchId.join(ARROW)
 
     this.bindings[match] =
-      this.bindings[match] || new Bindings()
+      this.bindings[match] || new Bindings(match)
 
     this.bindings[match].add(...targets)
   }
@@ -61,22 +61,22 @@ export class Listener {
         [
           `${this.id}.applyInstanceId`,
           instanceId,
-          { prepend: 0.4 },
+          { once: true, prepend: 0.4 },
         ],
         [
           `${this.id}.applyInstanceFunctions`,
           instanceId,
-          { prepend: 0.3 },
+          { once: true, prepend: 0.3 },
         ],
         [
           `${this.id}.callListenerBeforeLoaded`,
           instanceId,
-          { prepend: 0.2 },
+          { once: true, prepend: 0.2 },
         ],
         [
           `${this.id}.callListenerLoaded`,
           instanceId,
-          { prepend: 0.1 },
+          { once: true, prepend: 0.1 },
         ]
       )
 
@@ -335,12 +335,20 @@ export class Listener {
     )
 
     const setter = {
-      out: (o): any => (out = o === undefined ? out : o),
-      promise: (p): any =>
+      out: (o: any): any =>
+        (out = o === undefined ? out : o),
+      promise: (p: Promise<any>): any =>
         (promise = p === undefined ? promise : p),
     }
 
-    for (const { customIds, options, targetId } of list) {
+    for (const binding of list) {
+      const {
+        customIds,
+        matchId,
+        options,
+        targetId,
+      } = binding
+
       const opts = this.emitOptions(options)
       const { addListener, isMain } = opts
 
@@ -354,6 +362,10 @@ export class Listener {
 
       if (!fn) {
         continue
+      }
+
+      if (opts.once) {
+        this.bindings[matchId].remove(binding)
       }
 
       let customArgs: any[]
@@ -477,6 +489,7 @@ export class Listener {
       isMain: options && options.index === 0,
       isPeek: isIntercept || (options && options.peek),
       isReturn: isIntercept || (options && options.return),
+      once: options && options.once,
     }
   }
 

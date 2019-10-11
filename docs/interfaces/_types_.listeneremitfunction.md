@@ -19,7 +19,7 @@
 
 • **out**: *any*
 
-Defined in types.ts:27
+Defined in types.ts:28
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 • **promise**: *Promise‹any›*
 
-Defined in types.ts:26
+Defined in types.ts:27

@@ -16,6 +16,7 @@
 * [isMain](_types_.listeneremitoptions.md#ismain)
 * [isPeek](_types_.listeneremitoptions.md#ispeek)
 * [isReturn](_types_.listeneremitoptions.md#isreturn)
+* [once](_types_.listeneremitoptions.md#once)
 
 ## Properties
 
@@ -64,3 +65,11 @@ ___
 • **isReturn**: *boolean*
 
 Defined in types.ts:22
+
+___
+
+###  once
+
+• **once**: *boolean*
+
+Defined in types.ts:23

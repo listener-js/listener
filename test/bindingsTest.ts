@@ -1,12 +1,12 @@
 import { Bindings } from "../dist/bindings"
 
 test("bindings (basic)", (): void => {
-  const { bindings } = new Bindings("test")
+  const { bindings } = new Bindings().add("test")
   expect(bindings).toEqual([{ targetId: "test" }])
 })
 
 test("bindings (multiple basic)", (): void => {
-  const { bindings } = new Bindings("test", "test2")
+  const { bindings } = new Bindings().add("test", "test2")
   expect(bindings).toEqual([
     {
       targetId: "test",
@@ -18,7 +18,7 @@ test("bindings (multiple basic)", (): void => {
 })
 
 test("bindings (multiple basic with option)", (): void => {
-  const { bindings } = new Bindings(
+  const { bindings } = new Bindings().add(
     ["test", { prepend: true }],
     ["test2", { append: true }]
   )
@@ -29,7 +29,10 @@ test("bindings (multiple basic with option)", (): void => {
 })
 
 test("bindings (custom id)", (): void => {
-  const { bindings } = new Bindings(["test", "customId"])
+  const { bindings } = new Bindings().add([
+    "test",
+    "customId",
+  ])
   expect(bindings).toEqual([
     {
       customIds: ["customId"],
@@ -39,7 +42,7 @@ test("bindings (custom id)", (): void => {
 })
 
 test("bindings (custom id with option)", (): void => {
-  const { bindings } = new Bindings([
+  const { bindings } = new Bindings().add([
     "test",
     "customId",
     { prepend: true },
@@ -54,7 +57,7 @@ test("bindings (custom id with option)", (): void => {
 })
 
 test("bindings (multiple custom id)", (): void => {
-  const { bindings } = new Bindings(
+  const { bindings } = new Bindings().add(
     ["test", "customId"],
     ["test2", "customId"]
   )

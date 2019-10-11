@@ -14,6 +14,7 @@
 * [index](_bindings_.listenerinternalbindingoptions.md#optional-index)
 * [intercept](_bindings_.listenerinternalbindingoptions.md#optional-intercept)
 * [listener](_bindings_.listenerinternalbindingoptions.md#optional-listener)
+* [once](_bindings_.listenerinternalbindingoptions.md#optional-once)
 * [peek](_bindings_.listenerinternalbindingoptions.md#optional-peek)
 * [prepend](_bindings_.listenerinternalbindingoptions.md#optional-prepend)
 * [return](_bindings_.listenerinternalbindingoptions.md#optional-return)
@@ -52,11 +53,19 @@ Defined in bindings.ts:7
 
 ___
 
+### `Optional` once
+
+• **once**? : *boolean*
+
+Defined in bindings.ts:8
+
+___
+
 ### `Optional` peek
 
 • **peek**? : *boolean*
 
-Defined in bindings.ts:8
+Defined in bindings.ts:9
 
 ___
 
@@ -64,7 +73,7 @@ ___
 
 • **prepend**? : *boolean | number*
 
-Defined in bindings.ts:9
+Defined in bindings.ts:10
 
 ___
 
@@ -72,4 +81,4 @@ ___
 
 • **return**? : *boolean*
 
-Defined in bindings.ts:10
+Defined in bindings.ts:11

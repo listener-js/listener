@@ -20,6 +20,7 @@ export interface ListenerEmitOptions {
   isMain: boolean
   isPeek: boolean
   isReturn: boolean
+  once: boolean
 }
 
 export interface ListenerEmitFunction {

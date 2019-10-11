@@ -23,7 +23,7 @@
 
 Ƭ **ListenerInternalFunction**: *function*
 
-Defined in types.ts:35
+Defined in types.ts:36
 
 #### Type declaration:
 
@@ -42,7 +42,7 @@ ___
 
 Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:30
+Defined in types.ts:31
 
 ___
 
@@ -50,4 +50,4 @@ ___
 
 Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
-Defined in types.ts:40
+Defined in types.ts:41
