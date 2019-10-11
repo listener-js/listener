@@ -1,7 +1,7 @@
 import { Bindings } from "../dist/bindings"
 
 test("bindings (basic)", (): void => {
-  const { bindings } = new Bindings(["test"])
+  const { bindings } = new Bindings("test")
   expect(bindings).toEqual([{ targetId: "test" }])
 })
 
@@ -18,55 +18,30 @@ test("bindings (multiple basic)", (): void => {
 })
 
 test("bindings (multiple basic with option)", (): void => {
+  const { bindings } = new Bindings(
+    ["test", { prepend: true }],
+    ["test2", { append: true }]
+  )
+  expect(bindings).toEqual([
+    { options: { prepend: true }, targetId: "test" },
+    { options: { append: true }, targetId: "test2" },
+  ])
+})
+
+test("bindings (custom id)", (): void => {
+  const { bindings } = new Bindings(["test", "customId"])
+  expect(bindings).toEqual([
+    {
+      customIds: ["customId"],
+      targetId: "test",
+    },
+  ])
+})
+
+test("bindings (custom id with option)", (): void => {
   const { bindings } = new Bindings([
     "test",
-    "test2",
-    { prepend: true },
-  ])
-  expect(bindings).toEqual([
-    { options: { prepend: true }, targetId: "test" },
-    { options: { prepend: true }, targetId: "test2" },
-  ])
-})
-
-test("bindings (nested)", (): void => {
-  const { bindings } = new Bindings(["test"])
-  expect(bindings).toEqual([{ targetId: "test" }])
-})
-
-test("bindings (multiple nested)", (): void => {
-  const { bindings } = new Bindings(["test"], ["test2"])
-  expect(bindings).toEqual([
-    { targetId: "test" },
-    { targetId: "test2" },
-  ])
-})
-
-test("bindings (nested with option)", (): void => {
-  const { bindings } = new Bindings([
-    ["test"],
-    { prepend: true },
-  ])
-  expect(bindings).toEqual([
-    { options: { prepend: true }, targetId: "test" },
-  ])
-})
-
-test("bindings (multiple nested with option)", (): void => {
-  const { bindings } = new Bindings([
-    ["test"],
-    ["test2"],
-    { prepend: true },
-  ])
-  expect(bindings).toEqual([
-    { options: { prepend: true }, targetId: "test" },
-    { options: { prepend: true }, targetId: "test2" },
-  ])
-})
-
-test("bindings (nested with custom id)", (): void => {
-  const { bindings } = new Bindings([
-    ["test", "customId"],
+    "customId",
     { prepend: true },
   ])
   expect(bindings).toEqual([
@@ -78,21 +53,18 @@ test("bindings (nested with custom id)", (): void => {
   ])
 })
 
-test("bindings (multiple nested with custom id)", (): void => {
-  const { bindings } = new Bindings([
+test("bindings (multiple custom id)", (): void => {
+  const { bindings } = new Bindings(
     ["test", "customId"],
-    ["test2", "customId"],
-    { prepend: true },
-  ])
+    ["test2", "customId"]
+  )
   expect(bindings).toEqual([
     {
       customIds: ["customId"],
-      options: { prepend: true },
       targetId: "test",
     },
     {
       customIds: ["customId"],
-      options: { prepend: true },
       targetId: "test2",
     },
   ])

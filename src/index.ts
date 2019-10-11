@@ -301,7 +301,7 @@ export class Listener {
         (promise = p === undefined ? promise : p),
     }
 
-    for (const { targetId, options } of list) {
+    for (const { customIds, options, targetId } of list) {
       const opts = this.emitOptions(options)
       const { addListener, isMain } = opts
 
@@ -317,13 +317,22 @@ export class Listener {
         continue
       }
 
-      args = addListener ? [this, ...args] : args
+      let customArgs: any[]
+      let customId: string[]
+
+      if (addListener) {
+        customArgs = addListener ? [this, ...args] : args
+      }
+
+      if (customIds) {
+        customId = [...customIds, ...id]
+      }
 
       if (promise) {
         promise = promise.then(() =>
           this.emitItem(
-            args,
-            id,
+            customArgs || args,
+            customId || id,
             fn,
             opts,
             out,
@@ -333,8 +342,8 @@ export class Listener {
         )
       } else {
         this.emitItem(
-          args,
-          id,
+          customArgs || args,
+          customId || id,
           fn,
           opts,
           out,
@@ -345,6 +354,37 @@ export class Listener {
     }
 
     return promise ? promise.then(setter.out) : out
+  }
+
+  private emitFunction(
+    args: any[],
+    id: string[],
+    fn: ListenerInternalFunction,
+    opts: ListenerEmitOptions,
+    out: any
+  ): ListenerEmitFunction {
+    const { isMain, isPeek, isReturn } = opts
+
+    let promise
+
+    if (isMain && out !== undefined) {
+      return { out, promise }
+    }
+
+    const tmpOut = isPeek
+      ? fn(id, out, ...args)
+      : fn(id, ...args)
+
+    if (tmpOut && tmpOut.then) {
+      promise = tmpOut
+    } else if (
+      (isMain || isReturn) &&
+      tmpOut !== undefined
+    ) {
+      out = tmpOut
+    }
+
+    return { out, promise }
   }
 
   private emitItem(
@@ -384,37 +424,6 @@ export class Listener {
     } else {
       return promise ? promise : out
     }
-  }
-
-  emitFunction(
-    args: any[],
-    id: string[],
-    fn: ListenerInternalFunction,
-    opts: ListenerEmitOptions,
-    out: any
-  ): ListenerEmitFunction {
-    const { isMain, isPeek, isReturn } = opts
-
-    let promise
-
-    if (isMain && out !== undefined) {
-      return { out, promise }
-    }
-
-    const tmpOut = isPeek
-      ? fn(id, out, ...args)
-      : fn(id, ...args)
-
-    if (tmpOut && tmpOut.then) {
-      promise = tmpOut
-    } else if (
-      (isMain || isReturn) &&
-      tmpOut !== undefined
-    ) {
-      out = tmpOut
-    }
-
-    return { out, promise }
   }
 
   private emitOptions(

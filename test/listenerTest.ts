@@ -136,6 +136,21 @@ test("bind", (): void => {
   MyClass.fn([], true)
 })
 
+test("bind with custom id", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn", "hi", "MyClass.fn"])
+    },
+  }
+
+  load([], { Test })
+  bind([], ["MyClass.fn"], ["Test.fn", "hi"])
+
+  MyClass.fn([], true)
+})
+
 test("listenerBeforeLoaded bind", (): void => {
   expect.assertions(1)
 

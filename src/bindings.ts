@@ -13,7 +13,6 @@ export interface ListenerInternalBindingOptions {
 export type ListenerInternalBindings =
   | string
   | (string | ListenerInternalBindingOptions)[]
-  | (string[] | ListenerInternalBindingOptions)[]
 
 export interface ListenerInternalBinding {
   targetId: string
@@ -32,26 +31,24 @@ export class Bindings {
   public add(
     ...bindings: ListenerInternalBindings[]
   ): void {
-    for (const binding of bindings) {
-      let binds: (string | string[])[]
+    for (let binding of bindings) {
       let customIds: string[]
       let options: ListenerInternalBindingOptions
       let targetId: string
 
       if (typeof binding === "string") {
-        this.addBinding({ targetId: binding })
+        targetId = binding
       } else {
-        ;[binds, options] = this.separateOptions(binding)
-
-        for (const bind of binds) {
-          if (typeof bind === "string") {
-            targetId = bind
-          } else {
-            ;[targetId, ...customIds] = bind
-          }
-          this.addBinding({ customIds, options, targetId })
+        const last = binding[binding.length - 1]
+        const hasOption = typeof last !== "string"
+        if (hasOption) {
+          options = last as ListenerInternalBindingOptions
+          binding = binding.slice(0, -1)
         }
+        ;[targetId, ...customIds] = binding as string[]
       }
+
+      this.addBinding({ customIds, options, targetId })
     }
   }
 

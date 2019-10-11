@@ -32,7 +32,7 @@
 
 \+ **new Bindings**(...`bindings`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[]): *[Bindings](_bindings_.bindings.md)*
 
-Defined in bindings.ts:26
+Defined in bindings.ts:25
 
 **Parameters:**
 
@@ -48,7 +48,7 @@ Name | Type |
 
 • **bindings**: *[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[]* =  []
 
-Defined in bindings.ts:25
+Defined in bindings.ts:24
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 • **targetIds**: *Set‹string›* =  new Set()
 
-Defined in bindings.ts:26
+Defined in bindings.ts:25
 
 ## Methods
 
@@ -64,7 +64,7 @@ Defined in bindings.ts:26
 
 ▸ **add**(...`bindings`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[]): *void*
 
-Defined in bindings.ts:32
+Defined in bindings.ts:31
 
 **Parameters:**
 
@@ -80,7 +80,7 @@ ___
 
 ▸ **addBinding**(`__namedParameters`: object): *void*
 
-Defined in bindings.ts:58
+Defined in bindings.ts:55
 
 **Parameters:**
 
@@ -100,7 +100,7 @@ ___
 
 ▸ **separateOptions**(`binding`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)): *[string | string[][], [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)]*
 
-Defined in bindings.ts:163
+Defined in bindings.ts:160
 
 **Parameters:**
 
@@ -116,7 +116,7 @@ ___
 
 ▸ **list**(`_lid`: string[], `bindings`: Record‹string, [Bindings](_bindings_.bindings.md)›, `fnId`: string, `id`: string[]): *[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[]*
 
-Defined in bindings.ts:77
+Defined in bindings.ts:74
 
 **Parameters:**
 
@@ -135,7 +135,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: object, `__namedParameters`: object): *number*
 
-Defined in bindings.ts:123
+Defined in bindings.ts:120
 
 **Parameters:**
 
@@ -159,7 +159,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *number*
 
-Defined in bindings.ts:133
+Defined in bindings.ts:130
 
 **Parameters:**
 

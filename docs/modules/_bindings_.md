@@ -21,6 +21,6 @@
 
 ###  ListenerInternalBindings
 
-Ƭ **ListenerInternalBindings**: *string | string | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)[] | string[] | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)[]*
+Ƭ **ListenerInternalBindings**: *string | string | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)[]*
 
 Defined in bindings.ts:13
