@@ -1,11 +1,7 @@
 import {
   ListenerInternalInstances,
-  ListenerInternalBindings,
-  ListenerInternalOptions,
-  ListenerBindingOptions,
   LogEvent,
   ListenerCallback,
-  ListenerInternalBinding,
   ListenerInternalFunctions,
   ListenerCaptureOutputs,
   ListenerEvent,
@@ -13,25 +9,28 @@ import {
   ListenerInternalFunction,
   ListenerEmitFunction,
   ListenerEmitItemSetter,
-  ListenerBindTargets,
 } from "./types"
+
+import {
+  ListenerInternalBindings,
+  ListenerInternalBindingOptions,
+  Bindings,
+} from "./bindings"
+
+import { ARROW } from "./constants"
 
 export class Listener {
   public id: string
-  public arrow = " < "
 
   public commentRegex = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm
   public fnRegex = /^(\(|function \w*\()?\s*lid[\),\s]/
   public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
-  public bindings: ListenerInternalBindings = {}
+  public bindings: Record<string, Bindings> = {}
   public instances: ListenerInternalInstances = {}
-  public options: ListenerInternalOptions = {}
 
   private listenerFns: ListenerInternalFunctions = {}
   private originalFns: ListenerInternalFunctions = {}
-
-  private log: LogEvent
 
   public constructor(id: string) {
     this.id = id
@@ -41,32 +40,14 @@ export class Listener {
   public bind(
     lid: string[],
     matchId: string[],
-    ...targets: ListenerBindTargets
+    ...targets: ListenerInternalBindings[]
   ): void {
-    const match = matchId.join(this.arrow)
+    const match = matchId.join(ARROW)
 
-    for (const target of targets) {
-      let options: ListenerBindingOptions, targetId: string
+    this.bindings[match] =
+      this.bindings[match] || new Bindings()
 
-      if (typeof target === "string") {
-        targetId = target
-      } else {
-        ;[targetId, options] = target
-      }
-
-      this.bindings[match] = this.bindings[match] || []
-
-      if (this.bindings[match].indexOf(targetId) < 0) {
-        this.bindings[match] = this.bindings[match].concat(
-          targetId
-        )
-
-        if (options) {
-          this.options[match] = this.options[match] || {}
-          this.options[match][targetId] = options
-        }
-      }
-    }
+    this.bindings[match].add(...targets)
   }
 
   public captureOutputs(
@@ -194,8 +175,6 @@ export class Listener {
   }
 
   public reset(lid: string[]): void {
-    this.log = (): void => {}
-
     for (const instanceId in this.instances) {
       const instance = this.instances[instanceId]
 
@@ -229,12 +208,6 @@ export class Listener {
       instance: this,
       listener: this,
     })
-
-    this.bind(
-      lid,
-      [`${this.id}.listenerLoaded`, "log", "**"],
-      `${this.id}.logLoaded`
-    )
 
     this.bind(
       lid,
@@ -306,7 +279,7 @@ export class Listener {
 
     if (
       this.bindings["**"] &&
-      this.bindings["**"].indexOf(fnId) > -1
+      this.bindings["**"].targetIds.has(fnId)
     ) {
       return this.originalFns[fnId].call(
         instance,
@@ -315,7 +288,12 @@ export class Listener {
       )
     }
 
-    const list = this.emitList(_lid, fnId, id)
+    const list = Bindings.list(
+      _lid,
+      this.bindings,
+      fnId,
+      id
+    )
 
     const setter = {
       out: (o): any => (out = o === undefined ? out : o),
@@ -323,17 +301,17 @@ export class Listener {
         (promise = p === undefined ? promise : p),
     }
 
-    for (const [target, options] of list) {
+    for (const { targetId, options } of list) {
       const opts = this.emitOptions(options)
       const { addListener, isMain } = opts
 
-      if (!isMain && fnId === target) {
+      if (!isMain && fnId === targetId) {
         continue
       }
 
       const fn = isMain
         ? this.originalFns[fnId].bind(instance)
-        : this.listenerFns[target]
+        : this.listenerFns[targetId]
 
       if (!fn) {
         continue
@@ -439,69 +417,8 @@ export class Listener {
     return { out, promise }
   }
 
-  private emitList(
-    _lid: string[],
-    fnId: string,
-    id: string[]
-  ): ListenerInternalBinding[] {
-    const lists = this.bindings
-
-    let key: string
-    let key2: string
-    let list: ListenerInternalBinding[] = [
-      [fnId, { index: 0 }],
-    ]
-
-    this.listAdd(lists, list, "**")
-
-    for (const i of id.slice(0).reverse()) {
-      key = key ? i + this.arrow + key : i
-      this.listAdd(lists, list, "**" + this.arrow + key)
-    }
-
-    if (key) {
-      this.listAdd(lists, list, key)
-    }
-
-    for (const i of id) {
-      key2 = key2 ? key2 + this.arrow + i : i
-      this.listAdd(lists, list, key2 + this.arrow + "**")
-    }
-
-    if (id.length <= 1) {
-      this.listAdd(lists, list, "*")
-    } else {
-      this.listAdd(
-        lists,
-        list,
-        "*" + this.arrow + id.slice(1).join(this.arrow)
-      )
-      this.listAdd(
-        lists,
-        list,
-        id.slice(0, -1).join(this.arrow) + this.arrow + "*"
-      )
-    }
-
-    list = list.sort(this.listSort.bind(this))
-
-    if (id.indexOf("log.logEvent") < 0 && this.log) {
-      this.log(
-        [
-          `${this.id}.buildList`,
-          `${this.id}.emit`,
-          ..._lid,
-        ],
-        "internal",
-        list
-      )
-    }
-
-    return list
-  }
-
   private emitOptions(
-    options: ListenerBindingOptions
+    options: ListenerInternalBindingOptions
   ): ListenerEmitOptions {
     const isIntercept = options && options.intercept
 
@@ -575,62 +492,6 @@ export class Listener {
     return (_lid: string[], ...args: any[]): any => {
       return this.emit(_lid, fnId, instanceId, ...args)
     }
-  }
-
-  private listAdd(
-    lists: ListenerInternalBindings,
-    list: ListenerInternalBinding[],
-    key: string
-  ): void {
-    if (lists[key]) {
-      for (const item of lists[key]) {
-        const opts = this.options[key]
-          ? this.options[key][item]
-          : {}
-
-        list.push([item, opts])
-      }
-    }
-  }
-
-  private listSort(
-    [, a = {}]: ListenerInternalBinding,
-    [, b = {}]: ListenerInternalBinding
-  ): number {
-    const aIndex = this.optsToIndex(a)
-    const bIndex = this.optsToIndex(b)
-
-    return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
-  }
-
-  private logLoaded(
-    lid: string[],
-    { instance }: ListenerEvent
-  ): void {
-    this.log = instance.logEvent
-  }
-
-  private optsToIndex(
-    opts: ListenerBindingOptions
-  ): number {
-    if (typeof opts.index === "number") {
-      return opts.index
-    }
-    if (opts.prepend) {
-      if (typeof opts.prepend === "number") {
-        return opts.prepend * -1
-      } else {
-        return -1
-      }
-    }
-    if (opts.append) {
-      if (typeof opts.append === "number") {
-        return opts.append
-      } else {
-        return 1
-      }
-    }
-    return 1
   }
 }
 

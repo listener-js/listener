@@ -8,16 +8,6 @@ export interface ListenerEvent {
   options?: Record<string, any>
 }
 
-export interface ListenerBindingOptions {
-  append?: boolean | number
-  index?: number
-  intercept?: boolean
-  listener?: boolean
-  peek?: boolean
-  prepend?: boolean | number
-  return?: boolean
-}
-
 export interface ListenerEmitItemSetter {
   out: (o: any) => any
   promise: (p: Promise<any>) => any
@@ -37,10 +27,6 @@ export interface ListenerEmitFunction {
   out: any
 }
 
-export type ListenerBindTargets =
-  | string[]
-  | [string, ListenerBindingOptions][]
-
 export type ListenerCallback = (
   lid: string[],
   event: ListenerEvent
@@ -53,16 +39,6 @@ export type ListenerCaptureOutputs = {
   valuesById: Record<string, any>
 }
 
-export type ListenerInternalBindings = Record<
-  string,
-  string[]
->
-
-export type ListenerInternalBinding = [
-  string,
-  ListenerBindingOptions
-]
-
 export type ListenerInternalFunctions = Record<
   string,
   ListenerInternalFunction
@@ -72,11 +48,6 @@ export type ListenerInternalFunction = (
   id: string[],
   ...arg: any[]
 ) => any
-
-export type ListenerInternalOptions = Record<
-  string,
-  ListenerBindingOptions
->
 
 export type ListenerInternalInstances = Record<string, any>
 

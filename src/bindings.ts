@@ -1,0 +1,188 @@
+import { ARROW } from "./constants"
+
+export interface ListenerInternalBindingOptions {
+  append?: boolean | number
+  index?: number
+  intercept?: boolean
+  listener?: boolean
+  peek?: boolean
+  prepend?: boolean | number
+  return?: boolean
+}
+
+export type ListenerInternalBindings =
+  | string
+  | (string | ListenerInternalBindingOptions)[]
+  | (string[] | ListenerInternalBindingOptions)[]
+
+export interface ListenerInternalBinding {
+  targetId: string
+  customIds?: string[]
+  options?: ListenerInternalBindingOptions
+}
+
+export class Bindings {
+  public bindings: ListenerInternalBinding[] = []
+  public targetIds: Set<string> = new Set()
+
+  constructor(...bindings: ListenerInternalBindings[]) {
+    this.add(...bindings)
+  }
+
+  public add(
+    ...bindings: ListenerInternalBindings[]
+  ): void {
+    for (const binding of bindings) {
+      let binds: (string | string[])[]
+      let customIds: string[]
+      let options: ListenerInternalBindingOptions
+      let targetId: string
+
+      if (typeof binding === "string") {
+        this.addBinding({ targetId: binding })
+      } else {
+        ;[binds, options] = this.separateOptions(binding)
+
+        for (const bind of binds) {
+          if (typeof bind === "string") {
+            targetId = bind
+          } else {
+            ;[targetId, ...customIds] = bind
+          }
+          this.addBinding({ customIds, options, targetId })
+        }
+      }
+    }
+  }
+
+  public addBinding({
+    customIds,
+    options,
+    targetId,
+  }: ListenerInternalBinding): void {
+    if (targetId) {
+      this.bindings = this.bindings.concat({
+        customIds:
+          customIds && customIds.length
+            ? customIds
+            : undefined,
+        options,
+        targetId,
+      })
+
+      this.targetIds.add(targetId)
+    }
+  }
+
+  public static list(
+    _lid: string[],
+    bindings: Record<string, Bindings>,
+    fnId: string,
+    id: string[]
+  ): ListenerInternalBinding[] {
+    let key: string
+    let key2: string
+    let list: ListenerInternalBinding[] = [
+      { options: { index: 0 }, targetId: fnId },
+    ]
+
+    const keys = ["**"]
+
+    for (const i of id.slice(0).reverse()) {
+      key = key ? i + ARROW + key : i
+      keys.push("**" + ARROW + key)
+    }
+
+    if (key) {
+      keys.push(key)
+    }
+
+    for (const i of id) {
+      key2 = key2 ? key2 + ARROW + i : i
+      keys.push(key2 + ARROW + "**")
+    }
+
+    if (id.length <= 1) {
+      keys.push("*")
+    } else {
+      keys.push("*" + ARROW + id.slice(1).join(ARROW))
+      keys.push(id.slice(0, -1).join(ARROW) + ARROW + "*")
+    }
+
+    for (const key of keys) {
+      if (bindings[key]) {
+        list = list.concat(bindings[key].bindings)
+      }
+    }
+
+    list = list.sort(this.listSort.bind(this))
+
+    return list
+  }
+
+  private static listSort(
+    { options: a }: ListenerInternalBinding,
+    { options: b }: ListenerInternalBinding
+  ): number {
+    const aIndex = this.optsToIndex(a)
+    const bIndex = this.optsToIndex(b)
+
+    return aIndex > bIndex ? 1 : aIndex < bIndex ? -1 : 0
+  }
+
+  private static optsToIndex(
+    opts: ListenerInternalBindingOptions
+  ): number {
+    if (!opts) {
+      return 1
+    }
+
+    if (typeof opts.index === "number") {
+      return opts.index
+    }
+
+    if (opts.prepend) {
+      if (typeof opts.prepend === "number") {
+        return opts.prepend * -1
+      } else {
+        return -1
+      }
+    }
+
+    if (opts.append) {
+      if (typeof opts.append === "number") {
+        return opts.append
+      } else {
+        return 1
+      }
+    }
+
+    return 1
+  }
+
+  private separateOptions(
+    binding: ListenerInternalBindings
+  ): [
+    (string | string[])[],
+    ListenerInternalBindingOptions
+  ] {
+    if (Array.isArray(binding)) {
+      const values = []
+
+      let options: ListenerInternalBindingOptions
+
+      for (const value of binding) {
+        if (
+          typeof value !== "string" &&
+          !Array.isArray(value)
+        ) {
+          options = value
+        } else {
+          values.push(value)
+        }
+      }
+
+      return [values, options]
+    }
+  }
+}

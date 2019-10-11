@@ -19,7 +19,7 @@
 
 • **out**: *function*
 
-Defined in types.ts:22
+Defined in types.ts:12
 
 #### Type declaration:
 
@@ -37,7 +37,7 @@ ___
 
 • **promise**: *function*
 
-Defined in types.ts:23
+Defined in types.ts:13
 
 #### Type declaration:
 

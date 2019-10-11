@@ -6,7 +6,6 @@
 
 ### Interfaces
 
-* [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)
 * [ListenerEmitFunction](../interfaces/_types_.listeneremitfunction.md)
 * [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md)
 * [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md)
@@ -14,32 +13,20 @@
 
 ### Type aliases
 
-* [ListenerBindTargets](_types_.md#listenerbindtargets)
 * [ListenerCallback](_types_.md#listenercallback)
 * [ListenerCaptureOutputs](_types_.md#listenercaptureoutputs)
-* [ListenerInternalBinding](_types_.md#listenerinternalbinding)
-* [ListenerInternalBindings](_types_.md#listenerinternalbindings)
 * [ListenerInternalFunction](_types_.md#listenerinternalfunction)
 * [ListenerInternalFunctions](_types_.md#listenerinternalfunctions)
 * [ListenerInternalInstances](_types_.md#listenerinternalinstances)
-* [ListenerInternalOptions](_types_.md#listenerinternaloptions)
 * [LogEvent](_types_.md#logevent)
 
 ## Type aliases
-
-###  ListenerBindTargets
-
-Ƭ **ListenerBindTargets**: *string[] | [string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)][]*
-
-Defined in types.ts:40
-
-___
 
 ###  ListenerCallback
 
 Ƭ **ListenerCallback**: *function*
 
-Defined in types.ts:44
+Defined in types.ts:30
 
 #### Type declaration:
 
@@ -58,7 +45,7 @@ ___
 
 Ƭ **ListenerCaptureOutputs**: *object*
 
-Defined in types.ts:49
+Defined in types.ts:35
 
 #### Type declaration:
 
@@ -72,27 +59,11 @@ Defined in types.ts:49
 
 ___
 
-###  ListenerInternalBinding
-
-Ƭ **ListenerInternalBinding**: *[string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)]*
-
-Defined in types.ts:61
-
-___
-
-###  ListenerInternalBindings
-
-Ƭ **ListenerInternalBindings**: *Record‹string, string[]›*
-
-Defined in types.ts:56
-
-___
-
 ###  ListenerInternalFunction
 
 Ƭ **ListenerInternalFunction**: *function*
 
-Defined in types.ts:71
+Defined in types.ts:47
 
 #### Type declaration:
 
@@ -111,7 +82,7 @@ ___
 
 Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:66
+Defined in types.ts:42
 
 ___
 
@@ -119,15 +90,7 @@ ___
 
 Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
-Defined in types.ts:81
-
-___
-
-###  ListenerInternalOptions
-
-Ƭ **ListenerInternalOptions**: *Record‹string, [ListenerBindingOptions](../interfaces/_types_.listenerbindingoptions.md)›*
-
-Defined in types.ts:76
+Defined in types.ts:52
 
 ___
 
@@ -135,7 +98,7 @@ ___
 
 Ƭ **LogEvent**: *function*
 
-Defined in types.ts:83
+Defined in types.ts:54
 
 #### Type declaration:
 
