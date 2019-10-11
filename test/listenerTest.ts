@@ -136,6 +136,30 @@ test("bind", (): void => {
   MyClass.fn([], true)
 })
 
+test("listenerBeforeLoaded bind", (): void => {
+  expect.assertions(1)
+
+  const Test = {
+    fn: (lid: string[]): void => {
+      expect(lid).toEqual(["Test.fn", "MyClass.fn"])
+    },
+    listenerBeforeLoaded: (
+      lid: string[],
+      { instance, listener }: ListenerEvent
+    ): void => {
+      listener.bind(
+        lid,
+        ["MyClass.fn"],
+        `${instance.id}.fn`
+      )
+    },
+  }
+
+  load([], { Test })
+
+  MyClass.fn([], true)
+})
+
 test("listenerLoaded bind", (): void => {
   expect.assertions(1)
 
