@@ -96,14 +96,25 @@ export class Listener {
 
       this.bind(
         lid,
-        [`${this.id}.listenerLoaded`, instanceId, "**"],
-        [`${this.id}.applyInstanceId`, { prepend: 0.3 }],
+        [`${this.id}.listenersLoaded`, "**"],
+        [
+          `${this.id}.applyInstanceId`,
+          instanceId,
+          { prepend: 0.4 },
+        ],
         [
           `${this.id}.applyInstanceFunctions`,
+          instanceId,
+          { prepend: 0.3 },
+        ],
+        [
+          `${this.id}.callListenerBeforeLoaded`,
+          instanceId,
           { prepend: 0.2 },
         ],
         [
-          `${this.id}.listenerBeforeLoaded`,
+          `${this.id}.callListenerLoaded`,
+          instanceId,
           { prepend: 0.1 },
         ]
       )
@@ -113,7 +124,6 @@ export class Listener {
           lid,
           [
             `${this.id}.listenerBeforeLoaded`,
-            `${this.id}.listenerLoaded`,
             instanceId,
             "**",
           ],
@@ -204,10 +214,14 @@ export class Listener {
       }
     }
 
-    this.applyInstanceFunctions(lid, {
-      instance: this,
-      listener: this,
-    })
+    this.applyInstanceFunctions(
+      [
+        "listener.applyInstanceFunctions",
+        "listener",
+        ...lid,
+      ],
+      { listener: this }
+    )
 
     this.bind(
       lid,
@@ -218,9 +232,16 @@ export class Listener {
 
   private applyInstanceFunctions(
     lid: string[],
-    { instance }: ListenerEvent
+    instances: Record<string, any>
   ): void | Promise<any> {
-    this.instances[instance.id] = instance
+    const id = lid[1]
+    const instance = instances[id]
+
+    if (!instance) {
+      return
+    }
+
+    this.instances[id] = instance
 
     if (instance.then) {
       return
@@ -248,10 +269,67 @@ export class Listener {
 
   private applyInstanceId(
     lid: string[],
-    { instance }: ListenerEvent
+    instances: Record<string, any>
   ): void | Promise<any> {
-    this.instances[lid[2]] = instance
-    instance.id = lid[2]
+    const id = lid[1]
+    const instance = instances[id]
+
+    if (!instance) {
+      return
+    }
+
+    this.instances[id] = instance
+    instance.id = id
+  }
+
+  private callListenerBeforeLoaded(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<void> {
+    return this.callWithEvent(
+      lid,
+      "listenerBeforeLoaded",
+      instances,
+      options
+    )
+  }
+
+  private callListenerLoaded(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<void> {
+    return this.callWithEvent(
+      lid,
+      "listenerLoaded",
+      instances,
+      options
+    )
+  }
+
+  private callWithEvent(
+    _lid: string[],
+    fn: string,
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<void> {
+    const id = _lid[1]
+    const instance = instances[id]
+
+    if (!instance) {
+      return
+    }
+
+    const event: ListenerEvent = {
+      existing: this.diffInstances(instances),
+      instance,
+      instances,
+      listener: this,
+      options,
+    }
+
+    return this[fn]([id, ..._lid], event)
   }
 
   private diffInstances(
@@ -473,18 +551,7 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): void | Promise<any> {
-    const existing = this.diffInstances(instances)
-
-    const { promises } = this.captureOutputs(
-      lid,
-      instances,
-      { existing, options },
-      this.listenerLoaded
-    )
-
-    if (promises.length) {
-      return Promise.all(promises)
-    }
+    return
   }
 
   private listenerLoaded(

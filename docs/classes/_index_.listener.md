@@ -28,6 +28,9 @@
 * [applyInstanceFunctions](_index_.listener.md#private-applyinstancefunctions)
 * [applyInstanceId](_index_.listener.md#private-applyinstanceid)
 * [bind](_index_.listener.md#bind)
+* [callListenerBeforeLoaded](_index_.listener.md#private-calllistenerbeforeloaded)
+* [callListenerLoaded](_index_.listener.md#private-calllistenerloaded)
+* [callWithEvent](_index_.listener.md#private-callwithevent)
 * [captureOutputs](_index_.listener.md#captureoutputs)
 * [diffInstances](_index_.listener.md#private-diffinstances)
 * [emit](_index_.listener.md#private-emit)
@@ -128,19 +131,16 @@ Defined in index.ts:33
 
 ### `Private` applyInstanceFunctions
 
-▸ **applyInstanceFunctions**(`lid`: string[], `__namedParameters`: object): *void | Promise‹any›*
+▸ **applyInstanceFunctions**(`lid`: string[], `instances`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:219
+Defined in index.ts:233
 
 **Parameters:**
 
-▪ **lid**: *string[]*
-
-▪ **__namedParameters**: *object*
-
 Name | Type |
 ------ | ------ |
-`instance` | any |
+`lid` | string[] |
+`instances` | Record‹string, any› |
 
 **Returns:** *void | Promise‹any›*
 
@@ -148,19 +148,16 @@ ___
 
 ### `Private` applyInstanceId
 
-▸ **applyInstanceId**(`lid`: string[], `__namedParameters`: object): *void | Promise‹any›*
+▸ **applyInstanceId**(`lid`: string[], `instances`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:249
+Defined in index.ts:270
 
 **Parameters:**
 
-▪ **lid**: *string[]*
-
-▪ **__namedParameters**: *object*
-
 Name | Type |
 ------ | ------ |
-`instance` | any |
+`lid` | string[] |
+`instances` | Record‹string, any› |
 
 **Returns:** *void | Promise‹any›*
 
@@ -181,6 +178,61 @@ Name | Type |
 `...targets` | [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[] |
 
 **Returns:** *void*
+
+___
+
+### `Private` callListenerBeforeLoaded
+
+▸ **callListenerBeforeLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹void›*
+
+Defined in index.ts:285
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`lid` | string[] |
+`instances` | Record‹string, any› |
+`options?` | Record‹string, any› |
+
+**Returns:** *void | Promise‹void›*
+
+___
+
+### `Private` callListenerLoaded
+
+▸ **callListenerLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹void›*
+
+Defined in index.ts:298
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`lid` | string[] |
+`instances` | Record‹string, any› |
+`options?` | Record‹string, any› |
+
+**Returns:** *void | Promise‹void›*
+
+___
+
+### `Private` callWithEvent
+
+▸ **callWithEvent**(`_lid`: string[], `fn`: string, `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹void›*
+
+Defined in index.ts:311
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`_lid` | string[] |
+`fn` | string |
+`instances` | Record‹string, any› |
+`options?` | Record‹string, any› |
+
+**Returns:** *void | Promise‹void›*
 
 ___
 
@@ -207,7 +259,7 @@ ___
 
 ▸ **diffInstances**(`instances`: Record‹string, any›): *string[]*
 
-Defined in index.ts:257
+Defined in index.ts:335
 
 **Parameters:**
 
@@ -223,7 +275,7 @@ ___
 
 ▸ **emit**(`_lid`: string[], `fnId`: string, `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:268
+Defined in index.ts:346
 
 **Parameters:**
 
@@ -242,7 +294,7 @@ ___
 
 ▸ **emitFunction**(`args`: any[], `id`: string[], `fn`: [ListenerInternalFunction](../modules/_types_.md#listenerinternalfunction), `opts`: [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md), `out`: any): *[ListenerEmitFunction](../interfaces/_types_.listeneremitfunction.md)*
 
-Defined in index.ts:359
+Defined in index.ts:437
 
 **Parameters:**
 
@@ -262,7 +314,7 @@ ___
 
 ▸ **emitItem**(`args`: any[], `id`: string[], `fn`: [ListenerInternalFunction](../modules/_types_.md#listenerinternalfunction), `opts`: [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md), `out`: any, `promise`: Promise‹any›, `setter`: [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md)): *any*
 
-Defined in index.ts:390
+Defined in index.ts:468
 
 **Parameters:**
 
@@ -284,7 +336,7 @@ ___
 
 ▸ **emitItemOutput**(`promise`: Promise‹any›, `opts`: [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md), `out`: any, `setter`: [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md)): *any*
 
-Defined in index.ts:413
+Defined in index.ts:491
 
 **Parameters:**
 
@@ -303,7 +355,7 @@ ___
 
 ▸ **emitOptions**(`options`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *[ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md)*
 
-Defined in index.ts:429
+Defined in index.ts:507
 
 **Parameters:**
 
@@ -319,7 +371,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *string[]*
 
-Defined in index.ts:444
+Defined in index.ts:522
 
 **Parameters:**
 
@@ -335,7 +387,7 @@ ___
 
 ▸ **listenerBeforeLoaded**(`lid`: string[], `event`: [ListenerEvent](../interfaces/_types_.listenerevent.md)): *void | Promise‹any›*
 
-Defined in index.ts:464
+Defined in index.ts:542
 
 **Parameters:**
 
@@ -352,7 +404,7 @@ ___
 
 ▸ **listenerLoaded**(`lid`: string[], `event`: [ListenerEvent](../interfaces/_types_.listenerevent.md)): *void | Promise‹any›*
 
-Defined in index.ts:490
+Defined in index.ts:557
 
 **Parameters:**
 
@@ -369,7 +421,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string): *Function*
 
-Defined in index.ts:497
+Defined in index.ts:564
 
 **Parameters:**
 
@@ -386,7 +438,7 @@ ___
 
 ▸ **listenersLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:471
+Defined in index.ts:549
 
 **Parameters:**
 
@@ -422,7 +474,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:163
+Defined in index.ts:173
 
 **Parameters:**
 
@@ -438,7 +490,7 @@ ___
 
 ▸ **reset**(`lid`: string[]): *void*
 
-Defined in index.ts:177
+Defined in index.ts:187
 
 **Parameters:**
 
