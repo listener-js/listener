@@ -1,23 +1,20 @@
 import {
-  ListenerInternalInstances,
-  LogEvent,
-  ListenerCallback,
-  ListenerInternalFunctions,
-  ListenerCaptureOutputs,
-  ListenerEvent,
-  ListenerEmitOptions,
-  ListenerInternalFunction,
-  ListenerEmitFunction,
-  ListenerEmitItemSetter,
-} from "./types"
-
-import {
   ListenerInternalBindings,
   ListenerInternalBindingOptions,
   Bindings,
 } from "./bindings"
 
 import { ARROW } from "./constants"
+
+import {
+  ListenerInternalInstances,
+  ListenerInternalFunctions,
+  ListenerEvent,
+  ListenerEmitOptions,
+  ListenerInternalFunction,
+  ListenerEmitFunction,
+  ListenerEmitItemSetter,
+} from "./types"
 
 export class Listener {
   public id: string
@@ -48,42 +45,6 @@ export class Listener {
       this.bindings[match] || new Bindings()
 
     this.bindings[match].add(...targets)
-  }
-
-  public captureOutputs(
-    _lid: string[],
-    instances: Record<string, any>,
-    eventAssigns: Record<string, any>,
-    fn: ListenerCallback
-  ): ListenerCaptureOutputs {
-    const promises = []
-    const promisesById = {}
-
-    const values = []
-    const valuesById = {}
-
-    for (const id in instances) {
-      if (!fn) {
-        continue
-      }
-
-      const out = fn([id, ..._lid], {
-        instance: instances[id],
-        instances,
-        listener: this,
-        ...eventAssigns,
-      })
-
-      if (out && out.then) {
-        promises.push(out)
-        promisesById[id] = out
-      } else {
-        values.push(out)
-        valuesById[id] = out
-      }
-    }
-
-    return { promises, promisesById, values, valuesById }
   }
 
   public load(
