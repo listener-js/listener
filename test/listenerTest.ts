@@ -61,7 +61,7 @@ class MyClass2 {
 
 beforeEach((): void => {
   reset([])
-  load([], { MyClass, MyClass2, log })
+  load([], { MyClass, MyClass2 })
 })
 
 test("defined", (): void => {
@@ -146,12 +146,13 @@ test("listenerLoaded bind", (): void => {
     listenerLoaded: (
       lid: string[],
       { instance, listener }: ListenerEvent
-    ): void =>
+    ): void => {
       listener.bind(
         lid,
         ["MyClass.fn"],
         `${instance.id}.fn`
-      ),
+      )
+    },
   }
 
   load([], { Test })
@@ -200,7 +201,6 @@ test("listenerLoaded existing", (): void => {
         "listener",
         "MyClass",
         "MyClass2",
-        "log",
       ])
     },
   }

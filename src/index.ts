@@ -110,6 +110,71 @@ export class Listener {
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Record<string, any> | Promise<Record<string, any>> {
+    for (const instanceId in instances) {
+      const instance = instances[instanceId]
+
+      this.bind(
+        lid,
+        [`${this.id}.listenerLoaded`, instanceId, "**"],
+        [`${this.id}.applyInstanceId`, { prepend: 0.3 }],
+        [
+          `${this.id}.applyInstanceFunctions`,
+          { prepend: 0.2 },
+        ],
+        [
+          `${this.id}.listenerBeforeLoaded`,
+          { prepend: 0.1 },
+        ]
+      )
+
+      if (instance.listenerBeforeLoaded) {
+        this.bind(
+          lid,
+          [
+            `${this.id}.listenerBeforeLoaded`,
+            instanceId,
+            "**",
+          ],
+          `${instanceId}.listenerBeforeLoaded`
+        )
+      }
+
+      if (instance.listenerLoaded) {
+        this.bind(
+          lid,
+          [`${this.id}.listenerLoaded`, instanceId, "**"],
+          `${instanceId}.listenerLoaded`
+        )
+      }
+
+      if (instance.listenerBeforeLoadedAny) {
+        this.bind(
+          lid,
+          [`${this.id}.listenerBeforeLoaded`, "**"],
+          `${instanceId}.listenerBeforeLoadedAny`
+        )
+      }
+
+      if (instance.listenerLoadedAny) {
+        this.bind(
+          lid,
+          [`${this.id}.listenerLoaded`, "**"],
+          `${instanceId}.listenerLoadedAny`
+        )
+      }
+
+      if (instance.listenerReset) {
+        this.bind(
+          lid,
+          [`${this.id}.reset`, "**"],
+          [
+            `${instanceId}.listenerReset`,
+            { listener: true, prepend: true },
+          ]
+        )
+      }
+    }
+
     return this.instances
   }
 
@@ -173,38 +238,8 @@ export class Listener {
     this.bind(
       lid,
       [`${this.id}.load`, "**"],
-      [`${this.id}.applyInstancesId`, { prepend: 0.4 }],
-      [
-        `${this.id}.applyInstancesFunctions`,
-        { prepend: 0.3 },
-      ],
-      [
-        `${this.id}.applyCallbacksBindings`,
-        { prepend: 0.2 },
-      ],
-      [
-        `${this.id}.listenersBeforeLoaded`,
-        { prepend: 0.1 },
-      ],
       [`${this.id}.listenersLoaded`, { append: 0.1 }]
     )
-  }
-
-  private applyInstancesFunctions(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    const { promises } = this.captureOutputs(
-      lid,
-      instances,
-      { options },
-      this.applyInstanceFunctions
-    )
-
-    if (promises.length) {
-      return Promise.all(promises)
-    }
   }
 
   private applyInstanceFunctions(
@@ -237,100 +272,12 @@ export class Listener {
     }
   }
 
-  private applyInstancesId(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    const { promises } = this.captureOutputs(
-      lid,
-      instances,
-      { options },
-      this.applyInstanceId
-    )
-
-    if (promises.length) {
-      return Promise.all(promises)
-    }
-  }
-
   private applyInstanceId(
     lid: string[],
     { instance }: ListenerEvent
   ): void | Promise<any> {
-    this.instances[lid[1]] = instance
-    instance.id = lid[1]
-  }
-
-  private applyCallbacksBindings(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): void {
-    for (const instanceId in instances) {
-      const instance = instances[instanceId]
-
-      this.applyCallbackBindings(
-        [instanceId, ...lid],
-        instanceId,
-        instance,
-        options
-      )
-    }
-  }
-
-  private applyCallbackBindings(
-    lid: string[],
-    instanceId: string,
-    instance: any,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    if (instance.listenerBeforeLoaded) {
-      this.bind(
-        lid,
-        [
-          `${this.id}.listenerBeforeLoaded`,
-          instanceId,
-          "**",
-        ],
-        `${instanceId}.listenerBeforeLoaded`
-      )
-    }
-
-    if (instance.listenerLoaded) {
-      this.bind(
-        lid,
-        [`${this.id}.listenerLoaded`, instanceId, "**"],
-        `${instanceId}.listenerLoaded`
-      )
-    }
-
-    if (instance.listenerBeforeLoadedAny) {
-      this.bind(
-        lid,
-        [`${this.id}.listenerBeforeLoaded`, "**"],
-        `${instanceId}.listenerBeforeLoadedAny`
-      )
-    }
-
-    if (instance.listenerLoadedAny) {
-      this.bind(
-        lid,
-        [`${this.id}.listenerLoaded`, "**"],
-        `${instanceId}.listenerLoadedAny`
-      )
-    }
-
-    if (instance.listenerReset) {
-      this.bind(
-        lid,
-        [`${this.id}.reset`, "**"],
-        [
-          `${instanceId}.listenerReset`,
-          { listener: true, prepend: true },
-        ]
-      )
-    }
+    this.instances[lid[2]] = instance
+    instance.id = lid[2]
   }
 
   private diffInstances(
@@ -347,13 +294,13 @@ export class Listener {
   private emit(
     _lid: string[],
     fnId: string,
-    id: string[],
     instanceId: string,
     ...args: any[]
   ): any {
     let out: any
     let promise: Promise<any>
 
+    const id = [fnId].concat(_lid || [])
     const instance = this.instances[instanceId]
 
     if (
@@ -587,25 +534,6 @@ export class Listener {
     return listeners
   }
 
-  private listenersBeforeLoaded(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): void | Promise<any> {
-    const existing = this.diffInstances(instances)
-
-    const { promises } = this.captureOutputs(
-      lid,
-      instances,
-      { existing, options },
-      this.listenerBeforeLoaded
-    )
-
-    if (promises.length) {
-      return Promise.all(promises)
-    }
-  }
-
   private listenerBeforeLoaded(
     lid: string[],
     event: ListenerEvent
@@ -644,8 +572,7 @@ export class Listener {
     instanceId: string
   ): Function {
     return (_lid: string[], ...args: any[]): any => {
-      const id = [fnId].concat(_lid || [])
-      return this.emit(id, fnId, id, instanceId, ...args)
+      return this.emit(_lid, fnId, instanceId, ...args)
     }
   }
 
