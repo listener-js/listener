@@ -48,7 +48,7 @@
 
 \+ **new Listener**(`id`: string): *[Listener](_index_.listener.md)*
 
-Defined in index.ts:33
+Defined in index.ts:34
 
 **Parameters:**
 
@@ -64,7 +64,7 @@ Name | Type |
 
 • **bindings**: *Record‹string, [Bindings](_bindings_.bindings.md)›*
 
-Defined in index.ts:29
+Defined in index.ts:30
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 • **id**: *string*
 
-Defined in index.ts:27
+Defined in index.ts:28
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 • **instances**: *[ListenerInternalInstances](../modules/_types_.md#listenerinternalinstances)*
 
-Defined in index.ts:30
+Defined in index.ts:31
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 • **listenerFns**: *[ListenerInternalFunctions](../modules/_types_.md#listenerinternalfunctions)*
 
-Defined in index.ts:32
+Defined in index.ts:33
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 • **originalFns**: *[ListenerInternalFunctions](../modules/_types_.md#listenerinternalfunctions)*
 
-Defined in index.ts:33
+Defined in index.ts:34
 
 ## Methods
 
@@ -104,7 +104,7 @@ Defined in index.ts:33
 
 ▸ **applyInstanceFunctions**(`lid`: string[], `instances`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:195
+Defined in index.ts:196
 
 **Parameters:**
 
@@ -121,7 +121,7 @@ ___
 
 ▸ **applyInstanceId**(`lid`: string[], `instances`: Record‹string, any›): *void | Promise‹any›*
 
-Defined in index.ts:229
+Defined in index.ts:230
 
 **Parameters:**
 
@@ -138,7 +138,7 @@ ___
 
 ▸ **bind**(`lid`: string[], `matchId`: string[], ...`targets`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[]): *void*
 
-Defined in index.ts:40
+Defined in index.ts:41
 
 **Parameters:**
 
@@ -156,7 +156,7 @@ ___
 
 ▸ **callListenerBeforeLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹void›*
 
-Defined in index.ts:240
+Defined in index.ts:241
 
 **Parameters:**
 
@@ -174,7 +174,7 @@ ___
 
 ▸ **callListenerLoaded**(`lid`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹void›*
 
-Defined in index.ts:253
+Defined in index.ts:254
 
 **Parameters:**
 
@@ -192,7 +192,7 @@ ___
 
 ▸ **callWithEvent**(`_lid`: string[], `fn`: string, `instances`: Record‹string, any›, `options?`: Record‹string, any›): *void | Promise‹void›*
 
-Defined in index.ts:266
+Defined in index.ts:267
 
 **Parameters:**
 
@@ -211,7 +211,7 @@ ___
 
 ▸ **diffInstances**(`instances`: Record‹string, any›): *string[]*
 
-Defined in index.ts:286
+Defined in index.ts:287
 
 **Parameters:**
 
@@ -227,7 +227,7 @@ ___
 
 ▸ **emit**(`_lid`: string[], `fnId`: string, `instanceId`: string, ...`args`: any[]): *any*
 
-Defined in index.ts:297
+Defined in index.ts:298
 
 **Parameters:**
 
@@ -244,17 +244,19 @@ ___
 
 ### `Private` emitFunction
 
-▸ **emitFunction**(`args`: any[], `id`: string[], `fn`: [ListenerInternalFunction](../modules/_types_.md#listenerinternalfunction), `opts`: [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md), `out`: any): *[ListenerEmitFunction](../interfaces/_types_.listeneremitfunction.md)*
+▸ **emitFunction**(`__namedParameters`: object): *[ListenerEmitFunction](../interfaces/_types_.listeneremitfunction.md)*
 
-Defined in index.ts:403
+Defined in index.ts:423
 
 **Parameters:**
+
+▪ **__namedParameters**: *object*
 
 Name | Type |
 ------ | ------ |
 `args` | any[] |
+`fn` | function |
 `id` | string[] |
-`fn` | [ListenerInternalFunction](../modules/_types_.md#listenerinternalfunction) |
 `opts` | [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md) |
 `out` | any |
 
@@ -264,21 +266,15 @@ ___
 
 ### `Private` emitItem
 
-▸ **emitItem**(`args`: any[], `id`: string[], `fn`: [ListenerInternalFunction](../modules/_types_.md#listenerinternalfunction), `opts`: [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md), `out`: any, `promise`: Promise‹any›, `setter`: [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md)): *any*
+▸ **emitItem**(`item`: [ListenerEmitItem](../interfaces/_types_.listeneremititem.md)): *any*
 
-Defined in index.ts:434
+Defined in index.ts:454
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`args` | any[] |
-`id` | string[] |
-`fn` | [ListenerInternalFunction](../modules/_types_.md#listenerinternalfunction) |
-`opts` | [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md) |
-`out` | any |
-`promise` | Promise‹any› |
-`setter` | [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md) |
+`item` | [ListenerEmitItem](../interfaces/_types_.listeneremititem.md) |
 
 **Returns:** *any*
 
@@ -288,7 +284,7 @@ ___
 
 ▸ **emitItemOutput**(`promise`: Promise‹any›, `opts`: [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md), `out`: any, `setter`: [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md)): *any*
 
-Defined in index.ts:457
+Defined in index.ts:464
 
 **Parameters:**
 
@@ -307,7 +303,7 @@ ___
 
 ▸ **emitOptions**(`options`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *[ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md)*
 
-Defined in index.ts:473
+Defined in index.ts:480
 
 **Parameters:**
 
@@ -323,7 +319,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *[string, string][]*
 
-Defined in index.ts:489
+Defined in index.ts:496
 
 **Parameters:**
 
@@ -339,7 +335,7 @@ ___
 
 ▸ **listenerBeforeLoaded**(`lid`: string[], `event`: [ListenerEvent](../interfaces/_types_.listenerevent.md)): *void | Promise‹any›*
 
-Defined in index.ts:513
+Defined in index.ts:520
 
 **Parameters:**
 
@@ -356,7 +352,7 @@ ___
 
 ▸ **listenerLoaded**(`lid`: string[], `event`: [ListenerEvent](../interfaces/_types_.listenerevent.md)): *void | Promise‹any›*
 
-Defined in index.ts:520
+Defined in index.ts:527
 
 **Parameters:**
 
@@ -373,7 +369,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string, `lidName`: string): *Function*
 
-Defined in index.ts:527
+Defined in index.ts:534
 
 **Parameters:**
 
@@ -391,7 +387,7 @@ ___
 
 ▸ **load**(`lid_`: string[], `instances`: Record‹string, any›, `options?`: Record‹string, any›): *Record‹string, any› | Promise‹Record‹string, any››*
 
-Defined in index.ts:53
+Defined in index.ts:54
 
 **Parameters:**
 
@@ -409,7 +405,7 @@ ___
 
 ▸ **parseId**(`id`: string): *[string, string]*
 
-Defined in index.ts:139
+Defined in index.ts:140
 
 **Parameters:**
 
@@ -425,7 +421,7 @@ ___
 
 ▸ **reset**(`lid`: string[]): *void*
 
-Defined in index.ts:153
+Defined in index.ts:154
 
 **Parameters:**
 

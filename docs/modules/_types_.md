@@ -7,6 +7,7 @@
 ### Interfaces
 
 * [ListenerEmitFunction](../interfaces/_types_.listeneremitfunction.md)
+* [ListenerEmitItem](../interfaces/_types_.listeneremititem.md)
 * [ListenerEmitItemSetter](../interfaces/_types_.listeneremititemsetter.md)
 * [ListenerEmitOptions](../interfaces/_types_.listeneremitoptions.md)
 * [ListenerEvent](../interfaces/_types_.listenerevent.md)
@@ -23,7 +24,7 @@
 
 Ƭ **ListenerInternalFunction**: *function*
 
-Defined in types.ts:36
+Defined in types.ts:45
 
 #### Type declaration:
 
@@ -42,7 +43,7 @@ ___
 
 Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
 
-Defined in types.ts:31
+Defined in types.ts:40
 
 ___
 
@@ -50,4 +51,4 @@ ___
 
 Ƭ **ListenerInternalInstances**: *Record‹string, any›*
 
-Defined in types.ts:41
+Defined in types.ts:50

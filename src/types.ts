@@ -1,5 +1,14 @@
 import { Listener } from "."
 
+export interface ListenerEmitItem {
+  args: any[]
+  id: string[]
+  fn: ListenerInternalFunction
+  opts: ListenerEmitOptions
+  out?: any
+  setter?: ListenerEmitItemSetter
+}
+
 export interface ListenerEvent {
   existing?: string[]
   instance: any

@@ -19,6 +19,7 @@ import {
   ListenerInternalFunction,
   ListenerEmitFunction,
   ListenerEmitItemSetter,
+  ListenerEmitItem,
 } from "./types"
 
 import { Uid } from "./uid"
@@ -318,20 +319,23 @@ export class Listener {
     }
 
     const setter = {
-      out: (o: any): any =>
+      out: (o?: any): any =>
         (out = o === undefined ? out : o),
-      promise: (p: Promise<any>): any =>
+      promise: (p?: Promise<any>): any =>
         (promise = p === undefined ? promise : p),
     }
 
     for (const index of [-1, 0, 1]) {
-      const list = Bindings.list(
+      const [list, indices] = Bindings.list(
         _lid,
         this.bindings,
         fnId,
         id,
         index
       )
+
+      let promises: ListenerEmitItem[] = []
+      let lastIndex: number
 
       for (const binding of list) {
         const {
@@ -372,41 +376,57 @@ export class Listener {
         }
 
         if (promise) {
-          promise = promise.then(() =>
-            this.emitItem(
-              customArgs || args,
-              customId || id,
-              fn,
-              opts,
-              out,
-              promise,
-              setter
-            )
-          )
-        } else {
-          this.emitItem(
-            customArgs || args,
-            customId || id,
+          promises.push({
+            args: customArgs || args,
             fn,
+            id: customId || id,
+            opts,
+          })
+        } else {
+          this.emitItem({
+            args: customArgs || args,
+            fn,
+            id: customId || id,
             opts,
             out,
-            promise,
-            setter
-          )
+            setter,
+          })
+        }
+
+        const nextIndex = indices.shift()
+
+        if (lastIndex !== nextIndex) {
+          if (promises && promises.length) {
+            const p = promises
+            promise = promise.then(() => {
+              const map = p.map(item => {
+                const o = this.emitItem({
+                  ...item,
+                  out,
+                  setter,
+                })
+                return o
+              })
+              return Promise.all(map)
+            })
+          }
+
+          lastIndex = nextIndex
+          promises = []
         }
       }
     }
 
-    return promise ? promise.then(setter.out) : out
+    return promise ? promise.then(() => setter.out()) : out
   }
 
-  private emitFunction(
-    args: any[],
-    id: string[],
-    fn: ListenerInternalFunction,
-    opts: ListenerEmitOptions,
-    out: any
-  ): ListenerEmitFunction {
+  private emitFunction({
+    args,
+    fn,
+    id,
+    opts,
+    out,
+  }: ListenerEmitItem): ListenerEmitFunction {
     const { isMain, isPeek, isReturn } = opts
 
     let promise
@@ -431,25 +451,12 @@ export class Listener {
     return { out, promise }
   }
 
-  private emitItem(
-    args: any[],
-    id: string[],
-    fn: ListenerInternalFunction,
-    opts: ListenerEmitOptions,
-    out: any,
-    promise: Promise<any>,
-    setter: ListenerEmitItemSetter
-  ): any {
-    const { out: o, promise: p } = this.emitFunction(
-      args,
-      id,
-      fn,
-      opts,
-      out
-    )
+  private emitItem(item: ListenerEmitItem): any {
+    const { out: o, promise: p } = this.emitFunction(item)
+    const { opts, setter } = item
+    const out = setter.out(o)
 
-    out = setter.out(o)
-    promise = setter.promise(p)
+    setter.promise(p)
 
     return this.emitItemOutput(p, opts, out, setter)
   }

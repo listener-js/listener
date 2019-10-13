@@ -126,7 +126,7 @@ ___
 
 ▸ **separateOptions**(`binding`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)): *[string | string[][], [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)]*
 
-Defined in bindings.ts:188
+Defined in bindings.ts:197
 
 **Parameters:**
 
@@ -140,7 +140,7 @@ ___
 
 ### `Static` list
 
-▸ **list**(`_lid`: string[], `bindings`: Record‹string, [Bindings](_bindings_.bindings.md)›, `fnId`: string, `id`: string[], `index`: number): *[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[]*
+▸ **list**(`_lid`: string[], `bindings`: Record‹string, [Bindings](_bindings_.bindings.md)›, `fnId`: string, `id`: string[], `index`: number): *[[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[], number[]]*
 
 Defined in bindings.ts:90
 
@@ -154,7 +154,7 @@ Name | Type |
 `id` | string[] |
 `index` | number |
 
-**Returns:** *[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[]*
+**Returns:** *[[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[], number[]]*
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: object, `__namedParameters`: object): *number*
 
-Defined in bindings.ts:148
+Defined in bindings.ts:157
 
 **Parameters:**
 
@@ -186,7 +186,7 @@ ___
 
 ▸ **optsToIndex**(`opts`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *number*
 
-Defined in bindings.ts:158
+Defined in bindings.ts:167
 
 **Parameters:**
 

@@ -93,7 +93,8 @@ export class Bindings {
     fnId: string,
     id: string[],
     index: number
-  ): ListenerInternalBinding[] {
+  ): [ListenerInternalBinding[], number[]] {
+    const indices = []
     const keys = ["**"]
 
     let key: string
@@ -102,6 +103,7 @@ export class Bindings {
 
     if (index === 0) {
       list.push({ options: { index: 0 }, targetId: fnId })
+      indices.push(0)
     }
 
     for (const i of id.slice(0).reverse()) {
@@ -129,7 +131,14 @@ export class Bindings {
       options,
     }: ListenerInternalBinding): boolean => {
       const i = this.optsToIndex(options)
-      return index < 0 ? i < 0 : index < 1 ? i === 0 : i > 0
+      const inRange =
+        index < 0 ? i < 0 : index < 1 ? i === 0 : i > 0
+
+      if (inRange) {
+        indices.push(i)
+      }
+
+      return inRange
     }
 
     for (const key of keys) {
@@ -142,7 +151,7 @@ export class Bindings {
 
     list = list.sort(this.listSort.bind(this))
 
-    return list
+    return [list, indices]
   }
 
   private static listSort(

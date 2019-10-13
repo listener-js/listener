@@ -22,7 +22,7 @@
 
 • **existing**? : *string[]*
 
-Defined in types.ts:4
+Defined in types.ts:13
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 • **instance**: *any*
 
-Defined in types.ts:5
+Defined in types.ts:14
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 • **instances**? : *Record‹string, any›*
 
-Defined in types.ts:7
+Defined in types.ts:16
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 • **listener**: *[Listener](../classes/_index_.listener.md)*
 
-Defined in types.ts:6
+Defined in types.ts:15
 
 ___
 
@@ -54,4 +54,4 @@ ___
 
 • **options**? : *Record‹string, any›*
 
-Defined in types.ts:8
+Defined in types.ts:17
