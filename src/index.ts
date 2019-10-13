@@ -51,41 +51,43 @@ export class Listener {
   }
 
   public load(
-    lid: string[],
+    lid_: string[],
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Record<string, any> | Promise<Record<string, any>> {
+    const id = lid_[1]
+
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
       this.bind(
-        lid,
-        [`${this.id}.listenersLoaded`, "**"],
+        lid_,
+        [`${this.id}.load`, id, "**"],
         [
           `${this.id}.applyInstanceId`,
           instanceId,
-          { once: true, prepend: 0.4 },
+          { append: 0.1, once: true },
         ],
         [
           `${this.id}.applyInstanceFunctions`,
           instanceId,
-          { once: true, prepend: 0.3 },
+          { append: 0.2, once: true },
         ],
         [
           `${this.id}.callListenerBeforeLoaded`,
           instanceId,
-          { once: true, prepend: 0.2 },
+          { append: 0.3, once: true },
         ],
         [
           `${this.id}.callListenerLoaded`,
           instanceId,
-          { once: true, prepend: 0.1 },
+          { append: 0.4, once: true },
         ]
       )
 
       if (instance.listenerBeforeLoaded) {
         this.bind(
-          lid,
+          lid_,
           [
             `${this.id}.listenerBeforeLoaded`,
             instanceId,
@@ -97,7 +99,7 @@ export class Listener {
 
       if (instance.listenerLoaded) {
         this.bind(
-          lid,
+          lid_,
           [`${this.id}.listenerLoaded`, instanceId, "**"],
           `${instanceId}.listenerLoaded`
         )
@@ -105,7 +107,7 @@ export class Listener {
 
       if (instance.listenerBeforeLoadedAny) {
         this.bind(
-          lid,
+          lid_,
           [`${this.id}.listenerBeforeLoaded`, "**"],
           `${instanceId}.listenerBeforeLoadedAny`
         )
@@ -113,7 +115,7 @@ export class Listener {
 
       if (instance.listenerLoadedAny) {
         this.bind(
-          lid,
+          lid_,
           [`${this.id}.listenerLoaded`, "**"],
           `${instanceId}.listenerLoadedAny`
         )
@@ -121,7 +123,7 @@ export class Listener {
 
       if (instance.listenerReset) {
         this.bind(
-          lid,
+          lid_,
           [`${this.id}.reset`, "**"],
           [
             `${instanceId}.listenerReset`,
@@ -149,6 +151,8 @@ export class Listener {
   }
 
   public reset(lid: string[]): void {
+    Uid.reset()
+
     for (const instanceId in this.instances) {
       const instance = this.instances[instanceId]
 
@@ -185,12 +189,6 @@ export class Listener {
         ...lid,
       ],
       { listener: this }
-    )
-
-    this.bind(
-      lid,
-      [`${this.id}.load`, "**"],
-      [`${this.id}.listenersLoaded`, { append: 0.1 }]
     )
   }
 
@@ -527,14 +525,6 @@ export class Listener {
   private listenerBeforeLoaded(
     lid: string[],
     event: ListenerEvent
-  ): void | Promise<any> {
-    return
-  }
-
-  private listenersLoaded(
-    lid: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
   ): void | Promise<any> {
     return
   }

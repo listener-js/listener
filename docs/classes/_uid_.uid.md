@@ -14,6 +14,7 @@
 
 ### Methods
 
+* [reset](_uid_.uid.md#static-reset)
 * [uid](_uid_.uid.md#static-uid)
 
 ## Properties
@@ -26,10 +27,20 @@ Defined in uid.ts:4
 
 ## Methods
 
+### `Static` reset
+
+▸ **reset**(): *void*
+
+Defined in uid.ts:6
+
+**Returns:** *void*
+
+___
+
 ### `Static` uid
 
 ▸ **uid**(): *string*
 
-Defined in uid.ts:6
+Defined in uid.ts:10
 
 **Returns:** *string*

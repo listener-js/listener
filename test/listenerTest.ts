@@ -102,7 +102,7 @@ test("lid uid", (): void => {
 
   const test = {
     fn: (lid_: string[]): void => {
-      expect(lid_).toEqual(["test.fn", "a"])
+      expect(lid_).toEqual(["test.fn", "c"])
     },
   }
 

@@ -3,6 +3,10 @@ import { ALPHABET } from "./constants"
 export class Uid {
   public static counter = 0
 
+  public static reset(): void {
+    this.counter = 0
+  }
+
   public static uid(): string {
     let id = this.counter
     let s: string
