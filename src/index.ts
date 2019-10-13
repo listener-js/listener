@@ -199,10 +199,6 @@ export class Listener {
     const id = lid[1]
     const instance = instances[id]
 
-    if (!instance) {
-      return
-    }
-
     this.instances[id] = instance
 
     if (instance.then) {
@@ -236,10 +232,6 @@ export class Listener {
   ): void | Promise<any> {
     const id = lid[1]
     const instance = instances[id]
-
-    if (!instance) {
-      return
-    }
 
     this.instances[id] = instance
     instance.id = id
@@ -279,10 +271,6 @@ export class Listener {
   ): void | Promise<void> {
     const id = _lid[1]
     const instance = instances[id]
-
-    if (!instance) {
-      return
-    }
 
     const event: ListenerEvent = {
       existing: this.diffInstances(instances),
