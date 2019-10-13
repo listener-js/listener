@@ -1,7 +1,6 @@
 import {
-  ListenerInternalBindings,
-  ListenerInternalBindingOptions,
   Bindings,
+  ListenerInternalBindings,
 } from "./bindings"
 
 import {
@@ -11,15 +10,12 @@ import {
   REGEX_FN,
 } from "./constants"
 
+import { Emit, ListenerEmitItem } from "./emit"
+
 import {
   ListenerInternalInstances,
   ListenerInternalFunctions,
   ListenerEvent,
-  ListenerEmitOptions,
-  ListenerInternalFunction,
-  ListenerEmitFunction,
-  ListenerEmitItemSetter,
-  ListenerEmitItem,
 } from "./types"
 
 import { Uid } from "./uid"
@@ -338,15 +334,9 @@ export class Listener {
       let lastIndex: number
 
       for (const binding of list) {
-        const {
-          customIds,
-          matchId,
-          options,
-          targetId,
-        } = binding
-
-        const opts = this.emitOptions(options)
-        const { addListener, isMain } = opts
+        const { matchId, options, targetId } = binding
+        const opts = Emit.options(options)
+        const { isMain, once } = opts
 
         if (!isMain && fnId === targetId) {
           continue
@@ -360,20 +350,12 @@ export class Listener {
           continue
         }
 
-        if (opts.once) {
+        if (once) {
           this.bindings[matchId].remove(binding)
         }
 
-        let customArgs: any[]
-        let customId: string[]
-
-        if (addListener) {
-          customArgs = addListener ? [this, ...args] : args
-        }
-
-        if (customIds) {
-          customId = [...customIds, ...id]
-        }
+        const customArgs = Emit.customizeArgs(args, opts)
+        const customId = Emit.customizeIds(id, binding)
 
         if (promise) {
           promises.push({
@@ -383,12 +365,11 @@ export class Listener {
             opts,
           })
         } else {
-          this.emitItem({
+          Emit.callItem({
             args: customArgs || args,
             fn,
             id: customId || id,
             opts,
-            out,
             setter,
           })
         }
@@ -398,17 +379,16 @@ export class Listener {
         if (lastIndex !== nextIndex) {
           if (promises && promises.length) {
             const p = promises
-            promise = promise.then(() => {
-              const map = p.map(item => {
-                const o = this.emitItem({
-                  ...item,
-                  out,
-                  setter,
-                })
-                return o
-              })
-              return Promise.all(map)
-            })
+            promise = promise.then(() =>
+              Promise.all(
+                p.map(item =>
+                  Emit.callItem({
+                    ...item,
+                    setter,
+                  })
+                )
+              )
+            )
           }
 
           lastIndex = nextIndex
@@ -418,79 +398,6 @@ export class Listener {
     }
 
     return promise ? promise.then(() => setter.out()) : out
-  }
-
-  private emitFunction({
-    args,
-    fn,
-    id,
-    opts,
-    out,
-  }: ListenerEmitItem): ListenerEmitFunction {
-    const { isMain, isPeek, isReturn } = opts
-
-    let promise
-
-    if (isMain && out !== undefined) {
-      return { out, promise }
-    }
-
-    const tmpOut = isPeek
-      ? fn(id, out, ...args)
-      : fn(id, ...args)
-
-    if (tmpOut && tmpOut.then) {
-      promise = tmpOut
-    } else if (
-      (isMain || isReturn) &&
-      tmpOut !== undefined
-    ) {
-      out = tmpOut
-    }
-
-    return { out, promise }
-  }
-
-  private emitItem(item: ListenerEmitItem): any {
-    const { out: o, promise: p } = this.emitFunction(item)
-    const { opts, setter } = item
-    const out = setter.out(o)
-
-    setter.promise(p)
-
-    return this.emitItemOutput(p, opts, out, setter)
-  }
-
-  private emitItemOutput(
-    promise: Promise<any>,
-    opts: ListenerEmitOptions,
-    out: any,
-    setter: ListenerEmitItemSetter
-  ): any {
-    const { isMain, isReturn } = opts
-    const isMainWithoutReturn = isMain && out === undefined
-
-    if (promise && (isMainWithoutReturn || isReturn)) {
-      return promise ? promise.then(setter.out) : out
-    } else {
-      return promise ? promise : out
-    }
-  }
-
-  private emitOptions(
-    options: ListenerInternalBindingOptions
-  ): ListenerEmitOptions {
-    const isIntercept = options && options.intercept
-
-    return {
-      addListener: options && options.listener,
-      isBefore: options && options.index < 0,
-      isIntercept,
-      isMain: options && options.index === 0,
-      isPeek: isIntercept || (options && options.peek),
-      isReturn: isIntercept || (options && options.return),
-      once: options && options.once,
-    }
   }
 
   private extractListeners(
