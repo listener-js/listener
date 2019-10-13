@@ -10,17 +10,18 @@
 
 ### Interfaces
 
-* [ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)
-* [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)
+* [ListenerBinding](../interfaces/_bindings_.listenerbinding.md)
+* [ListenerBindingList](../interfaces/_bindings_.listenerbindinglist.md)
+* [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md)
 
 ### Type aliases
 
-* [ListenerInternalBindings](_bindings_.md#listenerinternalbindings)
+* [ListenerBindings](_bindings_.md#listenerbindings)
 
 ## Type aliases
 
-###  ListenerInternalBindings
+###  ListenerBindings
 
-Ƭ **ListenerInternalBindings**: *string | string | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)[]*
+Ƭ **ListenerBindings**: *string | string | [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md)[]*
 
-Defined in bindings.ts:14
+Defined in bindings.ts:28

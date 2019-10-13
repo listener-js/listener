@@ -10,15 +10,15 @@
 
 ### Type aliases
 
-* [ListenerInternalFunction](_types_.md#listenerinternalfunction)
-* [ListenerInternalFunctions](_types_.md#listenerinternalfunctions)
-* [ListenerInternalInstances](_types_.md#listenerinternalinstances)
+* [ListenerFunction](_types_.md#listenerfunction)
+* [ListenerFunctions](_types_.md#listenerfunctions)
+* [ListenerInstances](_types_.md#listenerinstances)
 
 ## Type aliases
 
-###  ListenerInternalFunction
+###  ListenerFunction
 
-Ƭ **ListenerInternalFunction**: *function*
+Ƭ **ListenerFunction**: *function*
 
 Defined in types.ts:16
 
@@ -35,16 +35,16 @@ Name | Type |
 
 ___
 
-###  ListenerInternalFunctions
+###  ListenerFunctions
 
-Ƭ **ListenerInternalFunctions**: *Record‹string, [ListenerInternalFunction](_types_.md#listenerinternalfunction)›*
+Ƭ **ListenerFunctions**: *Record‹string, [ListenerFunction](_types_.md#listenerfunction)›*
 
 Defined in types.ts:11
 
 ___
 
-###  ListenerInternalInstances
+###  ListenerInstances
 
-Ƭ **ListenerInternalInstances**: *Record‹string, any›*
+Ƭ **ListenerInstances**: *Record‹string, any›*
 
 Defined in types.ts:21

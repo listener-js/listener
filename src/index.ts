@@ -1,7 +1,4 @@
-import {
-  Bindings,
-  ListenerInternalBindings,
-} from "./bindings"
+import { Bindings, ListenerBindings } from "./bindings"
 
 import {
   ARROW,
@@ -13,8 +10,8 @@ import {
 import { Emit, ListenerEmitItem } from "./emit"
 
 import {
-  ListenerInternalInstances,
-  ListenerInternalFunctions,
+  ListenerInstances,
+  ListenerFunctions,
   ListenerEvent,
 } from "./types"
 
@@ -24,10 +21,10 @@ export class Listener {
   public id: string
 
   public bindings: Record<string, Bindings> = {}
-  public instances: ListenerInternalInstances = {}
+  public instances: ListenerInstances = {}
 
-  private listenerFns: ListenerInternalFunctions = {}
-  private originalFns: ListenerInternalFunctions = {}
+  private listenerFns: ListenerFunctions = {}
+  private originalFns: ListenerFunctions = {}
 
   public constructor(id: string) {
     this.id = id
@@ -37,7 +34,7 @@ export class Listener {
   public bind(
     lid: string[],
     matchId: string[],
-    ...targets: ListenerInternalBindings[]
+    ...targets: ListenerBindings[]
   ): void {
     const match = matchId.join(ARROW)
 
@@ -322,13 +319,12 @@ export class Listener {
     }
 
     for (const index of [-1, 0, 1]) {
-      const [list, indices] = Bindings.list(
-        _lid,
-        this.bindings,
+      const [list, indices] = Bindings.list(_lid, {
+        bindings: this.bindings,
         fnId,
         id,
-        index
-      )
+        index,
+      })
 
       let promises: ListenerEmitItem[] = []
       let lastIndex: number

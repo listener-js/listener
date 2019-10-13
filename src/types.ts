@@ -8,14 +8,14 @@ export interface ListenerEvent {
   options?: Record<string, any>
 }
 
-export type ListenerInternalFunctions = Record<
+export type ListenerFunctions = Record<
   string,
-  ListenerInternalFunction
+  ListenerFunction
 >
 
-export type ListenerInternalFunction = (
+export type ListenerFunction = (
   id: string[],
   ...arg: any[]
 ) => any
 
-export type ListenerInternalInstances = Record<string, any>
+export type ListenerInstances = Record<string, any>

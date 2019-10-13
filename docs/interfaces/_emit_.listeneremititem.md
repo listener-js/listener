@@ -27,7 +27,7 @@ ___
 
 ###  fn
 
-• **fn**: *[ListenerInternalFunction](../modules/_types_.md#listenerinternalfunction)*
+• **fn**: *[ListenerFunction](../modules/_types_.md#listenerfunction)*
 
 Defined in emit.ts:16
 

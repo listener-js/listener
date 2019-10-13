@@ -1,9 +1,9 @@
 import {
-  ListenerInternalBindingOptions,
-  ListenerInternalBinding,
+  ListenerBindingOptions,
+  ListenerBinding,
 } from "./bindings"
 
-import { ListenerInternalFunction } from "./types"
+import { ListenerFunction } from "./types"
 
 export interface ListenerEmitFunction {
   promise: Promise<any>
@@ -13,7 +13,7 @@ export interface ListenerEmitFunction {
 export interface ListenerEmitItem {
   args: any[]
   id: string[]
-  fn: ListenerInternalFunction
+  fn: ListenerFunction
   opts: ListenerEmitOptions
 }
 
@@ -48,7 +48,7 @@ export class Emit {
 
   public static customizeIds(
     id: string[],
-    { customIds }: ListenerInternalBinding
+    { customIds }: ListenerBinding
   ): any[] {
     let customId: string[]
 
@@ -137,7 +137,7 @@ export class Emit {
   }
 
   public static options(
-    options: ListenerInternalBindingOptions
+    options: ListenerBindingOptions
   ): ListenerEmitOptions {
     const isIntercept = options && options.intercept
 

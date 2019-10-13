@@ -137,7 +137,7 @@ ___
 
 ### `Static` options
 
-▸ **options**(`options`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *[ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md)*
+▸ **options**(`options`: [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md)): *[ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md)*
 
 Defined in emit.ts:139
 
@@ -145,6 +145,6 @@ Defined in emit.ts:139
 
 Name | Type |
 ------ | ------ |
-`options` | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md) |
+`options` | [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md) |
 
 **Returns:** *[ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md)*

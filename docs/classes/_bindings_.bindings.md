@@ -34,7 +34,7 @@
 
 \+ **new Bindings**(`matchId?`: string): *[Bindings](_bindings_.bindings.md)*
 
-Defined in bindings.ts:28
+Defined in bindings.ts:35
 
 **Parameters:**
 
@@ -48,9 +48,9 @@ Name | Type |
 
 ###  bindings
 
-• **bindings**: *[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[]* =  []
+• **bindings**: *[ListenerBinding](../interfaces/_bindings_.listenerbinding.md)[]* =  []
 
-Defined in bindings.ts:26
+Defined in bindings.ts:33
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 • **matchId**: *string*
 
-Defined in bindings.ts:27
+Defined in bindings.ts:34
 
 ___
 
@@ -66,21 +66,21 @@ ___
 
 • **targetIds**: *Set‹string›* =  new Set()
 
-Defined in bindings.ts:28
+Defined in bindings.ts:35
 
 ## Methods
 
 ###  add
 
-▸ **add**(...`bindings`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[]): *[Bindings](_bindings_.bindings.md)*
+▸ **add**(...`bindings`: [ListenerBindings](../modules/_bindings_.md#listenerbindings)[]): *[Bindings](_bindings_.bindings.md)*
 
-Defined in bindings.ts:34
+Defined in bindings.ts:41
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`...bindings` | [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)[] |
+`...bindings` | [ListenerBindings](../modules/_bindings_.md#listenerbindings)[] |
 
 **Returns:** *[Bindings](_bindings_.bindings.md)*
 
@@ -90,7 +90,7 @@ ___
 
 ▸ **addBinding**(`__namedParameters`: object): *void*
 
-Defined in bindings.ts:60
+Defined in bindings.ts:65
 
 **Parameters:**
 
@@ -99,7 +99,7 @@ Defined in bindings.ts:60
 Name | Type |
 ------ | ------ |
 `customIds` | string[] |
-`options` | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md) |
+`options` | [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md) |
 `targetId` | string |
 
 **Returns:** *void*
@@ -108,15 +108,15 @@ ___
 
 ###  remove
 
-▸ **remove**(`binding`: [ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)): *void*
+▸ **remove**(`binding`: [ListenerBinding](../interfaces/_bindings_.listenerbinding.md)): *void*
 
-Defined in bindings.ts:80
+Defined in bindings.ts:85
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`binding` | [ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md) |
+`binding` | [ListenerBinding](../interfaces/_bindings_.listenerbinding.md) |
 
 **Returns:** *void*
 
@@ -124,37 +124,40 @@ ___
 
 ### `Private` separateOptions
 
-▸ **separateOptions**(`binding`: [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings)): *[string | string[][], [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)]*
+▸ **separateOptions**(`binding`: [ListenerBindings](../modules/_bindings_.md#listenerbindings)): *[string | string[][], [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md)]*
 
-Defined in bindings.ts:197
+Defined in bindings.ts:199
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`binding` | [ListenerInternalBindings](../modules/_bindings_.md#listenerinternalbindings) |
+`binding` | [ListenerBindings](../modules/_bindings_.md#listenerbindings) |
 
-**Returns:** *[string | string[][], [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)]*
+**Returns:** *[string | string[][], [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md)]*
 
 ___
 
 ### `Static` list
 
-▸ **list**(`_lid`: string[], `bindings`: Record‹string, [Bindings](_bindings_.bindings.md)›, `fnId`: string, `id`: string[], `index`: number): *[[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[], number[]]*
+▸ **list**(`_lid`: string[], `__namedParameters`: object): *[[ListenerBinding](../interfaces/_bindings_.listenerbinding.md)[], number[]]*
 
-Defined in bindings.ts:90
+Defined in bindings.ts:95
 
 **Parameters:**
 
+▪ **_lid**: *string[]*
+
+▪ **__namedParameters**: *object*
+
 Name | Type |
 ------ | ------ |
-`_lid` | string[] |
-`bindings` | Record‹string, [Bindings](_bindings_.bindings.md)› |
+`bindings` | object |
 `fnId` | string |
 `id` | string[] |
 `index` | number |
 
-**Returns:** *[[ListenerInternalBinding](../interfaces/_bindings_.listenerinternalbinding.md)[], number[]]*
+**Returns:** *[[ListenerBinding](../interfaces/_bindings_.listenerbinding.md)[], number[]]*
 
 ___
 
@@ -162,7 +165,7 @@ ___
 
 ▸ **listSort**(`__namedParameters`: object, `__namedParameters`: object): *number*
 
-Defined in bindings.ts:157
+Defined in bindings.ts:159
 
 **Parameters:**
 
@@ -170,13 +173,13 @@ Defined in bindings.ts:157
 
 Name | Type |
 ------ | ------ |
-`a` | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md) |
+`a` | [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md) |
 
 ▪ **__namedParameters**: *object*
 
 Name | Type |
 ------ | ------ |
-`b` | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md) |
+`b` | [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md) |
 
 **Returns:** *number*
 
@@ -184,14 +187,14 @@ ___
 
 ### `Static` `Private` optsToIndex
 
-▸ **optsToIndex**(`opts`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *number*
+▸ **optsToIndex**(`opts`: [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md)): *number*
 
-Defined in bindings.ts:167
+Defined in bindings.ts:169
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
-`opts` | [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md) |
+`opts` | [ListenerBindingOptions](../interfaces/_bindings_.listenerbindingoptions.md) |
 
 **Returns:** *number*

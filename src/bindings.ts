@@ -1,6 +1,20 @@
 import { ARROW } from "./constants"
 
-export interface ListenerInternalBindingOptions {
+export interface ListenerBinding {
+  targetId: string
+  customIds?: string[]
+  matchId?: string
+  options?: ListenerBindingOptions
+}
+
+export interface ListenerBindingList {
+  bindings: Record<string, Bindings>
+  fnId: string
+  id: string[]
+  index: number
+}
+
+export interface ListenerBindingOptions {
   append?: boolean | number
   index?: number
   intercept?: boolean
@@ -11,19 +25,12 @@ export interface ListenerInternalBindingOptions {
   return?: boolean
 }
 
-export type ListenerInternalBindings =
+export type ListenerBindings =
   | string
-  | (string | ListenerInternalBindingOptions)[]
-
-export interface ListenerInternalBinding {
-  targetId: string
-  customIds?: string[]
-  matchId?: string
-  options?: ListenerInternalBindingOptions
-}
+  | (string | ListenerBindingOptions)[]
 
 export class Bindings {
-  public bindings: ListenerInternalBinding[] = []
+  public bindings: ListenerBinding[] = []
   public matchId: string
   public targetIds: Set<string> = new Set()
 
@@ -31,12 +38,10 @@ export class Bindings {
     this.matchId = matchId
   }
 
-  public add(
-    ...bindings: ListenerInternalBindings[]
-  ): Bindings {
+  public add(...bindings: ListenerBindings[]): Bindings {
     for (let binding of bindings) {
       let customIds: string[]
-      let options: ListenerInternalBindingOptions
+      let options: ListenerBindingOptions
       let targetId: string
 
       if (typeof binding === "string") {
@@ -45,7 +50,7 @@ export class Bindings {
         const last = binding[binding.length - 1]
         const hasOption = typeof last !== "string"
         if (hasOption) {
-          options = last as ListenerInternalBindingOptions
+          options = last as ListenerBindingOptions
           binding = binding.slice(0, -1)
         }
         ;[targetId, ...customIds] = binding as string[]
@@ -61,7 +66,7 @@ export class Bindings {
     customIds,
     options,
     targetId,
-  }: ListenerInternalBinding): void {
+  }: ListenerBinding): void {
     if (targetId) {
       this.bindings = this.bindings.concat({
         customIds:
@@ -77,7 +82,7 @@ export class Bindings {
     }
   }
 
-  public remove(binding: ListenerInternalBinding): void {
+  public remove(binding: ListenerBinding): void {
     const index = this.bindings.indexOf(binding)
 
     if (index > -1) {
@@ -89,17 +94,14 @@ export class Bindings {
 
   public static list(
     _lid: string[],
-    bindings: Record<string, Bindings>,
-    fnId: string,
-    id: string[],
-    index: number
-  ): [ListenerInternalBinding[], number[]] {
+    { bindings, fnId, id, index }: ListenerBindingList
+  ): [ListenerBinding[], number[]] {
     const indices = []
     const keys = ["**"]
 
     let key: string
     let key2: string
-    let list: ListenerInternalBinding[] = []
+    let list: ListenerBinding[] = []
 
     if (index === 0) {
       list.push({ options: { index: 0 }, targetId: fnId })
@@ -129,7 +131,7 @@ export class Bindings {
 
     const bindingFilter = ({
       options,
-    }: ListenerInternalBinding): boolean => {
+    }: ListenerBinding): boolean => {
       const i = this.optsToIndex(options)
       const inRange =
         index < 0 ? i < 0 : index < 1 ? i === 0 : i > 0
@@ -155,8 +157,8 @@ export class Bindings {
   }
 
   private static listSort(
-    { options: a }: ListenerInternalBinding,
-    { options: b }: ListenerInternalBinding
+    { options: a }: ListenerBinding,
+    { options: b }: ListenerBinding
   ): number {
     const aIndex = this.optsToIndex(a)
     const bIndex = this.optsToIndex(b)
@@ -165,7 +167,7 @@ export class Bindings {
   }
 
   private static optsToIndex(
-    opts: ListenerInternalBindingOptions
+    opts: ListenerBindingOptions
   ): number {
     if (!opts) {
       return 1
@@ -195,15 +197,12 @@ export class Bindings {
   }
 
   private separateOptions(
-    binding: ListenerInternalBindings
-  ): [
-    (string | string[])[],
-    ListenerInternalBindingOptions
-  ] {
+    binding: ListenerBindings
+  ): [(string | string[])[], ListenerBindingOptions] {
     if (Array.isArray(binding)) {
       const values = []
 
-      let options: ListenerInternalBindingOptions
+      let options: ListenerBindingOptions
 
       for (const value of binding) {
         if (
