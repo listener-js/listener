@@ -4,7 +4,12 @@ import {
   Bindings,
 } from "./bindings"
 
-import { ARROW } from "./constants"
+import {
+  ARROW,
+  REGEX_ID,
+  REGEX_COMMENT,
+  REGEX_FN,
+} from "./constants"
 
 import {
   ListenerInternalInstances,
@@ -16,12 +21,10 @@ import {
   ListenerEmitItemSetter,
 } from "./types"
 
+import { Uid } from "./uid"
+
 export class Listener {
   public id: string
-
-  public commentRegex = /\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm
-  public fnRegex = /^(\(|function \w*\()?\s*lid[\),\s]/
-  public idRegex = /(\*{1,2})|([^\.]+)\.(.+)/i
 
   public bindings: Record<string, Bindings> = {}
   public instances: ListenerInternalInstances = {}
@@ -132,7 +135,7 @@ export class Listener {
   }
 
   public parseId(id: string): [string, string] {
-    const match = id.match(this.idRegex)
+    const match = id.match(REGEX_ID)
 
     let joinInstanceId: string
     let fnId: string
@@ -210,7 +213,7 @@ export class Listener {
 
     const listeners = this.extractListeners(instance)
 
-    for (const fnName of listeners) {
+    for (const [fnName, lidName] of listeners) {
       const fnId = `${instance.id}.${fnName}`
 
       if (!instance[fnName] || this.originalFns[fnId]) {
@@ -221,7 +224,8 @@ export class Listener {
 
       instance[fnName] = this.listenerWrapper(
         fnId,
-        instance.id
+        instance.id,
+        lidName
       )
 
       this.listenerFns[fnId] = instance[fnName]
@@ -493,20 +497,24 @@ export class Listener {
     }
   }
 
-  private extractListeners(instance: any): string[] {
+  private extractListeners(
+    instance: any
+  ): [string, string][] {
     const listeners = []
 
     for (const name in instance) {
       const fn = instance[name]
 
+      let match: RegExpMatchArray
+
       if (
         typeof fn === "function" &&
-        fn
+        (match = (fn as Function)
           .toString()
-          .replace(this.commentRegex, "")
-          .match(this.fnRegex)
+          .replace(REGEX_COMMENT, "")
+          .match(REGEX_FN))
       ) {
-        listeners.push(name)
+        listeners.push([name, match[2]])
       }
     }
 
@@ -537,9 +545,13 @@ export class Listener {
 
   private listenerWrapper(
     fnId: string,
-    instanceId: string
+    instanceId: string,
+    lidName: string
   ): Function {
     return (_lid: string[], ...args: any[]): any => {
+      if (lidName === "lid_") {
+        _lid = [Uid.uid()].concat(_lid)
+      }
       return this.emit(_lid, fnId, instanceId, ...args)
     }
   }

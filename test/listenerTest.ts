@@ -97,6 +97,19 @@ test("load no arg", (): void => {
   expect(test.fn([])).toBe(1)
 })
 
+test("lid uid", (): void => {
+  expect.assertions(1)
+
+  const test = {
+    fn: (lid_: string[]): void => {
+      expect(lid_).toEqual(["test.fn", "a"])
+    },
+  }
+
+  load([], { test })
+  test.fn([])
+})
+
 test("load bad arg", (): void => {
   load([], { hi: {} })
 })
