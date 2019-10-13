@@ -1,17 +1,17 @@
-[@listener-js/listener](../README.md) › [Globals](../globals.md) › ["emit"](../modules/_emit_.md) › [ListenerEmitItemSetter](_emit_.listeneremititemsetter.md)
+[@listener-js/listener](../README.md) › [Globals](../globals.md) › ["emit"](../modules/_emit_.md) › [ListenerEmitSetter](_emit_.listeneremitsetter.md)
 
-# Interface: ListenerEmitItemSetter
+# Interface: ListenerEmitSetter
 
 ## Hierarchy
 
-* **ListenerEmitItemSetter**
+* **ListenerEmitSetter**
 
 ## Index
 
 ### Properties
 
-* [out](_emit_.listeneremititemsetter.md#out)
-* [promise](_emit_.listeneremititemsetter.md#promise)
+* [out](_emit_.listeneremitsetter.md#out)
+* [promise](_emit_.listeneremitsetter.md#promise)
 
 ## Properties
 
@@ -19,7 +19,7 @@
 
 • **out**: *function*
 
-Defined in emit.ts:22
+Defined in emit.ts:21
 
 #### Type declaration:
 
@@ -37,7 +37,7 @@ ___
 
 • **promise**: *function*
 
-Defined in emit.ts:23
+Defined in emit.ts:22
 
 #### Type declaration:
 

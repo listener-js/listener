@@ -12,6 +12,7 @@
 
 * [callFunction](_emit_.emit.md#static-callfunction)
 * [callItem](_emit_.emit.md#static-callitem)
+* [callPromises](_emit_.emit.md#static-callpromises)
 * [customizeArgs](_emit_.emit.md#static-customizeargs)
 * [customizeIds](_emit_.emit.md#static-customizeids)
 * [itemOutput](_emit_.emit.md#static-itemoutput)
@@ -21,9 +22,9 @@
 
 ### `Static` callFunction
 
-▸ **callFunction**(`__namedParameters`: object): *[ListenerEmitFunction](../interfaces/_emit_.listeneremitfunction.md)*
+▸ **callFunction**(`__namedParameters`: object, `setter`: [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md)): *[ListenerEmitFunction](../interfaces/_emit_.listeneremitfunction.md)*
 
-Defined in emit.ts:63
+Defined in emit.ts:62
 
 **Parameters:**
 
@@ -35,7 +36,8 @@ Name | Type |
 `fn` | function |
 `id` | string[] |
 `opts` | [ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md) |
-`setter` | [ListenerEmitItemSetter](../interfaces/_emit_.listeneremititemsetter.md) |
+
+▪ **setter**: *[ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md)*
 
 **Returns:** *[ListenerEmitFunction](../interfaces/_emit_.listeneremitfunction.md)*
 
@@ -43,17 +45,35 @@ ___
 
 ### `Static` callItem
 
-▸ **callItem**(`item`: [ListenerEmitItem](../interfaces/_emit_.listeneremititem.md)): *any*
+▸ **callItem**(`item`: [ListenerEmitItem](../interfaces/_emit_.listeneremititem.md), `setter`: [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md)): *any*
 
-Defined in emit.ts:95
+Defined in emit.ts:91
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `item` | [ListenerEmitItem](../interfaces/_emit_.listeneremititem.md) |
+`setter` | [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md) |
 
 **Returns:** *any*
+
+___
+
+### `Static` callPromises
+
+▸ **callPromises**(`promises`: [ListenerEmitItem](../interfaces/_emit_.listeneremititem.md)[], `setter`: [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md)): *void*
+
+Defined in emit.ts:104
+
+**Parameters:**
+
+Name | Type |
+------ | ------ |
+`promises` | [ListenerEmitItem](../interfaces/_emit_.listeneremititem.md)[] |
+`setter` | [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md) |
+
+**Returns:** *void*
 
 ___
 
@@ -61,7 +81,7 @@ ___
 
 ▸ **customizeArgs**(`args`: any[], `__namedParameters`: object): *any[]*
 
-Defined in emit.ts:37
+Defined in emit.ts:36
 
 **Parameters:**
 
@@ -81,7 +101,7 @@ ___
 
 ▸ **customizeIds**(`id`: string[], `__namedParameters`: object): *any[]*
 
-Defined in emit.ts:50
+Defined in emit.ts:49
 
 **Parameters:**
 
@@ -99,9 +119,9 @@ ___
 
 ### `Static` itemOutput
 
-▸ **itemOutput**(`promise`: Promise‹any›, `opts`: [ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md), `setter`: [ListenerEmitItemSetter](../interfaces/_emit_.listeneremititemsetter.md)): *any*
+▸ **itemOutput**(`promise`: Promise‹any›, `opts`: [ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md), `setter`: [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md)): *any*
 
-Defined in emit.ts:105
+Defined in emit.ts:123
 
 **Parameters:**
 
@@ -109,7 +129,7 @@ Name | Type |
 ------ | ------ |
 `promise` | Promise‹any› |
 `opts` | [ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md) |
-`setter` | [ListenerEmitItemSetter](../interfaces/_emit_.listeneremititemsetter.md) |
+`setter` | [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md) |
 
 **Returns:** *any*
 
@@ -119,7 +139,7 @@ ___
 
 ▸ **options**(`options`: [ListenerInternalBindingOptions](../interfaces/_bindings_.listenerinternalbindingoptions.md)): *[ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md)*
 
-Defined in emit.ts:121
+Defined in emit.ts:139
 
 **Parameters:**
 

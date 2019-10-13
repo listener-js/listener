@@ -357,40 +357,23 @@ export class Listener {
         const customArgs = Emit.customizeArgs(args, opts)
         const customId = Emit.customizeIds(id, binding)
 
+        const item = {
+          args: customArgs || args,
+          fn,
+          id: customId || id,
+          opts,
+        }
+
         if (promise) {
-          promises.push({
-            args: customArgs || args,
-            fn,
-            id: customId || id,
-            opts,
-          })
+          promises.push(item)
         } else {
-          Emit.callItem({
-            args: customArgs || args,
-            fn,
-            id: customId || id,
-            opts,
-            setter,
-          })
+          Emit.callItem(item, setter)
         }
 
         const nextIndex = indices.shift()
 
         if (lastIndex !== nextIndex) {
-          if (promises && promises.length) {
-            const p = promises
-            promise = promise.then(() =>
-              Promise.all(
-                p.map(item =>
-                  Emit.callItem({
-                    ...item,
-                    setter,
-                  })
-                )
-              )
-            )
-          }
-
+          Emit.callPromises(promises, setter)
           lastIndex = nextIndex
           promises = []
         }

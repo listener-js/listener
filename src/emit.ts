@@ -15,10 +15,9 @@ export interface ListenerEmitItem {
   id: string[]
   fn: ListenerInternalFunction
   opts: ListenerEmitOptions
-  setter?: ListenerEmitItemSetter
 }
 
-export interface ListenerEmitItemSetter {
+export interface ListenerEmitSetter {
   out: (o?: any) => any
   promise: (p?: Promise<any>) => any
 }
@@ -60,13 +59,10 @@ export class Emit {
     return customId
   }
 
-  public static callFunction({
-    args,
-    fn,
-    id,
-    opts,
-    setter,
-  }: ListenerEmitItem): ListenerEmitFunction {
+  public static callFunction(
+    { args, fn, id, opts }: ListenerEmitItem,
+    setter: ListenerEmitSetter
+  ): ListenerEmitFunction {
     const { isMain, isPeek, isReturn } = opts
 
     let out = setter.out()
@@ -92,9 +88,12 @@ export class Emit {
     return { out, promise }
   }
 
-  public static callItem(item: ListenerEmitItem): any {
-    const { out, promise } = Emit.callFunction(item)
-    const { opts, setter } = item
+  public static callItem(
+    item: ListenerEmitItem,
+    setter: ListenerEmitSetter
+  ): any {
+    const { out, promise } = Emit.callFunction(item, setter)
+    const { opts } = item
 
     setter.out(out)
     setter.promise(promise)
@@ -102,10 +101,29 @@ export class Emit {
     return this.itemOutput(promise, opts, setter)
   }
 
+  public static callPromises(
+    promises: ListenerEmitItem[],
+    setter: ListenerEmitSetter
+  ): void {
+    if (!promises || !promises.length) {
+      return
+    }
+
+    const promise = setter.promise()
+
+    setter.promise(
+      promise.then(() =>
+        Promise.all(
+          promises.map(item => Emit.callItem(item, setter))
+        )
+      )
+    )
+  }
+
   public static itemOutput(
     promise: Promise<any>,
     opts: ListenerEmitOptions,
-    setter: ListenerEmitItemSetter
+    setter: ListenerEmitSetter
   ): any {
     const out = setter.out()
     const { isMain, isReturn } = opts

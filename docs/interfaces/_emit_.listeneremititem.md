@@ -14,7 +14,6 @@
 * [fn](_emit_.listeneremititem.md#fn)
 * [id](_emit_.listeneremititem.md#id)
 * [opts](_emit_.listeneremititem.md#opts)
-* [setter](_emit_.listeneremititem.md#optional-setter)
 
 ## Properties
 
@@ -47,11 +46,3 @@ ___
 • **opts**: *[ListenerEmitOptions](_emit_.listeneremitoptions.md)*
 
 Defined in emit.ts:17
-
-___
-
-### `Optional` setter
-
-• **setter**? : *[ListenerEmitItemSetter](_emit_.listeneremititemsetter.md)*
-
-Defined in emit.ts:18

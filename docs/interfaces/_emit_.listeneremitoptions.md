@@ -24,7 +24,7 @@
 
 • **addListener**: *boolean*
 
-Defined in emit.ts:27
+Defined in emit.ts:26
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 • **isBefore**: *boolean*
 
-Defined in emit.ts:28
+Defined in emit.ts:27
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 • **isIntercept**: *boolean*
 
-Defined in emit.ts:29
+Defined in emit.ts:28
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 • **isMain**: *boolean*
 
-Defined in emit.ts:30
+Defined in emit.ts:29
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 • **isPeek**: *boolean*
 
-Defined in emit.ts:31
+Defined in emit.ts:30
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 • **isReturn**: *boolean*
 
-Defined in emit.ts:32
+Defined in emit.ts:31
 
 ___
 
@@ -72,4 +72,4 @@ ___
 
 • **once**: *boolean*
 
-Defined in emit.ts:33
+Defined in emit.ts:32

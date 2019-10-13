@@ -12,5 +12,5 @@
 
 * [ListenerEmitFunction](../interfaces/_emit_.listeneremitfunction.md)
 * [ListenerEmitItem](../interfaces/_emit_.listeneremititem.md)
-* [ListenerEmitItemSetter](../interfaces/_emit_.listeneremititemsetter.md)
 * [ListenerEmitOptions](../interfaces/_emit_.listeneremitoptions.md)
+* [ListenerEmitSetter](../interfaces/_emit_.listeneremitsetter.md)

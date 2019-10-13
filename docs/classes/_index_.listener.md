@@ -242,7 +242,7 @@ ___
 
 ▸ **extractListeners**(`instance`: any): *[string, string][]*
 
-Defined in index.ts:403
+Defined in index.ts:386
 
 **Parameters:**
 
@@ -258,7 +258,7 @@ ___
 
 ▸ **listenerBeforeLoaded**(`lid`: string[], `event`: [ListenerEvent](../interfaces/_types_.listenerevent.md)): *void | Promise‹any›*
 
-Defined in index.ts:427
+Defined in index.ts:410
 
 **Parameters:**
 
@@ -275,7 +275,7 @@ ___
 
 ▸ **listenerLoaded**(`lid`: string[], `event`: [ListenerEvent](../interfaces/_types_.listenerevent.md)): *void | Promise‹any›*
 
-Defined in index.ts:434
+Defined in index.ts:417
 
 **Parameters:**
 
@@ -292,7 +292,7 @@ ___
 
 ▸ **listenerWrapper**(`fnId`: string, `instanceId`: string, `lidName`: string): *Function*
 
-Defined in index.ts:441
+Defined in index.ts:424
 
 **Parameters:**
 
