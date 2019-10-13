@@ -331,13 +331,6 @@ export class Listener {
       )
     }
 
-    const list = Bindings.list(
-      _lid,
-      this.bindings,
-      fnId,
-      id
-    )
-
     const setter = {
       out: (o: any): any =>
         (out = o === undefined ? out : o),
@@ -345,46 +338,66 @@ export class Listener {
         (promise = p === undefined ? promise : p),
     }
 
-    for (const binding of list) {
-      const {
-        customIds,
-        matchId,
-        options,
-        targetId,
-      } = binding
+    for (const index of [-1, 0, 1]) {
+      const list = Bindings.list(
+        _lid,
+        this.bindings,
+        fnId,
+        id,
+        index
+      )
 
-      const opts = this.emitOptions(options)
-      const { addListener, isMain } = opts
+      for (const binding of list) {
+        const {
+          customIds,
+          matchId,
+          options,
+          targetId,
+        } = binding
 
-      if (!isMain && fnId === targetId) {
-        continue
-      }
+        const opts = this.emitOptions(options)
+        const { addListener, isMain } = opts
 
-      const fn = isMain
-        ? this.originalFns[fnId].bind(instance)
-        : this.listenerFns[targetId]
+        if (!isMain && fnId === targetId) {
+          continue
+        }
 
-      if (!fn) {
-        continue
-      }
+        const fn = isMain
+          ? this.originalFns[fnId].bind(instance)
+          : this.listenerFns[targetId]
 
-      if (opts.once) {
-        this.bindings[matchId].remove(binding)
-      }
+        if (!fn) {
+          continue
+        }
 
-      let customArgs: any[]
-      let customId: string[]
+        if (opts.once) {
+          this.bindings[matchId].remove(binding)
+        }
 
-      if (addListener) {
-        customArgs = addListener ? [this, ...args] : args
-      }
+        let customArgs: any[]
+        let customId: string[]
 
-      if (customIds) {
-        customId = [...customIds, ...id]
-      }
+        if (addListener) {
+          customArgs = addListener ? [this, ...args] : args
+        }
 
-      if (promise) {
-        promise = promise.then(() =>
+        if (customIds) {
+          customId = [...customIds, ...id]
+        }
+
+        if (promise) {
+          promise = promise.then(() =>
+            this.emitItem(
+              customArgs || args,
+              customId || id,
+              fn,
+              opts,
+              out,
+              promise,
+              setter
+            )
+          )
+        } else {
           this.emitItem(
             customArgs || args,
             customId || id,
@@ -394,17 +407,7 @@ export class Listener {
             promise,
             setter
           )
-        )
-      } else {
-        this.emitItem(
-          customArgs || args,
-          customId || id,
-          fn,
-          opts,
-          out,
-          promise,
-          setter
-        )
+        }
       }
     }
 

@@ -91,15 +91,18 @@ export class Bindings {
     _lid: string[],
     bindings: Record<string, Bindings>,
     fnId: string,
-    id: string[]
+    id: string[],
+    index: number
   ): ListenerInternalBinding[] {
+    const keys = ["**"]
+
     let key: string
     let key2: string
-    let list: ListenerInternalBinding[] = [
-      { options: { index: 0 }, targetId: fnId },
-    ]
+    let list: ListenerInternalBinding[] = []
 
-    const keys = ["**"]
+    if (index === 0) {
+      list.push({ options: { index: 0 }, targetId: fnId })
+    }
 
     for (const i of id.slice(0).reverse()) {
       key = key ? i + ARROW + key : i
@@ -122,9 +125,18 @@ export class Bindings {
       keys.push(id.slice(0, -1).join(ARROW) + ARROW + "*")
     }
 
+    const bindingFilter = ({
+      options,
+    }: ListenerInternalBinding): boolean => {
+      const i = this.optsToIndex(options)
+      return index < 0 ? i < 0 : index < 1 ? i === 0 : i > 0
+    }
+
     for (const key of keys) {
       if (bindings[key]) {
-        list = list.concat(bindings[key].bindings)
+        list = list.concat(
+          bindings[key].bindings.filter(bindingFilter)
+        )
       }
     }
 
