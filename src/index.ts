@@ -76,6 +76,11 @@ export class Listener {
           `${this.id}.callListenerLoaded`,
           instanceId,
           { append: 0.4, once: true },
+        ],
+        [
+          `${this.id}.callListenerAfterLoaded`,
+          instanceId,
+          { append: 0.5, once: true },
         ]
       )
 
@@ -99,6 +104,18 @@ export class Listener {
         )
       }
 
+      if (instance.listenerAfterLoaded) {
+        this.bind(
+          lid_,
+          [
+            `${this.id}.listenerAfterLoaded`,
+            instanceId,
+            "**",
+          ],
+          `${instanceId}.listenerAfterLoaded`
+        )
+      }
+
       if (instance.listenerBeforeLoadedAny) {
         this.bind(
           lid_,
@@ -112,6 +129,14 @@ export class Listener {
           lid_,
           [`${this.id}.listenerLoaded`, "**"],
           `${instanceId}.listenerLoadedAny`
+        )
+      }
+
+      if (instance.listenerAfterLoadedAny) {
+        this.bind(
+          lid_,
+          [`${this.id}.listenerAfterLoaded`, "**"],
+          `${instanceId}.listenerAfterLoadedAny`
         )
       }
 
@@ -229,6 +254,19 @@ export class Listener {
 
     this.instances[id] = instance
     instance.id = id
+  }
+
+  private callListenerAfterLoaded(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<void> {
+    return this.callWithEvent(
+      lid,
+      "listenerAfterLoaded",
+      instances,
+      options
+    )
   }
 
   private callListenerBeforeLoaded(
@@ -401,6 +439,13 @@ export class Listener {
     }
 
     return listeners
+  }
+
+  private listenerAfterLoaded(
+    lid: string[],
+    event: ListenerEvent
+  ): void | Promise<any> {
+    return
   }
 
   private listenerBeforeLoaded(
