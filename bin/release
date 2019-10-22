@@ -16,4 +16,4 @@ npx rollup ./dist/index.js --context this --file ./cdn/listener-$VERSION_BUMP.mj
 rm -rf dist
 npx tsc
 
-npx release-it --no-increment --ci
+npx release-it --ci -i $BUMP
