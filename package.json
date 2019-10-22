@@ -17,12 +17,13 @@
   "license": "MIT",
   "homepage": "https://github.com/listener-js/listener#readme",
   "scripts": {
+    "build": "rm -rf dist; tsc",
     "fix": "npm run lint -- --fix",
     "lint": "eslint --ignore-path .gitignore --ext=js src/**",
     "prepublish": "rm -rf dist; npm run build",
     "pretty": "prettier --write **/*.css **/*.json **/*.md",
-    "test": "jest",
-    "build": "rm -rf dist; tsc"
+    "release": "./bin/release",
+    "test": "jest"
   },
   "devDependencies": {
     "@listener-js/log": "1.32.0",
