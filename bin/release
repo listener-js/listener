@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+BUMP=${1:-minor} 
+VERSION="$(npx -c 'echo "$npm_package_version"')"
+VERSION_BUMP="$(npx semver -i $BUMP $VERSION)"
+
+cd "$(dirname "$0")/../"
+
+rm -rf cdn dist
+mkdir cdn dist
+
+npx tsc -m es6
+npx rollup ./dist/index.js --context this --file ./cdn/listener-$VERSION_BUMP.mjs -f esm
+
+rm -rf dist
+npx tsc
+
+npx release-it --no-increment --ci

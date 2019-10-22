@@ -1,4 +1,4 @@
-import { Listener } from "."
+import { Listener } from "./index"
 
 export interface ListenerEvent {
   existing?: string[]
