@@ -10,8 +10,11 @@ cd "$(dirname "$0")/../"
 rm -rf cdn dist
 mkdir cdn dist
 
+MJS="./cdn/listener-$VERSION_BUMP.mjs"
+
 npx tsc -m es6
-npx rollup ./dist/index.js --context this --file ./cdn/listener-$VERSION_BUMP.mjs -f esm
+npx rollup ./dist/index.js --context this --file $MJS -f esm
+npx terser $MJS --compress -m reserved=['lid'] -o $MJS
 
 rm -rf dist
 npx tsc
