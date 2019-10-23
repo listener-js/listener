@@ -14,7 +14,7 @@ MJS="./cdn/listener-$VERSION_BUMP.mjs"
 
 npx tsc -m es6
 npx rollup ./dist/index.js --context this --file $MJS -f esm
-npx terser $MJS --compress -m reserved=['lid','_lid'] -o $MJS
+npx terser $MJS --compress -m reserved=['lid','lid_'] -o $MJS
 
 rm -rf dist
 npx tsc
