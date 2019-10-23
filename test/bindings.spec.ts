@@ -1,11 +1,12 @@
+import expect from "expect"
 import { Bindings } from "../dist/bindings"
 
-test("bindings (basic)", (): void => {
+it("bindings (basic)", (): void => {
   const { bindings } = new Bindings().add("test")
   expect(bindings).toEqual([{ targetId: "test" }])
 })
 
-test("bindings (multiple basic)", (): void => {
+it("bindings (multiple basic)", (): void => {
   const { bindings } = new Bindings().add("test", "test2")
   expect(bindings).toEqual([
     {
@@ -17,7 +18,7 @@ test("bindings (multiple basic)", (): void => {
   ])
 })
 
-test("bindings (multiple basic with option)", (): void => {
+it("bindings (multiple basic with option)", (): void => {
   const { bindings } = new Bindings().add(
     ["test", { prepend: true }],
     ["test2", { append: true }]
@@ -28,7 +29,7 @@ test("bindings (multiple basic with option)", (): void => {
   ])
 })
 
-test("bindings (custom id)", (): void => {
+it("bindings (custom id)", (): void => {
   const { bindings } = new Bindings().add([
     "test",
     "customId",
@@ -41,7 +42,7 @@ test("bindings (custom id)", (): void => {
   ])
 })
 
-test("bindings (custom id with option)", (): void => {
+it("bindings (custom id with option)", (): void => {
   const { bindings } = new Bindings().add([
     "test",
     "customId",
@@ -56,7 +57,7 @@ test("bindings (custom id with option)", (): void => {
   ])
 })
 
-test("bindings (multiple custom id)", (): void => {
+it("bindings (multiple custom id)", (): void => {
   const { bindings } = new Bindings().add(
     ["test", "customId"],
     ["test2", "customId"]

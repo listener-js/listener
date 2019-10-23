@@ -1,12 +1,13 @@
+import expect from "expect"
+import log from "@listener-js/log"
+
 import {
   bind,
   instance,
   load,
   reset,
   ListenerEvent,
-} from "../"
-
-import log from "@listener-js/log"
+} from "../src"
 
 function delay(t: number, v?: any): Promise<any> {
   return new Promise((resolve): void => {
@@ -64,12 +65,12 @@ beforeEach((): void => {
   load([], { MyClass, MyClass2, log })
 })
 
-test("defined", (): void => {
+it("defined", (): void => {
   expect(bind).not.toBeUndefined()
   expect(load).not.toBeUndefined()
 })
 
-test("load", (): void => {
+it("load", (): void => {
   expect(MyClass.fn(["id"], true)).toEqual({
     fn: true,
     lid: ["MyClass.fn", "id"],
@@ -83,7 +84,7 @@ test("load", (): void => {
   })
 })
 
-test("load no arg", (): void => {
+it("load no arg", (): void => {
   expect.assertions(2)
 
   const test = {
@@ -97,7 +98,7 @@ test("load no arg", (): void => {
   expect(test.fn([])).toBe(1)
 })
 
-test("lid uid", (): void => {
+it("lid uid", (): void => {
   expect.assertions(1)
 
   const test = {
@@ -110,11 +111,11 @@ test("lid uid", (): void => {
   test.fn([])
 })
 
-test("load bad arg", (): void => {
+it("load bad arg", (): void => {
   load([], { hi: {} })
 })
 
-test("bind return", (): void => {
+it("bind return", (): void => {
   bind(
     [],
     ["MyClass.fn"],
@@ -134,7 +135,7 @@ test("bind return", (): void => {
   })
 })
 
-test("bind", (): void => {
+it("bind", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -149,7 +150,7 @@ test("bind", (): void => {
   MyClass.fn([], true)
 })
 
-test("bind with custom id", (): void => {
+it("bind with custom id", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -164,7 +165,7 @@ test("bind with custom id", (): void => {
   MyClass.fn([], true)
 })
 
-test("bind with once", (): void => {
+it("bind with once", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -180,7 +181,7 @@ test("bind with once", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerBeforeLoaded bind", (): void => {
+it("listenerBeforeLoaded bind", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -204,7 +205,7 @@ test("listenerBeforeLoaded bind", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerLoaded bind", (): void => {
+it("listenerLoaded bind", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -228,7 +229,7 @@ test("listenerLoaded bind", (): void => {
   MyClass.fn([], true)
 })
 
-test("listenerLoaded bind self", (): void => {
+it("listenerLoaded bind self", (): void => {
   expect.assertions(2)
 
   const Test = {
@@ -254,7 +255,7 @@ test("listenerLoaded bind self", (): void => {
   Test.fn([])
 })
 
-test("listenerLoaded existing", (): void => {
+it("listenerLoaded existing", (): void => {
   expect.assertions(1)
 
   const Test = {
@@ -279,7 +280,7 @@ test("listenerLoaded existing", (): void => {
   MyClass.fn([], true)
 })
 
-test("async listener", async (): Promise<void> => {
+it("async listener", async (): Promise<void> => {
   expect(await MyClass.asyncFn(["id"], true)).toEqual({
     asyncFn: true,
     lid: ["MyClass.asyncFn", "id"],
@@ -293,7 +294,7 @@ test("async listener", async (): Promise<void> => {
   })
 })
 
-test("async bind return", async (): Promise<void> => {
+it("async bind return", async (): Promise<void> => {
   bind(
     [],
     ["MyClass.asyncFn"],
@@ -313,7 +314,7 @@ test("async bind return", async (): Promise<void> => {
   })
 })
 
-test("async bind", async (): Promise<void> => {
+it("async bind", async (): Promise<void> => {
   expect.assertions(1)
 
   const Test = {
@@ -329,7 +330,7 @@ test("async bind", async (): Promise<void> => {
   await MyClass.asyncFn([], true)
 })
 
-test("async bind null return", async (): Promise<void> => {
+it("async bind null return", async (): Promise<void> => {
   bind(
     [],
     ["MyClass.asyncFn"],
@@ -339,7 +340,7 @@ test("async bind null return", async (): Promise<void> => {
   expect(await MyClass.asyncFn([], true)).toBe(null)
 })
 
-test("bind id", (): void => {
+it("bind id", (): void => {
   bind(
     [],
     ["MyClass.fn", "id"],
@@ -365,7 +366,7 @@ test("bind id", (): void => {
   })
 })
 
-test("bind *", (): void => {
+it("bind *", (): void => {
   bind([], ["*"], ["MyClass2.fn2", { return: true }])
 
   expect(MyClass.fn([], true)).toEqual({
@@ -381,7 +382,7 @@ test("bind *", (): void => {
   })
 })
 
-test("bind **", (): void => {
+it("bind **", (): void => {
   bind([], ["**"], ["MyClass2.fn2", { return: true }])
 
   expect(MyClass.fn(["id"], true)).toEqual({
@@ -391,7 +392,7 @@ test("bind **", (): void => {
   })
 })
 
-test("bind * and id", (): void => {
+it("bind * and id", (): void => {
   bind([], ["*", "id"], ["MyClass2.fn2", { return: true }])
 
   expect(MyClass.fn([], true)).toEqual({
@@ -413,7 +414,7 @@ test("bind * and id", (): void => {
   })
 })
 
-test("bind id and *", (): void => {
+it("bind id and *", (): void => {
   bind(
     [],
     ["MyClass.fn", "*"],
@@ -439,7 +440,7 @@ test("bind id and *", (): void => {
   })
 })
 
-test("bind ** and id", (): void => {
+it("bind ** and id", (): void => {
   bind(
     [],
     ["**", "id2"],
@@ -465,7 +466,7 @@ test("bind ** and id", (): void => {
   })
 })
 
-test("bind id and **", (): void => {
+it("bind id and **", (): void => {
   bind(
     [],
     ["MyClass.fn", "**"],
@@ -491,7 +492,7 @@ test("bind id and **", (): void => {
   })
 })
 
-test("prepend option", (): void => {
+it("prepend option", (): void => {
   bind([], ["MyClass.fn"], "MyClass2.fn2")
 
   bind(
@@ -507,7 +508,7 @@ test("prepend option", (): void => {
   })
 })
 
-test("prepend async to sync", async (): Promise<void> => {
+it("prepend async to sync", async (): Promise<void> => {
   expect.assertions(3)
 
   const order = []
@@ -537,7 +538,7 @@ test("prepend async to sync", async (): Promise<void> => {
   expect(order).toEqual([1, 2, 3])
 })
 
-test("prepend async to async", async (): Promise<void> => {
+it("prepend async to async", async (): Promise<void> => {
   expect.assertions(3)
 
   const order = []
@@ -567,7 +568,7 @@ test("prepend async to async", async (): Promise<void> => {
   expect(order).toEqual([1, 2, 3])
 })
 
-test("prepend async overwrite", async (): Promise<void> => {
+it("prepend async overwrite", async (): Promise<void> => {
   expect.assertions(3)
 
   const order = []
@@ -602,7 +603,7 @@ test("prepend async overwrite", async (): Promise<void> => {
   expect(order).toEqual([1, 2])
 })
 
-test("append option", (): void => {
+it("append option", (): void => {
   bind(
     [],
     ["MyClass.fn"],
@@ -622,7 +623,7 @@ test("append option", (): void => {
   })
 })
 
-test("numeric prepend option", (): void => {
+it("numeric prepend option", (): void => {
   bind(
     [],
     ["MyClass.fn"],
@@ -642,7 +643,7 @@ test("numeric prepend option", (): void => {
   })
 })
 
-test("numeric append option", (): void => {
+it("numeric append option", (): void => {
   bind(
     [],
     ["MyClass.fn"],
@@ -662,7 +663,7 @@ test("numeric append option", (): void => {
   })
 })
 
-test("intercept", (): void => {
+it("intercept", (): void => {
   expect.assertions(6)
 
   class Test {
@@ -704,7 +705,7 @@ test("intercept", (): void => {
   expect(test.test([], "hi")).toBe(false)
 })
 
-test("async intercept", async (): Promise<any> => {
+it("async intercept", async (): Promise<any> => {
   expect.assertions(2)
 
   class Test {
@@ -747,7 +748,7 @@ test("async intercept", async (): Promise<any> => {
     .then(out => expect(out).toBe(false))
 })
 
-test("intercept cancel", (): void => {
+it("intercept cancel", (): void => {
   expect.assertions(6)
 
   class Test {
@@ -789,7 +790,7 @@ test("intercept cancel", (): void => {
   expect(test.test([], "hi")).toBe(true)
 })
 
-test("peek", (): void => {
+it("peek", (): void => {
   expect.assertions(6)
 
   class Test {
@@ -827,12 +828,12 @@ test("peek", (): void => {
   expect(test.test([], "hi")).toBe(true)
 })
 
-test("load return value", () => {
+it("load return value", () => {
   const test = {}
   expect(load([], { test })).toBe(instance.instances)
 })
 
-test("promise instance", async () => {
+it("promise instance", async () => {
   expect.assertions(1)
   const promise = delay(1)
   load([], { test: promise })
@@ -840,7 +841,7 @@ test("promise instance", async () => {
   expect(instance.instances.test).toBe(promise)
 })
 
-test("promise instance overwrite", async () => {
+it("promise instance overwrite", async () => {
   expect.assertions(1)
   const promise = delay(1)
   const test = {
