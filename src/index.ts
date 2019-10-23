@@ -253,7 +253,10 @@ export class Listener {
     const instance = instances[id]
 
     this.instances[id] = instance
-    instance.id = id
+
+    if (!instance.id) {
+      instance.id = id
+    }
   }
 
   private callListenerAfterLoaded(
