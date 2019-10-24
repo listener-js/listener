@@ -7,22 +7,30 @@ import {
   REGEX_FN,
 } from "./constants"
 
-import { Emit, ListenerEmitItem } from "./emit"
-
 import {
-  ListenerInstances,
-  ListenerFunctions,
-  ListenerEvent,
-} from "./types"
+  Emit,
+  ListenerEmitItem,
+  ListenerFunction,
+} from "./emit"
 
 import { Uid } from "./uid"
+
+export interface ListenerEvent {
+  existing?: string[]
+  instance: any
+  listener: Listener
+  instances?: Record<string, any>
+  options?: Record<string, any>
+}
+
+type ListenerFunctions = Record<string, ListenerFunction>
+type ListenerInstances = Record<string, any>
 
 export class Listener {
   public id: string
 
   public bindings: Record<string, Bindings> = {}
   public instances: ListenerInstances = {}
-
   private listenerFns: ListenerFunctions = {}
   private originalFns: ListenerFunctions = {}
 
@@ -497,4 +505,3 @@ export const load: typeof instance.load = instance.load.bind(
 export const reset: typeof instance.reset = instance.reset.bind(
   instance
 )
-export * from "./types"

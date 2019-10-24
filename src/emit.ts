@@ -3,7 +3,10 @@ import {
   ListenerBinding,
 } from "./bindings"
 
-import { ListenerFunction } from "./types"
+export type ListenerFunction = (
+  id: string[],
+  ...arg: any[]
+) => any
 
 export interface ListenerEmitFunction {
   promise: Promise<any>
