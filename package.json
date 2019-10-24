@@ -18,10 +18,6 @@
   "homepage": "https://github.com/listener-js/listener#readme",
   "scripts": {
     "build": "rm -rf dist; tsc -b",
-    "fix": "npm run lint -- --fix",
-    "lint": "eslint --ignore-path .gitignore --ext=js src/**",
-    "prepublish": "rm -rf dist; npm run build",
-    "pretty": "prettier --write **/*.css **/*.json **/*.md",
     "release": "./bin/release",
     "test": "mocha"
   },
