@@ -17,7 +17,7 @@
   "license": "MIT",
   "homepage": "https://github.com/listener-js/listener#readme",
   "scripts": {
-    "build": "rm -rf dist; tsc",
+    "build": "rm -rf dist; tsc -b",
     "fix": "npm run lint -- --fix",
     "lint": "eslint --ignore-path .gitignore --ext=js src/**",
     "prepublish": "rm -rf dist; npm run build",
@@ -45,11 +45,6 @@
     "terser": "4.3.9",
     "ts-node": "8.4.1",
     "typescript": "3.6.4"
-  },
-  "prettier": {
-    "printWidth": 60,
-    "semi": false,
-    "trailingComma": "es5"
   },
   "husky": {
     "hooks": {

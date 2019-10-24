@@ -1,22 +1,14 @@
 #!/usr/bin/env bash
 
-BUMP=${1:-minor} 
+BUMP=${1:-minor}
 VERSION="$(npx -c 'echo "$npm_package_version"')"
 VERSION_BUMP="$(npx semver -i $BUMP $VERSION)"
-HUSKY_SKIP_HOOKS=1
+ESM="./dist/esm/index.js"
+MJS="./dist/esm/listener-$VERSION_BUMP.mjs"
 
 cd "$(dirname "$0")/../"
 
-rm -rf cdn dist
-mkdir cdn dist
-
-MJS="./cdn/listener-$VERSION_BUMP.mjs"
-
-npx tsc -m es6
-npx rollup ./dist/index.js --context this --file $MJS -f esm
+npm run build
+npx rollup $ESM --context this --file $MJS -f esm
 npx terser $MJS --compress -m reserved=['lid','lid_'] -o $MJS
-
-rm -rf dist
-npx tsc
-
 npx release-it --ci -i $BUMP

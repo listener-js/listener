@@ -1,5 +1,5 @@
 import expect from "expect"
-import { Bindings } from "../dist/bindings"
+import { Bindings } from "../src/bindings"
 
 it("bindings (basic)", (): void => {
   const { bindings } = new Bindings().add("test")
