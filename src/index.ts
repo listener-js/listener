@@ -260,10 +260,6 @@ export class Listener {
     const id = lid[1]
     const instance = instances[id]
 
-    if (instance.then) {
-      return
-    }
-
     this.instances[id] = instance
 
     instance.id = id
