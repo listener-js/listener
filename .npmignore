@@ -1,8 +1,9 @@
 .*
-bin
+*.tsbuildinfo
 jest.config.js
 tsconfig.json
-tsconfig.tsbuildinfo
+tsconfig.*.json
+tsconfig-base.json
 docs
 media
 test
