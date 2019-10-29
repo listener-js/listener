@@ -59,7 +59,7 @@ export class Listener {
   ): Record<string, any> | Promise<Record<string, any>> {
     const id = lid_[1]
 
-    this.loadWithoutCallbacks(lid_, instances, options)
+    this.loadWithoutCallbacks(lid_, id, instances, options)
 
     for (const instanceId in instances) {
       const instance = instances[instanceId]
@@ -157,15 +157,14 @@ export class Listener {
 
   public loadWithoutCallbacks(
     lid: string[],
+    loadId: string,
     instances: Record<string, any>,
     options?: Record<string, any>
   ): Record<string, any> | Promise<Record<string, any>> {
-    const id = lid[2]
-
     for (const instanceId in instances) {
       this.bind(
         lid,
-        [`${this.id}.load`, id, "**"],
+        [`${this.id}.load`, loadId, "**"],
         [
           `${this.id}.applyInstanceId`,
           instanceId,
