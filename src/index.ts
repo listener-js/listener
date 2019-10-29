@@ -173,7 +173,7 @@ export class Listener {
     for (const instanceId in instances) {
       this.bind(
         lid_,
-        [`${this.id}.load`, id, "**"],
+        [`${this.id}.loadWithoutCallbacks`, id, "**"],
         [
           `${this.id}.applyInstanceId`,
           instanceId,
