@@ -59,22 +59,14 @@ export class Listener {
   ): Record<string, any> | Promise<Record<string, any>> {
     const id = lid_[1]
 
+    this.loadWithoutCallbacks(lid_, instances, options)
+
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
       this.bind(
         lid_,
         [`${this.id}.load`, id, "**"],
-        [
-          `${this.id}.applyInstanceId`,
-          instanceId,
-          { append: 0.1, once: true },
-        ],
-        [
-          `${this.id}.applyInstanceFunctions`,
-          instanceId,
-          { append: 0.2, once: true },
-        ],
         [
           `${this.id}.callListenerBeforeLoaded`,
           instanceId,
@@ -158,6 +150,33 @@ export class Listener {
           ]
         )
       }
+    }
+
+    return this.instances
+  }
+
+  public loadWithoutCallbacks(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): Record<string, any> | Promise<Record<string, any>> {
+    const id = lid[2]
+
+    for (const instanceId in instances) {
+      this.bind(
+        lid,
+        [`${this.id}.load`, id, "**"],
+        [
+          `${this.id}.applyInstanceId`,
+          instanceId,
+          { append: 0.1, once: true },
+        ],
+        [
+          `${this.id}.applyInstanceFunctions`,
+          instanceId,
+          { append: 0.2, once: true },
+        ]
+      )
     }
 
     return this.instances
