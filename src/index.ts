@@ -25,12 +25,15 @@ export interface ListenerEvent {
 
 type ListenerFunctions = Record<string, ListenerFunction>
 type ListenerInstances = Record<string, any>
+type ListenerPromises = Record<string, Promise<any>[]>
 
 export class Listener {
   public id: string
 
   public bindings: Record<string, Bindings> = {}
   public instances: ListenerInstances = {}
+  public pending: ListenerPromises = {}
+
   private listenerFns: ListenerFunctions = {}
   private originalFns: ListenerFunctions = {}
 
@@ -62,6 +65,25 @@ export class Listener {
     for (const instanceId in instances) {
       const instance = instances[instanceId]
 
+      if (instance.then) {
+        this.pending[id] = this.pending[id] || []
+        this.pending[id].push(
+          instance.then(
+            this.resolvePending(lid_, instanceId)
+          )
+        )
+        this.bind(
+          lid_,
+          [`${this.id}.load`, id, "**"],
+          [
+            `${this.id}.waitForPending`,
+            instanceId,
+            { append: 0.1, once: true },
+          ]
+        )
+        continue
+      }
+
       this.bind(
         lid_,
         [`${this.id}.load`, id, "**"],
@@ -89,6 +111,11 @@ export class Listener {
           `${this.id}.callListenerAfterLoaded`,
           instanceId,
           { append: 0.5, once: true },
+        ],
+        [
+          `${this.id}.waitForPending`,
+          instanceId,
+          { append: 0.6, once: true },
         ]
       )
 
@@ -163,33 +190,6 @@ export class Listener {
     return this.instances
   }
 
-  public loadWithoutCallbacks(
-    lid_: string[],
-    instances: Record<string, any>,
-    options?: Record<string, any>
-  ): Record<string, any> | Promise<Record<string, any>> {
-    const id = lid_[1]
-
-    for (const instanceId in instances) {
-      this.bind(
-        lid_,
-        [`${this.id}.loadWithoutCallbacks`, id, "**"],
-        [
-          `${this.id}.applyInstanceId`,
-          instanceId,
-          { append: 0.1, once: true },
-        ],
-        [
-          `${this.id}.applyInstanceFunctions`,
-          instanceId,
-          { append: 0.2, once: true },
-        ]
-      )
-    }
-
-    return this.instances
-  }
-
   public parseId(id: string): [string, string] {
     const match = id.match(REGEX_ID)
 
@@ -226,8 +226,8 @@ export class Listener {
       "bindings",
       "instances",
       "listenerFns",
-      "options",
       "originalFns",
+      "pending",
     ]
 
     for (const key of recordKeys) {
@@ -508,6 +508,38 @@ export class Listener {
         _lid = [Uid.uid()].concat(_lid)
       }
       return this.emit(_lid, fnId, instanceId, ...args)
+    }
+  }
+
+  private resolvePending(
+    lid: string[],
+    instanceId: string
+  ) {
+    return (
+      instance: any
+    ):
+      | Record<string, any>
+      | Promise<Record<string, any>> => {
+      if (!instance) {
+        return
+      }
+
+      if (instance.default) {
+        instance = instance.default
+      }
+
+      return this.load(lid, { [instanceId]: instance })
+    }
+  }
+
+  private waitForPending(
+    lid: string[]
+  ): void | Promise<any> {
+    const id = lid[lid.indexOf(`${this.id}.load`) + 1]
+    if (this.pending[id]) {
+      return Promise.all(this.pending[id]).then(() => {
+        delete this.pending[id]
+      })
     }
   }
 }

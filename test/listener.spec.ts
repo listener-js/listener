@@ -835,10 +835,11 @@ it("load return value", () => {
 
 it("promise instance", async () => {
   expect.assertions(1)
-  const promise = delay(1)
-  load([], { test: promise })
+  const promise = load([], { test: delay(1) })
+  expect(instance.pending.b.length).toBe(1)
   await promise
-  expect(instance.instances.test).toBe(promise)
+  expect(instance.instances.test).toBeUndefined()
+  expect(instance.pending.b).toBeUndefined()
 })
 
 it("promise instance overwrite", async () => {
