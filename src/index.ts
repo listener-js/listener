@@ -116,6 +116,11 @@ export class Listener {
           `${this.id}.waitForPending`,
           instanceId,
           { append: 0.6, once: true },
+        ],
+        [
+          `${this.id}.callListenerAfterAllLoaded`,
+          instanceId,
+          { append: 0.5, once: true },
         ]
       )
 
@@ -305,6 +310,19 @@ export class Listener {
     )
   }
 
+  private callListenerAfterAllLoaded(
+    lid: string[],
+    instances: Record<string, any>,
+    options?: Record<string, any>
+  ): void | Promise<void> {
+    return this.callWithEvent(
+      lid,
+      "listenerAfterAllLoaded",
+      instances,
+      options
+    )
+  }
+
   private callListenerBeforeLoaded(
     lid: string[],
     instances: Record<string, any>,
@@ -478,6 +496,13 @@ export class Listener {
   }
 
   private listenerAfterLoaded(
+    lid: string[],
+    event: ListenerEvent
+  ): void | Promise<any> {
+    return
+  }
+
+  private listenerAfterAllLoaded(
     lid: string[],
     event: ListenerEvent
   ): void | Promise<any> {
