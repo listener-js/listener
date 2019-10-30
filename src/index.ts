@@ -120,7 +120,7 @@ export class Listener {
         [
           `${this.id}.callListenerAfterAllLoaded`,
           instanceId,
-          { append: 0.5, once: true },
+          { append: 0.7, once: true },
         ]
       )
 
