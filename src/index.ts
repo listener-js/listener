@@ -78,7 +78,7 @@ export class Listener {
           [
             `${this.id}.waitForPending`,
             instanceId,
-            { append: 0.1, once: true },
+            { append: 0.6, once: true },
           ]
         )
         continue
