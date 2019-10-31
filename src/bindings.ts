@@ -95,17 +95,18 @@ export class Bindings {
   public static list(
     _lid: string[],
     { bindings, fnId, id, index }: ListenerBindingList
-  ): [ListenerBinding[], number[]] {
-    const indices = []
+  ): [ListenerBinding, number][] {
     const keys = ["**"]
 
     let key: string
     let key2: string
-    let list: ListenerBinding[] = []
+    let list: [ListenerBinding, number][] = []
 
     if (index === 0) {
-      list.push({ options: { index: 0 }, targetId: fnId })
-      indices.push(0)
+      list.push([
+        { options: { index: 0 }, targetId: fnId },
+        0,
+      ])
     }
 
     for (const i of id.slice(0).reverse()) {
@@ -129,36 +130,36 @@ export class Bindings {
       keys.push(id.slice(0, -1).join(ARROW) + ARROW + "*")
     }
 
-    const bindingFilter = ({
-      options,
-    }: ListenerBinding): boolean => {
-      const i = this.optsToIndex(options)
-      const inRange =
-        index < 0 ? i < 0 : index < 1 ? i === 0 : i > 0
+    const bindingWithIndex = (
+      binding: ListenerBinding
+    ): [ListenerBinding, number] => {
+      return [binding, this.optsToIndex(binding.options)]
+    }
 
-      if (inRange) {
-        indices.push(i)
-      }
-
-      return inRange
+    const bindingFilter = ([binding, i]: [
+      ListenerBinding,
+      number
+    ]): boolean => {
+      return index < 0 ? i < 0 : index < 1 ? i === 0 : i > 0
     }
 
     for (const key of keys) {
       if (bindings[key]) {
-        list = list.concat(
-          bindings[key].bindings.filter(bindingFilter)
+        const binds = bindings[key].bindings.map(
+          bindingWithIndex
         )
+        list = list.concat(binds.filter(bindingFilter))
       }
     }
 
     list = list.sort(this.listSort.bind(this))
 
-    return [list, indices]
+    return list
   }
 
   private static listSort(
-    { options: a }: ListenerBinding,
-    { options: b }: ListenerBinding
+    [{ options: a }]: [ListenerBinding],
+    [{ options: b }]: [ListenerBinding]
   ): number {
     const aIndex = this.optsToIndex(a)
     const bIndex = this.optsToIndex(b)

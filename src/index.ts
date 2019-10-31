@@ -393,7 +393,7 @@ export class Listener {
     }
 
     for (const index of [-1, 0, 1]) {
-      const [list, indices] = Bindings.list(_lid, {
+      const list = Bindings.list(_lid, {
         bindings: this.bindings,
         fnId,
         id,
@@ -401,9 +401,11 @@ export class Listener {
       })
 
       let promises: ListenerEmitItem[] = []
-      let lastIndex: number
+      let i = -1
 
-      for (const binding of list) {
+      for (const [binding, bindingIndex] of list) {
+        i += 1
+
         const { matchId, options, targetId } = binding
         const opts = Emit.options(options)
         const { isMain, once } = opts
@@ -440,11 +442,11 @@ export class Listener {
           Emit.callItem(item, setter)
         }
 
-        const nextIndex = indices.shift()
-
-        if (lastIndex !== nextIndex) {
+        if (
+          !list[i + 1] ||
+          bindingIndex !== list[i + 1][1]
+        ) {
           Emit.callPromises(promises, setter)
-          lastIndex = nextIndex
           promises = []
         }
       }

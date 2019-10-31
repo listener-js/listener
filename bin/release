@@ -12,5 +12,5 @@ npm run build
 npx rollup $ESM --context this --file $MJS -f esm
 npx terser $MJS --compress -m reserved=['lid','lid_'] -o $MJS
 
-git status
-npx release-it --ci -i $BUMP
+# git status
+# npx release-it --ci -i $BUMP
