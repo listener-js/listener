@@ -4,6 +4,6 @@ cd "$(dirname "$0")/../"
 
 BUMP=${1:-minor}
 
-./bin/release
+./bin/build
 git status
 npx release-it --ci -i $BUMP
