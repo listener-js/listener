@@ -17,7 +17,7 @@
   "license": "MIT",
   "homepage": "https://github.com/listener-js/listener#readme",
   "scripts": {
-    "build": "rm -rf dist; tsc -b",
+    "build": "./bin/build",
     "release": "./bin/release",
     "test": "mocha"
   },

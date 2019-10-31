@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-BUMP=${1:-minor}
-VERSION="$(npx -c 'echo "$npm_package_version"')"
-VERSION_BUMP="$(npx semver -i $BUMP $VERSION)"
-ESM="./dist/esm/index.js"
-MJS="./dist/mjs/listener-$VERSION_BUMP.mjs"
-
 cd "$(dirname "$0")/../"
 
-npm run build
-npx rollup $ESM --context this --file $MJS -f esm
-npx terser $MJS --compress -m reserved=['lid','lid_'] -o $MJS
+BUMP=${1:-minor}
 
-# git status
-# npx release-it --ci -i $BUMP
+./bin/release
+git status
+npx release-it --ci -i $BUMP
