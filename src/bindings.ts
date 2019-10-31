@@ -86,7 +86,7 @@ export class Bindings {
     const index = this.bindings.indexOf(binding)
 
     if (index > -1) {
-      this.bindings.splice(index, 1)
+      this.bindings = this.bindings.slice(index, 1)
     }
 
     this.targetIds.delete(binding.targetId)
